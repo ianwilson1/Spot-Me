@@ -1,1 +1,1 @@
-# lab-github-intro
+The increased demand for parking and the limited spaces on the Fresno State campus has created a frustrating and time-consuming environment for all students, faculty, and staff who commute by car. Our project, the SpotMe mobile app, aims to ease the task of finding open spots around campus through a mobile application that tracks and provides real-time data on parking space availability.
