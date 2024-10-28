@@ -7,11 +7,12 @@ const MainMap = () => {
         <View style={styles.container}>
             <MapView 
                 style={styles.map}
+                minZoomLevel={19}
                 initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    latitude: 36.81369124340123,
+                    longitude: -119.7455163161234,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
                 }}
             >
             </MapView>
@@ -22,8 +23,6 @@ const MainMap = () => {
 const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        height: 400,
-        width: 400,
         justifyContent: 'center',
         alignItems: 'center'
     },
