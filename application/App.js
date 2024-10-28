@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, Alert, StyleSheet, Button } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const Toolbar = ({ realignMap, saveLocation, goToAccount, refreshData }) => {
@@ -25,15 +25,58 @@ const Toolbar = ({ realignMap, saveLocation, goToAccount, refreshData }) => {
   );
 };
 
-const MainScreen = () => {
+const App = () => {
+  const [carLocSaved, setCarLocSaved] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const realignMap = () => {
+    Alert.alert("Map will be reoriented.");
+  };
+
+  const saveLocation = () => {
+    if (!carLocSaved) {
+      Alert.alert("Car Location saved.", "", [{ text: "OK" }]);
+      setCarLocSaved(true);
+    } else {
+      Alert.alert("Car location unsaved.", "", [{ text: "OK" }]);
+      setCarLocSaved(false);
+    }
+  };
+
+  const goToAccount = () => {
+    if (!isLoggedIn) {
+      Alert.alert(
+        "Account Options",
+        "Please log in or register.",
+        [
+          { text: "Log In", onPress: () => setIsLoggedIn(true) },
+          { text: "Register", onPress: () => setIsLoggedIn(true) },
+          { text: "Cancel", style: "cancel" }
+        ]
+      );
+    } else {
+      Alert.alert(
+        "Logged In",
+        "You are currently logged in.",
+        [
+          { text: "Log Out", onPress: () => setIsLoggedIn(false) },
+          { text: "OK", style: "cancel" }
+        ]
+      );
+    }
+  };
+
+  const refreshData = () => {
+    Alert.alert("Data refreshed.");
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Parking App Toolbar</Text>
+    <View style={{ flex: 1, justifyContent: 'center' }}>
       <Toolbar 
-        realignMap={() => console.log("Realign Map")} 
-        saveLocation={() => console.log("Save Location")} 
-        goToAccount={() => console.log("Go to Account")} 
-        refreshData={() => console.log("Refresh Data")} 
+        realignMap={realignMap} 
+        saveLocation={saveLocation} 
+        goToAccount={goToAccount} 
+        refreshData={refreshData} 
       />
     </View>
   );
@@ -71,4 +114,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainScreen;
+export default App;
