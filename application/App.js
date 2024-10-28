@@ -14,7 +14,8 @@ export default function App () {
   }
 
   return (
-    <View style={ styles.container }>
+    <View style={styles.container}>
+      <Text>If you see this, something is terribly wrong!</Text>
       <MainMap ref={mapRef}/>
       <Toolbar realignMap={realignMap}/>
     </View>
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: 'red',
   },
   title: {
     fontSize: 24,

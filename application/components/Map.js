@@ -15,9 +15,10 @@ const MainMap = React.forwardRef((props, ref) => {
                 initialRegion={{
                     latitude: 36.81369124340123,
                     longitude: -119.7455163161234,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
+                    latitudeDelta: 0.02,
+                    longitudeDelta: 0.02,
                 }}
+                
             />
         </View>
     );

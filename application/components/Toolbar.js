@@ -8,11 +8,39 @@ const Toolbar = ({realignMap}) => {
 
   const saveLocation = () => {
     if (!carLocSaved) {
-      Alert.alert("Car Location saved.", "", [{ text: "OK" }]);
-      setCarLocSaved(true);
+      Alert.alert(
+        "Save car location?", "", [
+          { 
+            text: "Yes",
+            onPress: () => { // IMPLEMENT CAR SAVE FUNCTION AND CALL HERE
+              setCarLocSaved(true); 
+              Alert.alert("TODO: Save user's current position");
+            }
+          },
+          { 
+            text: "Cancel" 
+          }
+        ]
+      );
     } else {
-      Alert.alert("Car location unsaved.", "", [{ text: "OK" }]);
-      setCarLocSaved(false);
+      Alert.alert(
+        "Car location saved.", "", [
+          { 
+            text: "View",
+            onPress: () => Alert.alert("TODO: Move camera to saved location")
+          },
+          {
+            text: "Forget",
+            onPress: () => { 
+              setCarLocSaved(false);
+              Alert.alert("Car location deleted.")
+            }
+          },
+          {
+            text: "Cancel"
+          }
+        ]
+      );
     }
   };
 
