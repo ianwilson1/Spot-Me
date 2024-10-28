@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Text, View, Alert, StyleSheet} from 'react-native';
 import Toolbar from './components/Toolbar.js'
 import MainMap from './components/Map.js';
-import MapView from 'react-native-maps';
 
 export default function App () {
+  const mapRef = useRef(null);
+
+  // Re-orient map to north (compass button)
+  const realignMap = () => {
+    if (mapRef.current) {
+      mapRef.current.animateCamera({heading: 0});
+    }
+  }
+
   return (
     <View style={ styles.container }>
-      <MainMap />
-      <Toolbar />
+      <MainMap ref={mapRef}/>
+      <Toolbar realignMap={realignMap}/>
     </View>
   );
 };

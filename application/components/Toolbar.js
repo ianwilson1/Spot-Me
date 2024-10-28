@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-const Toolbar = () => {
+const Toolbar = ({realignMap}) => {
   const [carLocSaved, setCarLocSaved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const realignMap = () => {
-    Alert.alert("Map will be reoriented.");
-  };
 
   const saveLocation = () => {
     if (!carLocSaved) {
