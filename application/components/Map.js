@@ -7,7 +7,7 @@ const MainMap = () => {
         <View style={styles.container}>
             <MapView 
                 style={styles.map}
-                minZoomLevel={19}
+                minZoomLevel={15}
                 initialRegion={{
                     latitude: 36.81369124340123,
                     longitude: -119.7455163161234,
