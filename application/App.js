@@ -1,7 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Text, View, Alert, StyleSheet} from 'react-native';
-import Toolbar from './components/Toolbar.js'
+import Toolbar from './components/Toolbar.js';
 import MainMap from './components/Map.js';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {LoginScreen, RegisterScreen} from './components/Accounts.js';
+
+const Stack = createStackNavigator();
 
 export default function App () {
   const mapRef = useRef(null);
@@ -14,11 +19,20 @@ export default function App () {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>If you see this, something is terribly wrong!</Text>
-      <MainMap ref={mapRef}/>
-      <Toolbar realignMap={realignMap}/>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name = "Main" options={{headerShown: false}}>
+          {props => (
+            <View style={ styles.container }>
+              <MainMap ref={mapRef}/>
+              <Toolbar {...props} realignMap={realignMap}/>
+            </View>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Login" component={LoginScreen}/>
+        <Stack.Screen name="Register" component={RegisterScreen}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

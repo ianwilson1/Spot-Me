@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import {LoginScreen, RegisterScreen} from './Accounts';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const Toolbar = ({realignMap}) => {
+
+const Toolbar = ({realignMap, navigation}) => {
   const [carLocSaved, setCarLocSaved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -46,15 +50,7 @@ const Toolbar = ({realignMap}) => {
 
   const goToAccount = () => {
     if (!isLoggedIn) {
-      Alert.alert(
-        "Account Options",
-        "Please log in or register.",
-        [
-          { text: "Log In", onPress: () => setIsLoggedIn(true) },
-          { text: "Register", onPress: () => setIsLoggedIn(true) },
-          { text: "Cancel", style: "cancel" }
-        ]
-      );
+      navigation.navigate('Login');
     } else {
       Alert.alert(
         "Logged In",
