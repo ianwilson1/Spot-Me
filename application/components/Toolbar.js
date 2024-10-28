@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View, Button, Text } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const Toolbar = () => {
