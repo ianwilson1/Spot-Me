@@ -5,6 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import {LoginScreen, RegisterScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import * as Location from 'expo-location';
 
 const Stack = createStackNavigator();
 
@@ -14,8 +15,10 @@ export default function App () {
   // States
   const [carLocSaved, setCarLocSaved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [carLocation, setCarLocation] = useState(null);
 
-  // Request location permission
+  // Request location permission 
+  /*
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'android') {
@@ -34,6 +37,7 @@ export default function App () {
 
     requestLocationPermission();
   }, []);
+  */
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -42,19 +46,22 @@ export default function App () {
     }
   }
 
-  const getCurrLocation = () => {
-
-  }
-
   // Save user's parked car location (aka create persistent marker of current location)
-  const saveLocation = () => {
-    if (!carLocSaved) {
+  const saveLocation = async () => {
+    if (carLocation == null) {
+
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
         Alert.alert(
           "Save car location?", "", [
             { 
               text: "Yes",
-              onPress: () => { // IMPLEMENT CAR SAVE FUNCTION AND CALL HERE
-                setCarLocSaved(true); 
+              onPress: async () => { // IMPLEMENT CAR SAVE FUNCTION AND CALL HERE
+                let carLoc = await Location.getCurrentPositionAsync({});
+                setCarLocation(carLoc.coords);
               }
             },
             { 
@@ -68,14 +75,18 @@ export default function App () {
         "Already saved!", "", [
           { 
             text: "Locate",
-            onPress: () => Alert.alert("TODO: Move camera to saved location"),
+            onPress: () => Alert.alert("TODO: Move camera to saved location")
           },
           {
-            text: "Update" // TODO: Update saved car location
+            text: "Update", // TODO: Update saved car location
+            onPress: async () => {
+              let newLoc = await Location.getCurrentPositionAsync({});
+              setCarLocation(newLoc.coords);
+            }
           },
           {
             text: "Forget", // TODO: Forget saved car location 
-            onPress: () => setCarLocSaved(false)
+            onPress: () => setCarLocation(null)
           },
         ]
       );
@@ -103,12 +114,12 @@ export default function App () {
                     longitudeDelta: 0.02,
                 }}
               >
-                {carLocSaved && (
+                {carLocation != null && (
                     <Marker
                         title = {'Your Car'}
                         coordinate = {{
-                            latitude: 36.81369124340123,
-                            longitude: -119.7455163161234,
+                            latitude: carLocation.latitude,
+                            longitude: carLocation.longitude,
                         }}
                     />
                 )}
