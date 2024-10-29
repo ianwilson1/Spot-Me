@@ -13,31 +13,8 @@ export default function App () {
   const mapRef = useRef(null);
 
   // States
-  const [carLocSaved, setCarLocSaved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [carLocation, setCarLocation] = useState(null);
-
-  // Request location permission 
-  /*
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      if (Platform.OS === 'android') {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('Location Permission Granted')
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-    };
-
-    requestLocationPermission();
-  }, []);
-  */
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -75,7 +52,16 @@ export default function App () {
         "Already saved!", "", [
           { 
             text: "Locate",
-            onPress: () => Alert.alert("TODO: Move camera to saved location")
+            onPress: () => {
+              if (mapRef.current) {
+                mapRef.current.animateToRegion({ // Center and zoom in on car's location
+                    latitude: carLocation.latitude,
+                    longitude: carLocation.longitude,
+                    latitudeDelta: 0.003,
+                    longitudeDelta: 0.003,
+                }, 1000);
+              }
+            }
           },
           {
             text: "Update", // TODO: Update saved car location
@@ -85,7 +71,7 @@ export default function App () {
             }
           },
           {
-            text: "Forget", // TODO: Forget saved car location 
+            text: "Forget",
             onPress: () => setCarLocation(null)
           },
         ]
