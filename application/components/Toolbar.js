@@ -6,6 +6,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Toolbar = ({realignMap, saveLocation, navigation}) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const goToAccount = () => {
     if (!isLoggedIn) {
