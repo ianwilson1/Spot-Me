@@ -1,48 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View, Text, Platform  } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import {LoginScreen, RegisterScreen} from './Accounts';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-
-const Toolbar = ({realignMap, navigation}) => {
-  const [carLocSaved, setCarLocSaved] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const saveLocation = () => {
-    if (!carLocSaved) {
-      Alert.alert(
-        "Save car location?", "", [
-          { 
-            text: "Yes",
-            onPress: () => { // IMPLEMENT CAR SAVE FUNCTION AND CALL HERE
-              setCarLocSaved(true); 
-              Alert.alert("TODO: Save user's current position");
-            }
-          },
-          { 
-            text: "Cancel" 
-          }
-        ]
-      );
-    } else {
-      Alert.alert(
-        "Car location saved.", "", [
-          { 
-            text: "View",
-            onPress: () => Alert.alert("TODO: Move camera to saved location")
-          },
-          {
-            text: "Forget" // TODO: Forget saved car location 
-          },
-          {
-            text: "Cancel"
-          }
-        ]
-      );
-    }
-  };
+const Toolbar = ({realignMap, saveLocation, navigation}) => {
 
   const goToAccount = () => {
     if (!isLoggedIn) {
