@@ -13,8 +13,20 @@ export default function App () {
   const mapRef = useRef(null);
 
   // States
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [carLocation, setCarLocation] = useState(null);
+
+  this.state = { 
+    mapRegion: {
+      latitude: 36.81369124340123,
+      longitude: -119.7455163161234,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
+    },
+    markerCoordinate: {
+      latitude: null,
+      longitude: null,
+     }
+ }
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -36,7 +48,7 @@ export default function App () {
           "Save car location?", "", [
             { 
               text: "Yes",
-              onPress: async () => { // IMPLEMENT CAR SAVE FUNCTION AND CALL HERE
+              onPress: async () => {
                 let carLoc = await Location.getCurrentPositionAsync({});
                 setCarLocation(carLoc.coords);
               }
