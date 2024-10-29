@@ -29,7 +29,7 @@ export default function App () {
 
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
+          Alert.alert('Location permission required to use this feature.');
           return;
         }
         Alert.alert(
@@ -103,6 +103,7 @@ export default function App () {
                 {carLocation != null && (
                     <Marker
                         title = {'Your Car'}
+                        pinColor={'navy'}
                         coordinate = {{
                             latitude: carLocation.latitude,
                             longitude: carLocation.longitude,
