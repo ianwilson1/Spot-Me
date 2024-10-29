@@ -34,11 +34,7 @@ const Toolbar = ({realignMap, navigation}) => {
             onPress: () => Alert.alert("TODO: Move camera to saved location")
           },
           {
-            text: "Forget",
-            onPress: () => { 
-              setCarLocSaved(false);
-              Alert.alert("Car location deleted.")
-            }
+            text: "Forget" // TODO: Forget saved car location 
           },
           {
             text: "Cancel"
@@ -50,7 +46,15 @@ const Toolbar = ({realignMap, navigation}) => {
 
   const goToAccount = () => {
     if (!isLoggedIn) {
-      navigation.navigate('Login');
+      Alert.alert(
+        "",
+        "You are currently not logged in.",
+        [
+          {text: "Log In", onPress: () => navigation.navigate('Login')},
+          {text: "Register", onPress: () => navigation.navigate('Register')},
+          {text: "Cancel", style: "Cancel"}
+        ]
+      )
     } else {
       Alert.alert(
         "Logged In",
@@ -64,7 +68,7 @@ const Toolbar = ({realignMap, navigation}) => {
   };
 
   const refreshData = () => {
-    Alert.alert("Data refreshed.");
+    Alert.alert("TODO: Implement refresh following database implementation.");
   };
     return (
       <View style={styles.toolbar}>

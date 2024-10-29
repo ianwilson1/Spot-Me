@@ -34,7 +34,7 @@ export const LoginScreen = ({navigation}) => {
             <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername}/>
             <TextInput style={styles.input} placeholder="Password" value={password} secureTextEntry onChangeText={setPassword}/>
             <Button title="Login" onPress={handleLogin}/>
-            <Button title="Register" onPress={() => navigation.navigate('Register')}/>
+            <Button title="Register" onPress={RegisterScreen.handleRegister}/>
         </View>
     )
 }
@@ -61,7 +61,7 @@ export const RegisterScreen = ({navigation}) => {
             <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername}/>
             <TextInput style={styles.input} placeholder="Password" value={password} secureTextEntry onChangeText={setPassword}/>
             <Button title="Register" onPress={handleRegister}/>
-            <Button title="Go to login" onPress={(navigation.navigate('Login'))}/>
+            <Button title="Go to login" onPress={LoginScreen.handleLogin}/>
         </View>
     );
 };
