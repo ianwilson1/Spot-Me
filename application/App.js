@@ -13,7 +13,6 @@ export default function App () {
   const mapRef = useRef(null);
 
   // States
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [carLocation, setCarLocation] = useState(null);
 
   // Re-orient map to north (compass button)
