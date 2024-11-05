@@ -57,4 +57,4 @@ while True:
     print(f"[OUTBOUND] {msg}")
     send(msg)
 
-    time.sleep(0.001)
+    time.sleep(3)
