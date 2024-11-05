@@ -31,6 +31,7 @@ def UpdateSpot(id, status):
 
     # TODO: Implement database interaction
 
+
 def HandleOperation(rcvdJson):
     if rcvdJson["op"] == "UpdateSpot":
         id = rcvdJson["id"]
