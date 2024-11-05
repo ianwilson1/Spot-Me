@@ -116,8 +116,8 @@ def InitDB():
     lots = [] 
     lot = {
         "lot_id": "P_example",
-        "spaces": [{"space_id": j + 1, "status": 0} for j in range(10)],
-        "isHandicap" : 0
+        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(10)],
+        
     }
     lots.append(lot)
     SPOTS_COL.insert_many(lots)
