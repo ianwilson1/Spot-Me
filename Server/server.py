@@ -5,6 +5,7 @@
 #   - UpdatePass: update a user's password
 #   - UpdatePermit: update a user's list of permits
 
+import bcrypt
 import socket
 import threading
 import json
@@ -27,6 +28,11 @@ SPOTS_COL = DB['spots']
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
+def hash_password(password): # Password security
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password
+
 def UpdateSpot(id, status):
     print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id}
@@ -39,11 +45,13 @@ def CreateAccount(name, passwd):
 
     # Only make a new account if the username is unique
     if (USERS_COL.find_one({"name": name})):
-        return
+        return False
+    
+    hashed_password = hash_password(passwd)
     
     user = {
         "name": name,
-        "pass": passwd
+        "pass": hashed_password
     }
 
     USERS_COL.insert_one(user)
@@ -51,7 +59,12 @@ def CreateAccount(name, passwd):
 
 def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
-    filter = {"pass": passwd}
+
+
+    if (USERS_COL.find_one({"name": newName})):
+        return False
+    
+    filter = {"name": name}
     update = {"$set": {"name": newName}}
 
     USERS_COL.update_one(filter, update)
