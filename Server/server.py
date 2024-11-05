@@ -28,8 +28,27 @@ server.bind(ADDR)
 
 def UpdateSpot(id, status):
     print(f"[OPERATION] UpdateSpot({id},{status})")
-
+    #
     # TODO: Implement database interaction
+    #
+
+def CreateAccount(name, passwd):
+    print(f"[OPERATION] CreateAccount({name},{passwd})")
+    #
+    # TODO: Implement database interaction
+    #
+
+def UpdateName(name, passwd, newName):
+    print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
+    #
+    # TODO: Implement database interaction
+    #
+
+def UpdatePass(name, passwd, newPass):
+    print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
+    #
+    # TODO: Implement database interaction
+    #
 
 
 def HandleOperation(rcvdJson):
@@ -37,6 +56,23 @@ def HandleOperation(rcvdJson):
         id = rcvdJson["id"]
         status = rcvdJson["status"]
         UpdateSpot(id, status)
+
+    elif rcvdJson["op"] == "CreateAccount":
+        name = rcvdJson["name"]
+        passwd = rcvdJson["passwd"]
+        CreateAccount(name, passwd)
+
+    elif rcvdJson["op"] == "UpdateName":
+        name = rcvdJson["name"]
+        passwd = rcvdJson["passwd"]
+        newName = rcvdJson["newName"]
+        UpdateName(name, passwd, newName)
+        
+    elif rcvdJson["op"] == "UpdatePass":
+        name = rcvdJson["name"]
+        passwd = rcvdJson["passwd"]
+        newPass = rcvdJson["newPass"]
+        CreateAccount(name, passwd, newPass)
 
     # TODO: Create branches for the rest of the operations
 
