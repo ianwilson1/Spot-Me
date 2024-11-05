@@ -18,9 +18,10 @@ ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
-#DB_CLIENT = pymongo.MongoClient('localhost', 27017)
-#DATABASE = DB_CLIENT['']
-#COLLECTION = DATABASE['']
+DB_CLIENT = pymongo.MongoClient('localhost', 27017)
+DB = DB_CLIENT['SpotMeDB']
+USERS_COL = DB['userData']
+SPOTS_COL = DB['spots']
 ####################################################
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,27 +29,36 @@ server.bind(ADDR)
 
 def UpdateSpot(id, status):
     print(f"[OPERATION] UpdateSpot({id},{status})")
-    #
-    # TODO: Implement database interaction
-    #
+    filter = {"spaces.space_id": id}
+    update = {"$set": {"spaces.$.status": status}}
+    
+    SPOTS_COL.update_one(filter, update)
 
 def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")
-    #
-    # TODO: Implement database interaction
-    #
+    user = {
+        "name": name,
+        "pass": passwd
+    }
+
+    USERS_COL.insert_one(user)
+
 
 def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
-    #
-    # TODO: Implement database interaction
-    #
+    filter = {"pass": passwd}
+    update = {"$set": {"name": newName}}
+
+    USERS_COL.update_one(filter, update)
+
+
 
 def UpdatePass(name, passwd, newPass):
     print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
-    #
-    # TODO: Implement database interaction
-    #
+    filter = {"pass": passwd}
+    update = {"$set": {"pass": newPass}}
+
+    USERS_COL.update_one(filter, update)
 
 
 def HandleOperation(rcvdJson):
@@ -97,6 +107,20 @@ def HandleClient(conn, addr):
 
     conn.close()
 
+def InitDB():
+    ### TODO: Make sure to change later to implement as many spots and lots as needed
+    ## Example lot for testing with 10 lots
+    if (SPOTS_COL.count_documents({}) > 0):
+        return
+    
+    lots = [] 
+    lot = {
+        "lot_id": "P_example",
+        "spaces": [{"space_id": j + 1, "status": "available"} for j in range(10)]  
+    }
+    lots.append(lot)
+    SPOTS_COL.insert_many(lots)
+
 def Start():
     server.listen()
     print(f"[LISTENING] Listening on {SERVER}")
@@ -109,4 +133,5 @@ def Start():
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 print("[STARTING]")
+InitDB()
 Start()
