@@ -36,6 +36,11 @@ def UpdateSpot(id, status):
 
 def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")
+
+    # Only make a new account if the username is unique
+    if (USERS_COL.find_one({"name": name})):
+        return
+    
     user = {
         "name": name,
         "pass": passwd
