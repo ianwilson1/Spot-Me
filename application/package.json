@@ -15,11 +15,12 @@
     "@react-navigation/stack": "^6.4.1",
     "async-storage": "^0.1.0",
     "expo": "~51.0.28",
+    "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
+    "mongodb": "^6.10.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
-    "react-native-maps": "^1.18.2",
-    "expo-location": "~17.0.1"
+    "react-native-maps": "^1.18.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

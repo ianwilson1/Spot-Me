@@ -15,19 +15,6 @@ export default function App () {
   // States
   const [carLocation, setCarLocation] = useState(null);
 
-  this.state = { 
-    mapRegion: {
-      latitude: 36.81369124340123,
-      longitude: -119.7455163161234,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02,
-    },
-    markerCoordinate: {
-      latitude: null,
-      longitude: null,
-     }
- }
-
   // Re-orient map to north (compass button)
   const realignMap = () => {
     if (mapRef.current) {
@@ -50,6 +37,7 @@ export default function App () {
               text: "Yes",
               onPress: async () => {
                 let carLoc = await Location.getCurrentPositionAsync({});
+                            
                 setCarLocation(carLoc.coords);
               }
             },
