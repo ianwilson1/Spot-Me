@@ -6,7 +6,7 @@ import {LoginScreen, RegisterScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
-import io from 'socket.io-client'
+
 
 
 /////////////////////////////////////////////// Server Connection Setup
@@ -96,6 +96,7 @@ export default function App () {
       "name": name,
       "passwd": passwd
     }
+
     socket.emit('message', 'Hello from React Native!');
   }
 
