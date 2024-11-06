@@ -37,19 +37,19 @@ const Toolbar = ({realignMap, saveLocation, navigation}) => {
     return (
       <View style={styles.toolbar}>
         <TouchableOpacity onPress={realignMap} style={styles.iconContainer}>
-          <Ionicons name="compass" size={32} color="black" />
+          <Ionicons name="compass" size={32} color="white" />
           <Text style={styles.iconLabel}>North</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={saveLocation} style={styles.iconContainer}>
-          <MaterialIcons name="directions-car" size={32} color="black" />
+          <MaterialIcons name="directions-car" size={32} color="white" />
           <Text style={styles.iconLabel}>My Car</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={goToAccount} style={styles.iconContainer}>
-          <Ionicons name="person" size={32} color="black" />
+          <Ionicons name="person" size={32} color="white" />
           <Text style={styles.iconLabel}>My Account</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={refreshData} style={styles.iconContainer}>
-          <Ionicons name="refresh-circle" size={32} color="black" />
+          <Ionicons name="refresh-circle" size={32} color="white" />
           <Text style={styles.iconLabel}>Refresh</Text>
         </TouchableOpacity>
       </View>
@@ -68,23 +68,25 @@ const Toolbar = ({realignMap, saveLocation, navigation}) => {
       marginBottom: 20,
     },
     toolbar: {
-      flexDirection: 'column',
-      alignItems: 'flex-end',
+      flexDirection: 'row',
+      alignItems: 'center',
       position: 'absolute',
-      top: 60,
-      right: 25,
-      height: 220,
-      justifyContent: 'space-between',
+      width: '100%',
+      bottom: 0,
+      height: 90,
+      justifyContent: 'space-around',
+      paddingBottom: 30,
+      backgroundColor: 'darkblue',
     },
     iconContainer: {
       alignItems: 'center',
-      justifyContent: 'center',
-      width: 60,
+      paddingHorizontal: '20',
     },
     iconLabel: {
       marginTop: 3,
       fontSize: 12,
       textAlign: 'center',
+      color: 'white',
     },
   });
 
