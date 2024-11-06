@@ -154,4 +154,6 @@ def Start():
 print("[STARTING]")
 InitDB()
 CreateAccount("Ian", "urMom123")
+CreateAccount("Adrian", "goodPassword")
+CreateAccount("xX360NoScoperXx720", "mySocialSecurityNumber")
 Start()
