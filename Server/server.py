@@ -33,6 +33,21 @@ def hash_password(password): # Password security
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
+def logIn(name, passwd):
+    print(f"[OPERATION] logIn({name},{passwd})")
+    user = USERS_COL.find_one({"name": name})
+    
+    if (user):
+        if bcrypt.checkpw(passwd.encode('utf-8'), user["pass"]):
+            print("Login successful!")
+            return True
+        else:
+            print("Login failed.")
+            return False
+    else:
+        print("User not found.")
+        return False
+    
 def UpdateSpot(id, status):
     print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id}
@@ -156,4 +171,5 @@ InitDB()
 CreateAccount("Ian", "urMom123")
 CreateAccount("Adrian", "goodPassword")
 CreateAccount("xX360NoScoperXx720", "mySocialSecurityNumber")
+logIn("xX360NoScoperXx720", "mySocialSecurityNumber")
 Start()
