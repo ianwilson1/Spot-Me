@@ -26,6 +26,19 @@ def hash_password(password): # Password security
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
+async def congestionCalc(id):
+    lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
+    print(lot)
+
+    #lot_length = lot.spaces.len()
+    #print(lot_length)
+
+    #for spots in lot.spaces:
+    #    if spots.status == 1 or spots.status == 2:
+    #       sum = sum + 1
+
+    SPOTS_COL.lot.update_one()
+
 async def Login(name, passwd):
     print(f"[OPERATION] logIn({name},{passwd})")
     user = USERS_COL.find_one({"name": name})
@@ -48,6 +61,7 @@ async def UpdateSpot(id, status):
     update = {"$set": {"spaces.$.status": status}}
     
     SPOTS_COL.update_one(filter, update)
+    await congestionCalc(id)
 
 async def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")
@@ -140,8 +154,10 @@ async def InitDB():
     
     lots = [] 
     lot = {
-        "lot_id": "P6",
-        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(10)], 
+        "lot_id": "P_example",
+        "permit_required": 0,
+        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(10)],
+        "congestion_percent": 0
     }
     
     lots.append(lot)
@@ -152,6 +168,7 @@ async def Start():
     async with websockets.serve(HandleMsg, '0.0.0.0', PORT) as server:
         print(f"[LISTENING] Server listening on port {PORT}")
         await server.serve_forever()
+
 
 print("[STARTING]")
 asyncio.run(Start())
