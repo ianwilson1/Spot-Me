@@ -155,6 +155,7 @@ def InitDB():
     lots.append(lot)
     SPOTS_COL.insert_many(lots)
 
+
 def Start():
     server.listen()
     print(f"[LISTENING] Listening on {SERVER}")
@@ -172,4 +173,5 @@ CreateAccount("Ian", "urMom123")
 CreateAccount("Adrian", "goodPassword")
 CreateAccount("xX360NoScoperXx720", "mySocialSecurityNumber")
 logIn("xX360NoScoperXx720", "mySocialSecurityNumber")
+
 Start()
