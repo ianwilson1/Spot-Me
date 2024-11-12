@@ -26,16 +26,16 @@ def hash_password(password): # Password security
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
-async def congestionCalc(spot):
-    lot = SPOTS_COL.find_one({"spaces.space_id": spot})
+async def congestionCalc(id):
+    lot = SPOTS_COL.find_one({"spaces.$.space_id": id})
     print(lot)
 
-    lot_length = lot.spaces.len()
-    print(lot_length)
+    #lot_length = lot.spaces.len()
+    #print(lot_length)
 
-    for spots in lot.spaces:
-        if spots.status == 1 or spots.status == 2:
-            sum = sum + 1
+    #for spots in lot.spaces:
+    #    if spots.status == 1 or spots.status == 2:
+    #       sum = sum + 1
 
     SPOTS_COL.lot.update_one()
 
