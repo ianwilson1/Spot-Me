@@ -42,6 +42,7 @@ async def Login(name, passwd):
         return False
     
 async def UpdateSpot(id, status):
+
     print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id}
     update = {"$set": {"spaces.$.status": status}}
@@ -139,7 +140,7 @@ async def InitDB():
     
     lots = [] 
     lot = {
-        "lot_id": "P_example",
+        "lot_id": "P6",
         "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(10)], 
     }
     
