@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PermissionsAndroid, Platform, View, Alert, StyleSheet} from 'react-native';
+import { View, Alert, StyleSheet} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker } from 'react-native-maps';
 import {LoginScreen, RegisterScreen} from './components/Accounts.js';
@@ -7,25 +7,56 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 
-
-
-/////////////////////////////////////////////// Server Connection Setup
-
-const SERVER_IP = 'http://34.105.119.88:15024';
-const socket = io(SERVER_IP, {
-  transports: ['websocket'],
-});
-
-///////////////////////////////////////////////
-
 const Stack = createStackNavigator();
 
 export default function App () {
+  // Refs (for tracking objects between components)
   const mapRef = useRef(null);
+  const socketRef = useRef(null);
 
   // States
   const [carLocation, setCarLocation] = useState(null);
-  const [serverMsg, setServerMsg] = useState(null);
+  const [socket, setSocket] = useState(null);
+
+
+  // Establish connection to server
+  useEffect( () => {
+    const ConnectToServer = () => {
+      const client = new WebSocket('ws://34.105.119.88:15024')
+      setSocket(client);
+      socketRef.current = client;
+    };
+
+    ConnectToServer();
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    }
+  }, [])
+
+  // CALL THIS TO SEND MESSAGE TO THE SERVER!
+  // Returns the server response.
+  const sendMsg = (msg) => {
+    return new Promise((resolve, reject) => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(msg);
+      
+        socket.onmessage = (event) => {
+          resolve(event.data); 
+        }
+  
+        socket.onerror = (error) => {
+          reject('ERROR: ' + error);
+        }
+      }
+      else {
+        reject('ERROR: Could not connect to server!')
+      }
+    });
+  };
+
 
   // Re-orient map to north (compass button)
   const realignMap = () => {

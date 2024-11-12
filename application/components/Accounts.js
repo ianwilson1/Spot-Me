@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {View, TextInput, Button, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
+import React, { useState } from "react";
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
 import TcpSocket from "react-native-tcp-socket";
-
-
 
 export const LoginScreen = ({navigation}) => {
     const [username, setUsername] = useState('');
@@ -10,7 +8,7 @@ export const LoginScreen = ({navigation}) => {
 
     const handleLogin = () => {
         const client = TcpSocket.createConnection(
-            {port: 15024, host: "http://34.105.119.88:15024"},
+            {port: 15024, host: "34.105.119.88"},
             () => {
                 console.log("Connected to server");
 
