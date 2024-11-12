@@ -148,7 +148,7 @@ async def InitDB():
 
 async def Start():
     await InitDB()
-    async with websockets.serve(HandleMsg, 'localhost', PORT) as server:
+    async with websockets.serve(HandleMsg, '0.0.0.0', PORT) as server:
         print(f"[LISTENING] Server listening on port {PORT}")
         await server.serve_forever()
 
