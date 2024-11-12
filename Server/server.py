@@ -122,7 +122,7 @@ async def HandleOperation(websocket, rcvdJson):
 
     # TODO: Create branches for the rest of the operations
 
-async def HandleMessage(websocket, path):
+async def HandleMsg(websocket):
     async for msg in websocket:
         if msg == DISCONNECT_MESSAGE:
             break
@@ -148,9 +148,9 @@ async def InitDB():
 
 async def Start():
     await InitDB()
-    async with websockets.serve(HandleMessage, "0.0.0.0", PORT):
+    async with websockets.serve(HandleMsg, 'localhost', PORT) as server:
         print(f"[LISTENING] Server listening on port {PORT}")
-        await asyncio.Future() # Keeps the server alive without timeout.
+        await server.serve_forever()
 
 print("[STARTING]")
 asyncio.run(Start())

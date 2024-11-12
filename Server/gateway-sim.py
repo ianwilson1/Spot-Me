@@ -5,20 +5,21 @@ import websockets
 
 #################################################### Constants
 
-PORT = 15024                        # The port that the server is listening on (must be 15024)
-SERVER = 'ws://34.105.119.88'       # public address of server machine
+ADDR = 'ws://34.105.119.88:15024'   # Public address + port of server machine
 DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from the server
 
 MAX_SPOTS = 10                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
+
+# vvv For local testing only (comment out when testing on server)
+# ADDR = 'ws://localhost:15024'
 
 ####################################################
 
 async def Send(websocket, msg):
     await websocket.send(msg)
-    print(f"[OUTBOUND] {msg}")
 
 async def Start():
-    async with websockets.connect(f"{SERVER}:{PORT}") as websocket:
+    async with websockets.connect(ADDR) as websocket:
 
         # Summary of operation:
         #   - Pick a random spot from the list of spots by ID.
@@ -39,7 +40,7 @@ async def Start():
             
             msg = json.dumps(updSpotInfo)
             print(f"[OUTBOUND] {msg}")
-            await Send(msg)
+            await Send(websocket, msg)
 
             await asyncio.sleep(3)
 
