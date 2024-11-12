@@ -60,7 +60,7 @@ async def UpdateSpot(id, status):
     update = {"$set": {"spaces.$.status": status}}
     
     SPOTS_COL.update_one(filter, update)
-    await congestionCalc(id)
+    #await congestionCalc(id)
 
 async def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")
