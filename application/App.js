@@ -6,6 +6,17 @@ import {LoginScreen, RegisterScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
+import io from 'socket.io-client'
+
+
+/////////////////////////////////////////////// Server Connection Setup
+
+const SERVER_IP = 'http://34.105.119.88:15024';
+const socket = io(SERVER_IP, {
+  transports: ['websocket'],
+});
+
+///////////////////////////////////////////////
 
 const Stack = createStackNavigator();
 
@@ -14,6 +25,7 @@ export default function App () {
 
   // States
   const [carLocation, setCarLocation] = useState(null);
+  const [serverMsg, setServerMsg] = useState(null);
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -78,6 +90,15 @@ export default function App () {
       );
     }
   };
+
+  const createAccount = async (name, passwd) => {
+    let msg = {
+      "op":"CreateAccount",
+      "name": name,
+      "passwd": passwd
+    }
+    socket.emit('message', 'Hello from React Native!');
+  }
 
   return (
     <NavigationContainer>
