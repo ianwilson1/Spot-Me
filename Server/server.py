@@ -27,7 +27,7 @@ def hash_password(password): # Password security
     return hashed_password
 
 async def congestionCalc(id):
-    lot = await SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
+    lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
     print(lot)
 
     #lot_length = lot.spaces.len()
