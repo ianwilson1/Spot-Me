@@ -27,7 +27,7 @@ def hash_password(password): # Password security
     return hashed_password
 
 async def congestionCalc(id):
-    lot = SPOTS_COL.find_one({"spaces.$.space_id": id})
+    lot = await SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
     print(lot)
 
     #lot_length = lot.spaces.len()
@@ -60,7 +60,7 @@ async def UpdateSpot(id, status):
     update = {"$set": {"spaces.$.status": status}}
     
     SPOTS_COL.update_one(filter, update)
-    #await congestionCalc(id)
+    await congestionCalc(id)
 
 async def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")

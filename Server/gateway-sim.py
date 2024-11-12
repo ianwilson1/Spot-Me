@@ -11,7 +11,7 @@ DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from 
 MAX_SPOTS = 10                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
 
 # vvv For local testing only (comment out when testing on server)
-# ADDR = 'ws://localhost:15024'
+ADDR = 'ws://localhost:15024'
 
 ####################################################
 
