@@ -150,6 +150,7 @@ async def Start():
     await InitDB()
     async with websockets.serve(HandleMessage, "0.0.0.0", PORT):
         print(f"[LISTENING] Server listening on port {PORT}")
+        await asyncio.Future() # Keeps the server alive without timeout.
 
 print("[STARTING]")
 asyncio.run(Start())
