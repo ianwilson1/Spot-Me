@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PermissionsAndroid, Platform, View, Alert, StyleSheet} from 'react-native';
+import { View, Alert, StyleSheet} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker } from 'react-native-maps';
 import {LoginScreen, RegisterScreen} from './components/Accounts.js';
@@ -10,23 +10,53 @@ import * as Location from 'expo-location';
 const Stack = createStackNavigator();
 
 export default function App () {
+  // Refs (for tracking objects between components)
   const mapRef = useRef(null);
+  const socketRef = useRef(null);
 
   // States
   const [carLocation, setCarLocation] = useState(null);
+  const [socket, setSocket] = useState(null);
 
-  this.state = { 
-    mapRegion: {
-      latitude: 36.81369124340123,
-      longitude: -119.7455163161234,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02,
-    },
-    markerCoordinate: {
-      latitude: null,
-      longitude: null,
-     }
- }
+
+  // Establish connection to server
+  useEffect( () => {
+    const ConnectToServer = () => {
+      const client = new WebSocket('ws://34.105.119.88:15024')
+      setSocket(client);
+      socketRef.current = client;
+    };
+
+    ConnectToServer();
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    }
+  }, [])
+
+  // CALL THIS TO SEND MESSAGE TO THE SERVER!
+  // Returns the server response.
+  const sendMsg = (msg) => {
+    return new Promise((resolve, reject) => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(msg);
+      
+        socket.onmessage = (event) => {
+          resolve(event.data); 
+        }
+  
+        socket.onerror = (error) => {
+          reject('ERROR: ' + error);
+        }
+      }
+      else {
+        reject('ERROR: Could not connect to server!')
+      }
+    });
+  };
+
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -90,6 +120,16 @@ export default function App () {
       );
     }
   };
+
+  const createAccount = async (name, passwd) => {
+    let msg = {
+      "op":"CreateAccount",
+      "name": name,
+      "passwd": passwd
+    }
+
+    socket.emit('message', 'Hello from React Native!');
+  }
 
   return (
     <NavigationContainer>
