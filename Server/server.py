@@ -26,6 +26,18 @@ def hash_password(password): # Password security, will hash a given passed in pa
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
+def userAuthenticate(name, passwd):
+    user = USERS_COL.find_one({"name": name}) # Finds a user by their unique username
+
+    if (user): # Checks password for user
+        if bcrypt.checkpw(passwd.encode("utf-8"), user['password']):
+            return user # Return if both username and password check out
+        else:
+            print("Wrong password :(")
+    else:
+        print("User could not be found :(")
+
+
 async def congestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
@@ -82,22 +94,36 @@ async def CreateAccount(name, passwd):
 async def UpdateName(name, passwd, newName):                    # FIXME: does not check password!
     print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
 
-    if (USERS_COL.find_one({"name": newName})): # Ensures unique usernames
+    if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
         print("Error: user already exists.")
         return False
     
-    filter = {"name": name} # Find document with old name
-    update = {"$set": {"name": newName}} # Set new name
+    user = userAuthenticate(name, passwd) # Check user's name and password
 
-    USERS_COL.update_one(filter, update) # Update document
-    return True
+    if (user):
+        filter = {"name": name} # Find document with old name
+        update = {"$set": {"name": newName}} # Set new name
+        USERS_COL.update_one(filter, update) # Update document
+        print("New username is set!")
+        return True
+    else:
+        print("Error: could not verify user")
 
 async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
     print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
-    filter = {"pass": passwd}
-    update = {"$set": {"pass": newPass}}
+    
+    user = userAuthenticate(name, passwd) # Check user's name and password
 
-    USERS_COL.update_one(filter, update)
+    if (user):
+        filter = {"name": name} # Find document
+        update = {"$set": {"pass": newPass}} # Set new password
+        USERS_COL.update_one(filter, update) # Push update to that document
+        print("New password set!")
+        return True
+    else:
+        print("Error: could not verify")
+
+    
 
 async def HandleOperation(websocket, rcvdJson):
     if rcvdJson["op"] == "Login":
