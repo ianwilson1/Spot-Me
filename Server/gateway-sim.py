@@ -8,7 +8,7 @@ import websockets
 ADDR = 'ws://34.105.119.88:15024'   # Public address + port of server machine
 DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from the server
 
-MAX_SPOTS = 10                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
+MAX_SPOTS = 300                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
 
 # vvv For local testing only (comment out when testing on server)
 # ADDR = 'ws://localhost:15024'
@@ -27,7 +27,7 @@ async def Start():
         #     and a random state to change it to (0 = free, 1 = occupied, 2 = reserved)
         #   - Stringify this dictionary into a JSON string.
         #   - Send this JSON string to the server.
-        #   - Repeat every 3 seconds.
+        #   - Repeat every second.
 
         while True:
             spotID = random.randint(1, MAX_SPOTS)
@@ -42,6 +42,6 @@ async def Start():
             print(f"[OUTBOUND] {msg}")
             await Send(websocket, msg)
 
-            await asyncio.sleep(3)
+            await asyncio.sleep(1)
 
 asyncio.run(Start())
