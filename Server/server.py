@@ -189,9 +189,6 @@ async def InitDB():
 
 async def Start():
     await InitDB()
-    await CreateAccount("Ian", "Password")
-    await UpdateName("Ian", "Password", "NewName")
-    await UpdatePass("Ian", "Password", "NewPass")
     async with websockets.serve(HandleMsg, '0.0.0.0', PORT) as server:
         print(f"[LISTENING] Server listening on port {PORT}")
         await server.serve_forever()
