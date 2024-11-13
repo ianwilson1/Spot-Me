@@ -126,37 +126,45 @@ async def UpdatePass(name, passwd, newPass):                              # FIXM
     
 
 async def HandleOperation(websocket, rcvdJson):
-    if rcvdJson["op"] == "Login":
-        name = rcvdJson["name"]
-        passwd = rcvdJson["passwd"]
-        success = await Login(name, passwd)
-        await websocket.send(json.dumps({"success": success}))
+    try:
+        if rcvdJson["op"] == "Login":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            success = await Login(name, passwd)
+            await websocket.send(json.dumps({"success": success}))
 
-    elif rcvdJson["op"] == "UpdateSpot":
-        id = rcvdJson["id"]
-        status = rcvdJson["status"]
-        await UpdateSpot(id, status)
-        await websocket.send(json.dumps({"status": "updated"}))
+        elif rcvdJson["op"] == "UpdateSpot":
+            id = rcvdJson["id"]
+            status = rcvdJson["status"]
+            await UpdateSpot(id, status)
+            await websocket.send(json.dumps({"status": "updated"}))
 
-    elif rcvdJson["op"] == "CreateAccount":
-        name = rcvdJson["name"]
-        passwd = rcvdJson["passwd"]
-        success = await CreateAccount(name, passwd)
-        await websocket.send(json.dumps({"success": success}))
+        elif rcvdJson["op"] == "CreateAccount":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            success = await CreateAccount(name, passwd)
+            await websocket.send(json.dumps({"success": success}))
 
-    elif rcvdJson["op"] == "UpdateName":
-        name = rcvdJson["name"]
-        passwd = rcvdJson["passwd"]
-        newName = rcvdJson["newName"]
-        success = await UpdateName(name, passwd, newName)
-        await websocket.send(json.dumps({"success": success}))
-        
-    elif rcvdJson["op"] == "UpdatePass":
-        name = rcvdJson["name"]
-        passwd = rcvdJson["passwd"]
-        newPass = rcvdJson["newPass"]
-        success = await UpdatePass(name, passwd, newPass)
-        await websocket.send(json.dumps({"success": success}))
+        elif rcvdJson["op"] == "UpdateName":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            newName = rcvdJson["newName"]
+            success = await UpdateName(name, passwd, newName)
+            await websocket.send(json.dumps({"success": success}))
+            
+        elif rcvdJson["op"] == "UpdatePass":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            newPass = rcvdJson["newPass"]
+            success = await UpdatePass(name, passwd, newPass)
+            await websocket.send(json.dumps({"success": success}))
+            
+    except websockets.exceptions.ConnectionClosedError:
+        print("[ERROR] Connection closed while handling operation.")
+    except websockets.exceptions.ConnectionClosedOK:
+        print("[ERROR] Connection closed with OK status.")
+    except Exception as e:
+        print(f"[ERROR] Unexpected error: {e}")
 
 
     # TODO: Create branches for the rest of the operations
