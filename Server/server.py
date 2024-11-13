@@ -33,9 +33,9 @@ def userAuthenticate(name, passwd):
         if bcrypt.checkpw(passwd.encode("utf-8"), user['pass']):
             return user # Return if both username and password check out
         else:
-            print("Wrong password :(")
+            print("[ERROR] Wrong password :(")
     else:
-        print("User could not be found :(")
+        print("[ERROR] User could not be found :(")
 
 
 async def congestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
@@ -56,13 +56,13 @@ async def Login(name, passwd): # Function to return whether a login is successfu
     
     if (user):
         if bcrypt.checkpw(passwd.encode('utf-8'), user["pass"]):
-            print("Login successful!")
+            print("[SUCCESS] Login successful!")
             return True
         else:
-            print("Login failed.")
+            print("[ERROR] Login failed.")
             return False
     else: 
-        print("User not found.")
+        print("[ERROR] User not found.")
         return False
     
 async def UpdateSpot(id, status): # Function to update the parking status of a lot; 0 = empty, 1 = full, 2 = soft reserved
@@ -78,7 +78,7 @@ async def CreateAccount(name, passwd):
     print(f"[OPERATION] CreateAccount({name},{passwd})")
 
     if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
-        print("Error: user already exists.")
+        print("[ERROR] User already exists.")
         return False
     
     hashed_password = hash_password(passwd) # Create the hashed password
@@ -95,7 +95,7 @@ async def UpdateName(name, passwd, newName):                    # FIXME: does no
     print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
 
     if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
-        print("Error: user already exists.")
+        print("[ERROR] User already exists.")
         return False
     
     user = userAuthenticate(name, passwd) # Check user's name and password
@@ -107,7 +107,7 @@ async def UpdateName(name, passwd, newName):                    # FIXME: does no
         print("New username is set!")
         return True
     else:
-        print("Error: could not verify user")
+        print("[ERROR] could not verify user")
 
 async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
     print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
@@ -118,10 +118,10 @@ async def UpdatePass(name, passwd, newPass):                              # FIXM
         filter = {"name": name} # Find document
         update = {"$set": {"pass": newPass}} # Set new password
         USERS_COL.update_one(filter, update) # Push update to that document
-        print("New password set!")
+        print("[SUCCESS] New password set!")
         return True
     else:
-        print("Error: could not verify")
+        print("[ERROR] could not verify")
 
     
 
@@ -164,7 +164,7 @@ async def HandleOperation(websocket, rcvdJson):
 async def HandleMsg(websocket):
     async for msg in websocket:
         if msg == DISCONNECT_MESSAGE:
-            break
+            return
         
         rcvdJson = json.loads(msg)
         await HandleOperation(websocket, rcvdJson)
