@@ -93,7 +93,7 @@ async def UpdateName(name, passwd, newName):                    # FIXME: does no
     return True
 
 async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
-    print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
+    print(f"[OPERATION] UpdatePass({name},{passwd},{newPass})")
     filter = {"pass": passwd}
     update = {"$set": {"pass": newPass}}
 

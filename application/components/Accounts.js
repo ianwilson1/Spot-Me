@@ -6,42 +6,21 @@ export const LoginScreen = ({navigation}) => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        const client = TcpSocket.createConnection(
-            {port: 15024, host: "34.105.119.88"},
-            () => {
-                console.log("Connected to server");
+        let name = username;
+        let passwd = password;
 
-                const loginData = JSON.stringify({
-                    op: "logIn",
-                    name: username,
-                    passwd: password,
-                });
+        let msgObj = {
+            "op":"CreateAccount",
+            "name":name,
+            "passwd":passwd
+        }
 
-                const header = String(loginData.length).padStart(64, ' ');
-                client.write(header + loginData);
-            }
-        );
-
-        client.on("data", (data) => {
-            const response = JSON.parse(data.toString());
-            if(response.success){
-                Alert.alert("Login Successful!", "Welcome back!");
-                navigation.goBack();
-            }
-            else{
-                Alert.alert("Login Failed!", response.message || "Incorrect username or password.");
-            }
-            client.destroy();
-        });
-
-        client.on("error", (error) => {
-            console.error("Connection error:", error);
-            Alert.alert("Connection Failed!", "Could not connect to server.");
-        });
-
-        client.on("close", () => {
-            console.log("Connection closed");
-        });
+        if(sendMsg(JSON.stringify(msgObj))) {
+            Alert.alert("Login successful");
+        }
+        else {
+            Alert.alert("Login failed");
+        }
     };
 
     return (
@@ -50,19 +29,33 @@ export const LoginScreen = ({navigation}) => {
             <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername}/>
             <TextInput style={styles.input} placeholder="Password" value={password} secureTextEntry onChangeText={setPassword}/>
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
-                <Text>Login</Text>
+                <Text style={styles.text}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity title="Register" onPress={() => navigation.navigate('Register')}/>
         </View>
     )
 }
 
-export const RegisterScreen = ({navigation}) => {
+export const RegisterScreen = ({navigation, sendMsg}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleRegister = () => {
-        
+        let name = username;
+        let passwd = password;
+
+        let msgObj = {
+            "op":"CreateAccount",
+            "name":name,
+            "passwd":passwd
+        }
+
+        if(sendMsg(JSON.stringify(msgObj))) {
+            Alert.alert("Login successful");
+        }
+        else {
+            Alert.alert("Login failed");
+        }
     };
 
     return (
@@ -70,15 +63,18 @@ export const RegisterScreen = ({navigation}) => {
             <Text style={styles.title}>Register</Text>
             <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername}/>
             <TextInput style={styles.input} placeholder="Password" value={password} secureTextEntry onChangeText={setPassword}/>
-            <TouchableOpacity title="Register" onPress={handleRegister}/>
+            <TouchableOpacity title="Register" style={styles.buttons} onPress={handleRegister}>
+            <Text style={styles.text}>Register</Text>
+            </TouchableOpacity>
             <TouchableOpacity title="Go to login" onPress={() => navigation.navigate('Login')}/>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {flex: 1, justifyContent: 'center', padding: 20, backgroundColor: "red"},
+    container: {flex: 1, justifyContent: 'center', padding: 20},
     title: {fontSize: 24, marginBottom: 20, textAlign: 'center'},
     input: {height: 40, borderColor: 'black', borderWidth: 1, marginBottom: 12, paddingLeft: 8, borderRadius: 5},
-    buttons: {height: 20, alignItems: 'center', backgroundColor: 'blue', padding: 2},
+    buttons: {height: 25, alignItems: 'center', backgroundColor: 'darkblue', padding: 2},
+    text: {color: 'white'}
 });
