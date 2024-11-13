@@ -27,17 +27,18 @@ def hash_password(password): # Password security
     return hashed_password
 
 async def congestionCalc(id):
+    sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
     print(lot)
 
-    #lot_length = lot.spaces.len()
-    #print(lot_length)
+    lot_length = len(lot['spaces'])
+    print(lot_length)
 
-    #for spots in lot.spaces:
-    #    if spots.status == 1 or spots.status == 2:
-    #       sum = sum + 1
+    for spots in lot['spaces']:
+        if spots['status'] == 1 or spots['status'] == 2:
+           sum = sum + 1
 
-    SPOTS_COL.lot.update_one()
+    SPOTS_COL.update_one({"spaces": {"$elemMatch": {"space_id": id}}}, {"$set": {"congestion_percent": sum / lot_length }})
 
 async def Login(name, passwd):
     print(f"[OPERATION] logIn({name},{passwd})")
