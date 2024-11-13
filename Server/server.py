@@ -30,7 +30,7 @@ def userAuthenticate(name, passwd):
     user = USERS_COL.find_one({"name": name}) # Finds a user by their unique username
 
     if (user): # Checks password for user
-        if bcrypt.checkpw(passwd.encode("utf-8"), user['password']):
+        if bcrypt.checkpw(passwd.encode("utf-8"), user['pass']):
             return user # Return if both username and password check out
         else:
             print("Wrong password :(")
