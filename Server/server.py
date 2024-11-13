@@ -29,10 +29,8 @@ def hash_password(password): # Password security
 async def congestionCalc(id):
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
-    print(lot)
 
     lot_length = len(lot['spaces'])
-    print(lot_length)
 
     for spots in lot['spaces']:
         if spots['status'] == 1 or spots['status'] == 2:
@@ -157,7 +155,7 @@ async def InitDB():
     lot = {
         "lot_id": "P_example",
         "permit_required": 0,
-        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(10)],
+        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(300)],
         "congestion_percent": 0
     }
     
