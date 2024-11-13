@@ -158,11 +158,11 @@ async def HandleOperation(websocket, rcvdJson):
             newPass = rcvdJson["newPass"]
             success = await UpdatePass(name, passwd, newPass)
             await websocket.send(json.dumps({"success": success}))
-            
+
     except websockets.exceptions.ConnectionClosedError:
         print("[ERROR] Connection closed while handling operation.")
     except websockets.exceptions.ConnectionClosedOK:
-        print("[ERROR] Connection closed with OK status.")
+        print("[CLOSED] Connection closed with OK status.")
     except Exception as e:
         print(f"[ERROR] Unexpected error: {e}")
 
