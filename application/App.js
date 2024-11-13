@@ -159,8 +159,17 @@ export default function App () {
             </View>
           )}
         </Stack.Screen>
-        <Stack.Screen name="Login" component={LoginScreen}/>
-        <Stack.Screen name="Register" component={RegisterScreen}/>
+        <Stack.Screen
+          name="Register"
+          children={(screenProps) => (
+            <RegisterScreen {...screenProps} sendMsg={sendMsg} />
+          )}
+        />
+        <Stack.Screen
+          name="Login"
+          children={(screenProps) => (
+            <LoginScreen {...screenProps} sendMsg={sendMsg}/>
+          )}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
