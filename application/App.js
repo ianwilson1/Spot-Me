@@ -16,14 +16,12 @@ export default function App () {
 
   // States
   const [carLocation, setCarLocation] = useState(null);
-  const [socket, setSocket] = useState(null);
 
 
   // Establish connection to server
   useEffect( () => {
     const ConnectToServer = () => {
       const client = new WebSocket('ws://34.105.119.88:15024')
-      setSocket(client);
       socketRef.current = client;
     };
 
@@ -39,6 +37,8 @@ export default function App () {
   // CALL THIS TO SEND MESSAGE TO THE SERVER!
   // Returns the server response.
   const sendMsg = (msg) => {
+    const socket = socketRef.current;
+
     return new Promise((resolve, reject) => {
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(msg);
@@ -121,16 +121,6 @@ export default function App () {
       );
     }
   };
-
-  const createAccount = async (name, passwd) => {
-    let msg = {
-      "op":"CreateAccount",
-      "name": name,
-      "passwd": passwd
-    }
-
-    socket.emit('message', 'Hello from React Native!');
-  }
 
   return (
     <NavigationContainer>
