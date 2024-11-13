@@ -21,26 +21,26 @@ USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
 ####################################################
 
-def hash_password(password): # Password security
+def hash_password(password): # Password security, will hash a given passed in password
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
-async def congestionCalc(id):
+async def congestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
 
-    lot_length = len(lot['spaces'])
+    lot_length = len(lot['spaces']) # Total parking spaces in lot
 
-    for spots in lot['spaces']:
+    for spots in lot['spaces']: # Counts how many lots are occupied at time of call
         if spots['status'] == 1 or spots['status'] == 2:
            sum = sum + 1
 
-    SPOTS_COL.update_one({"spaces": {"$elemMatch": {"space_id": id}}}, {"$set": {"congestion_percent": sum / lot_length }})
+    SPOTS_COL.update_one({"spaces": {"$elemMatch": {"space_id": id}}}, {"$set": {"congestion_percent": sum / lot_length }}) # Update congestion field with sum of filled lots by total spaces
 
-async def Login(name, passwd):
+async def Login(name, passwd): # Function to return whether a login is successful or not
     print(f"[OPERATION] logIn({name},{passwd})")
-    user = USERS_COL.find_one({"name": name})
+    user = USERS_COL.find_one({"name": name}) # Find a user by given name; names are unique
     
     if (user):
         if bcrypt.checkpw(passwd.encode('utf-8'), user["pass"]):
@@ -49,51 +49,50 @@ async def Login(name, passwd):
         else:
             print("Login failed.")
             return False
-    else:
+    else: 
         print("User not found.")
         return False
     
-async def UpdateSpot(id, status):
+async def UpdateSpot(id, status): # Function to update the parking status of a lot; 0 = empty, 1 = full, 2 = soft reserved
 
     print(f"[OPERATION] UpdateSpot({id},{status})")
-    filter = {"spaces.space_id": id}
-    update = {"$set": {"spaces.$.status": status}}
+    filter = {"spaces.space_id": id} # Find spot
+    update = {"$set": {"spaces.$.status": status}} # Set new status
     
-    SPOTS_COL.update_one(filter, update)
-    await congestionCalc(id)
+    SPOTS_COL.update_one(filter, update) # Update document
+    await congestionCalc(id) # Update congestion level of lot
 
-async def CreateAccount(name, passwd):
+async def CreateAccount(name, passwd): 
     print(f"[OPERATION] CreateAccount({name},{passwd})")
 
-    # Only make a new account if the username is unique
-    if (USERS_COL.find_one({"name": name})):
+    if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
         print("Error: user already exists.")
         return False
     
-    hashed_password = hash_password(passwd)
+    hashed_password = hash_password(passwd) # Create the hashed password
     
-    user = {
+    user = { # Set document
         "name": name,
         "pass": hashed_password
     }
 
-    USERS_COL.insert_one(user)
-    return True
+    USERS_COL.insert_one(user) # Insert document
+    return True 
 
 async def UpdateName(name, passwd, newName):                    # FIXME: does not check password!
     print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
 
-    if (USERS_COL.find_one({"name": newName})):
-        print("Error: name in use")
+    if (USERS_COL.find_one({"name": newName})): # Ensures unique usernames
+        print("Error: user already exists.")
         return False
     
-    filter = {"name": name}
-    update = {"$set": {"name": newName}}
+    filter = {"name": name} # Find document with old name
+    update = {"$set": {"name": newName}} # Set new name
 
-    USERS_COL.update_one(filter, update)
+    USERS_COL.update_one(filter, update) # Update document
     return True
 
-async def UpdatePass(name, passwd, newPass):                              # FIXME: same thing
+async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
     print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
     filter = {"pass": passwd}
     update = {"$set": {"pass": newPass}}
@@ -151,16 +150,16 @@ async def InitDB():
     if (SPOTS_COL.count_documents({}) > 0):
         return
     
-    lots = [] 
-    lot = {
+    lots = [] # Set array
+    lot = { # Example lot
         "lot_id": "P_example",
         "permit_required": 0,
         "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(300)],
         "congestion_percent": 0
     }
     
-    lots.append(lot)
-    SPOTS_COL.insert_many(lots)
+    lots.append(lot) # Just one append for now, incorporate loop for # of lots
+    SPOTS_COL.insert_many(lots) # Insert array of lots
 
 async def Start():
     await InitDB()
