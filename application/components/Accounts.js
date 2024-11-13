@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
-import TcpSocket from "react-native-tcp-socket";
 
 export const LoginScreen = ({navigation}) => {
     const [username, setUsername] = useState('');
@@ -63,41 +62,7 @@ export const RegisterScreen = ({navigation}) => {
     const [password, setPassword] = useState('');
 
     const handleRegister = () => {
-        const client = TcpSocket.createConnection(
-            {port: 15024, host: "http://34.105.119.88:15024"},
-            () => {
-                console.log("Connected to server");
-
-                const registerData = JSON.stringify({
-                    op: "CreateAccount",
-                    name: username,
-                    passwd: password,
-                });
-                const header = String(registerData.length).padStart(64,'');
-                client.write(header + registerData);
-            }
-        );
-
-        client.on("data", (data) => {
-            const response = JSON.parse(data.toString());
-            if(response.success){
-                Alert.alert("Registration Successful!", response.message);
-                navigation.goBack();
-            }
-            else{
-                Alert.alert("Registration Failed!", response.message);
-            }
-            client.destroy();
-        });
-
-        client.on("error", (error) => {
-            console.error("Connection error:", error);
-            Alert.alert("Connection Failed!", "Could not connect to server.");
-        });
-
-        client.on("close", () => {
-            console.log("Connection closed");
-        });
+        
     };
 
     return (
