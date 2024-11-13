@@ -110,15 +110,9 @@ async def UpdateName(name, passwd, newName):                    # FIXME: does no
         print("Error: could not verify user")
 
 async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
-<<<<<<< HEAD
-    print(f"[OPERATION] UpdatePass({name},{passwd},{newPass})")
-    filter = {"pass": passwd}
-    update = {"$set": {"pass": newPass}}
-=======
     print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
     
     user = userAuthenticate(name, passwd) # Check user's name and password
->>>>>>> 4e5cb350fb5362dbdffafa0151a42fff29d9d8b5
 
     if (user):
         filter = {"name": name} # Find document
