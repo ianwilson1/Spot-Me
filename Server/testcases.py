@@ -19,7 +19,10 @@ async def Send(websocket, msg):
 # Make sure to clear the collection before testing the next test case!
 async def Start():
     async with websockets.connect(ADDR) as websocket:
-
+        await Send(websocket, json.dumps({"op":"RefreshLot"}))
+        message = await websocket.recv;
+        print(message)
+'''
     # Test Case 0 - Create an account with a duplicate name
         await Send(websocket, json.dumps({"op":"CreateAccount", "name":"Ian", "passwd":"Password"}))
         await Send(websocket, json.dumps({"op":"CreateAccount", "name":"Ian", "passwd":"Password123"}))
@@ -30,7 +33,6 @@ async def Start():
         await Send(websocket, json.dumps({"op":"UpdateName", "name":"Ian", "passwd":"Password", "newName":"NewName"}))
         await Send(websocket, json.dumps({"op":"UpdatePass", "name":"NewName", "passwd":"Password"," newPass":"NewPass"}))
 
-'''
     # Test Case 2 - New name is a duplicate
         await Send(websocket, json.dumps({"op":"CreateAccount", "name":"Ian", "passwd":"Password"}))
         await Send(websocket, json.dumps({"op":"UpdateName", "name":"Ian", "passwd":"Password", "newName":"Ian"}))
