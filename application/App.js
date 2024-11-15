@@ -66,8 +66,6 @@ export default function App () {
 
   // Save user's parked car location (aka create persistent marker of current location)
   const saveLocation = async () => {
-    if (carLocation == null) {
-
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
           Alert.alert('Location permission required to use this feature.');
