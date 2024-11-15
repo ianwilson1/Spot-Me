@@ -6,6 +6,7 @@ import {LoginScreen, RegisterScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
+import RNFS from 'react-native-fs';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ export default function App () {
 
   // Save user's parked car location (aka create persistent marker of current location)
   const saveLocation = async () => {
+    if(carLocation == null) {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
           Alert.alert('Location permission required to use this feature.');
@@ -78,6 +80,11 @@ export default function App () {
                 let carLoc = await Location.getCurrentPositionAsync({});
                             
                 setCarLocation(carLoc.coords);
+
+                const locJSON = JSON.stringify(carLoc);
+                const file = RNFS.DocumentDirectoryPath + "/cache/carloc.json";
+
+                RNFS.writeFile(file, locJSON, 'utf8')
               }
             },
             { 
