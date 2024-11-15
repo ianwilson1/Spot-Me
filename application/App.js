@@ -17,7 +17,6 @@ export default function App () {
   // States
   const [carLocation, setCarLocation] = useState(null);
 
-
   // Establish connection to server
   useEffect( () => {
     const ConnectToServer = () => {
@@ -125,7 +124,8 @@ export default function App () {
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
         const data = await sendMsg(msg);
-        console.log('Received response:', data);
+
+
       } 
       catch (error) {
         console.error('Error sending message:', error);
