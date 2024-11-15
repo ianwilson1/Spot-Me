@@ -5,7 +5,7 @@ import {LoginScreen, RegisterScreen} from './Accounts';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-const Toolbar = ({realignMap, saveLocation, navigation}) => {
+const Toolbar = ({realignMap, saveLocation, refreshData, navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const goToAccount = () => {
@@ -31,9 +31,6 @@ const Toolbar = ({realignMap, saveLocation, navigation}) => {
     }
   };
 
-  const refreshData = () => {
-    Alert.alert("TODO: Implement refresh following database implementation.");
-  };
     return (
       <View style={styles.toolbar}>
         <TouchableOpacity onPress={realignMap} style={styles.iconContainer}>

@@ -57,7 +57,6 @@ export default function App () {
     });
   };
 
-
   // Re-orient map to north (compass button)
   const realignMap = () => {
     if (mapRef.current) {
@@ -122,6 +121,17 @@ export default function App () {
     }
   };
 
+  const refreshData = async () => {
+    let msg = JSON.stringify({ "op":"RefreshData" })
+      try {
+        const data = await sendMsg(msg);
+        console.log('Received response:', data);
+      } 
+      catch (error) {
+        console.error('Error sending message:', error);
+      }
+    }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
@@ -155,7 +165,7 @@ export default function App () {
                 )}
             </MapView>
 
-              <Toolbar {...props} realignMap={realignMap} saveLocation={saveLocation}/>
+              <Toolbar {...props} realignMap={realignMap} saveLocation={saveLocation} refreshData={refreshData}/>
             </View>
           )}
         </Stack.Screen>
