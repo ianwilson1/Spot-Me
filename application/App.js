@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Alert, StyleSheet} from 'react-native';
 import Toolbar from './components/Toolbar.js';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polygon } from 'react-native-maps';
 import {LoginScreen, RegisterScreen, AccountMenuScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -57,6 +57,31 @@ export default function App () {
       }
     });
   };
+
+  //Start of provisional code for parking lot overlay (part1)
+  //Define first parking spot coordinates
+  const parkingLotBaseCoords = [
+    { latitude: 36.8139167, longitude: -119.7424710 }, // Lower Left
+    { latitude: 36.8139167, longitude: -119.7424399 }, // Lower Right
+    { latitude: 36.8139700, longitude: -119.7424399 }, // Upper Right
+    { latitude: 36.8139700, longitude: -119.7424710 }, // Upper Left
+    { latitude: 36.8139167, longitude: -119.7424710 }, // Close the rectangle
+  ];
+
+  // Longitude offset for each additional parking spot (9 feet wide)
+  const longitudeOffset = 0.0000311;  // 9 feet in degrees of longitude
+
+  // Generate coordinates for 48 parking spots (1 base + 47 more to the right)
+  const parkingLots = [];
+  for (let i = 0; i < 48; i++) {
+    const offsetLongitude = -119.7422222 + (i * longitudeOffset);
+    const newParkingLotCoords = parkingLotBaseCoords.map(coord => ({
+      latitude: coord.latitude,
+      longitude: coord.longitude + (i * longitudeOffset), // Increment longitude for each new spot
+    }));
+    parkingLots.push(newParkingLotCoords);
+  }
+  //End of provisional code for parking lot overlay (part1)
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -165,6 +190,19 @@ const saveLocation = async () => {
                     longitudeDelta: 0.02,
                 }}
               >
+                {/*Start of provisional code for parking spot overlay(part1)*/}
+                {parkingLots.map((lotCoords, index) => (
+                <Polygon
+                  key={index}
+                  coordinates={lotCoords}
+                  strokeColor="black"
+                  fillColor="rgba(0, 255, 0, 0.2)"
+                  strokeWidth={1}
+                  tappable
+                />
+                ))}
+                {/*End of provisional code for parking spot overlay (part2)*/}
+
                 {carLocation != null && (
                     <Marker
                         title = {'Your Car'}
