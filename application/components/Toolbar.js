@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View, Text, Platform  } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
-import {LoginScreen, RegisterScreen} from './Accounts';
+import {LoginScreen, RegisterScreen, AccountMenuScreen} from './Accounts';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-const Toolbar = ({realignMap, saveLocation, refreshData, navigation}) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
+const Toolbar = ({realignMap, saveLocation, refreshData, navigation, isLoggedIn, setIsLoggedIn}) => {
 
   const goToAccount = () => {
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
+      navigation.navigate('AccountMenu');
+    } else {
       Alert.alert(
         "",
         "You are currently not logged in.",
@@ -17,15 +18,6 @@ const Toolbar = ({realignMap, saveLocation, refreshData, navigation}) => {
           {text: "Log In", onPress: () => navigation.navigate('Login')},
           {text: "Register", onPress: () => navigation.navigate('Register')},
           {text: "Cancel", style: "Cancel"}
-        ]
-      )
-    } else {
-      Alert.alert(
-        "Logged In",
-        "You are currently logged in.",
-        [
-          { text: "Log Out", onPress: () => setIsLoggedIn(false) },
-          { text: "OK", style: "cancel" }
         ]
       );
     }

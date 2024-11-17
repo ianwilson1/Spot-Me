@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Alert, StyleSheet} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker } from 'react-native-maps';
-import {LoginScreen, RegisterScreen} from './components/Accounts.js';
+import {LoginScreen, RegisterScreen, AccountMenuScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
-import RNFS from 'react-native-fs';
+import * as FileSystem from 'expo-file-system';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +17,7 @@ export default function App () {
 
   // States
   const [carLocation, setCarLocation] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Establish connection to server
   useEffect( () => {
@@ -65,65 +66,71 @@ export default function App () {
   }
 
   // Save user's parked car location (aka create persistent marker of current location)
-  const saveLocation = async () => {
-    if(carLocation == null) {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('Location permission required to use this feature.');
-          return;
-        }
-        Alert.alert(
-          "Save car location?", "", [
-            { 
-              text: "Yes",
-              onPress: async () => {
-                let carLoc = await Location.getCurrentPositionAsync({});
-                            
-                setCarLocation(carLoc.coords);
-
-                const locJSON = JSON.stringify(carLoc);
-                const file = RNFS.DocumentDirectoryPath + "/cache/carloc.json";
-
-                RNFS.writeFile(file, locJSON, 'utf8')
-              }
-            },
-            { 
-              text: "Cancel" 
-            }
-          ]
-        );
-    } 
-    else {
-      Alert.alert(
-        "Already saved!", "", [
-          { 
-            text: "Locate",
-            onPress: () => {
-              if (mapRef.current) {
-                mapRef.current.animateToRegion({ // Center and zoom in on car's location
-                    latitude: carLocation.latitude,
-                    longitude: carLocation.longitude,
-                    latitudeDelta: 0.003,
-                    longitudeDelta: 0.003,
-                }, 1000);
-              }
-            }
-          },
-          {
-            text: "Update", // TODO: Update saved car location
-            onPress: async () => {
-              let newLoc = await Location.getCurrentPositionAsync({});
-              setCarLocation(newLoc.coords);
-            }
-          },
-          {
-            text: "Forget",
-            onPress: () => setCarLocation(null)
-          },
-        ]
-      );
+const saveLocation = async () => {
+  if (carLocation == null) {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Location permission required to use this feature.');
+      return;
     }
-  };
+    Alert.alert(
+      "Save car location?", "", [
+        { 
+          text: "Yes",
+          onPress: async () => {
+            let carLoc = await Location.getCurrentPositionAsync({});
+                        
+            setCarLocation(carLoc.coords);
+
+            const locJSON = JSON.stringify(carLoc);
+            const fileUri = FileSystem.documentDirectory + './cache/carloc.json';
+
+            try {
+              await FileSystem.writeAsStringAsync(fileUri, locJSON, {
+                encoding: FileSystem.EncodingType.UTF8
+              });
+              console.log('Car location saved:', fileUri);
+            } catch (error) {
+              console.error('Error saving car location:', error);
+            }
+          }
+        },
+        { 
+          text: "Cancel" 
+        }
+      ]
+    );
+  } else {
+    Alert.alert(
+      "Already saved!", "", [
+        { 
+          text: "Locate",
+          onPress: () => {
+            if (mapRef.current) {
+              mapRef.current.animateToRegion({ // Center and zoom in on car's location
+                  latitude: carLocation.latitude,
+                  longitude: carLocation.longitude,
+                  latitudeDelta: 0.003,
+                  longitudeDelta: 0.003,
+              }, 1000);
+            }
+          }
+        },
+        {
+          text: "Update", // TODO: Update saved car location
+          onPress: async () => {
+            let newLoc = await Location.getCurrentPositionAsync({});
+            setCarLocation(newLoc.coords);
+          }
+        },
+        {
+          text: "Forget",
+          onPress: () => setCarLocation(null)
+        },
+      ]
+    );
+  }
+};
 
   const refreshData = async () => {
     let msg = JSON.stringify({ "op":"RefreshData" })
@@ -170,21 +177,49 @@ export default function App () {
                 )}
             </MapView>
 
-              <Toolbar {...props} realignMap={realignMap} saveLocation={saveLocation} refreshData={refreshData}/>
+              <Toolbar 
+                {...props} 
+                realignMap={realignMap} 
+                aveLocation={saveLocation} 
+                refreshData={refreshData}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              />
             </View>
           )}
         </Stack.Screen>
         <Stack.Screen
           name="Register"
           children={(screenProps) => (
-            <RegisterScreen {...screenProps} sendMsg={sendMsg} />
+            <RegisterScreen 
+              {...screenProps} 
+              sendMsg={sendMsg}
+              isLoggedIn={isLoggedIn}  
+              setIsLoggedIn={setIsLoggedIn}
+            />
           )}
         />
         <Stack.Screen
           name="Login"
           children={(screenProps) => (
-            <LoginScreen {...screenProps} sendMsg={sendMsg}/>
-          )}/>
+            <LoginScreen 
+              {...screenProps} 
+              sendMsg={sendMsg}
+              isLoggedIn={isLoggedIn} 
+              setIsLoggedIn={setIsLoggedIn}
+            />
+          )}
+        />
+        <Stack.Screen
+          name="AccountMenu"
+          children={(screenProps) =>(
+            <AccountMenuScreen
+              {...screenProps}
+              isLoggedIn={isLoggedIn} 
+              setIsLoggedIn={setIsLoggedIn}
+            />
+          )}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
