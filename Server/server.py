@@ -186,9 +186,11 @@ async def HandleMsg(websocket):
 
 async def InitDB():
     ### TODO: Make sure to change later to implement as many spots and lots as needed
+    
     if (SPOTS_COL.count_documents({}) > 0):
         return
     
+    print('[DATABASE] No parking lot info found, reinitializing database')
     lots = [
         {
             "lot_id": "P6",

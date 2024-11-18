@@ -8,7 +8,7 @@ import websockets
 ADDR = 'ws://34.105.119.88:15024'   # Public address + port of server machine
 DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from the server
 
-MAX_SPOTS = 300                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
+MAX_SPOTS = 1288                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
 
 # vvv For local testing only (comment out when testing on server)
 # ADDR = 'ws://localhost:15024'
