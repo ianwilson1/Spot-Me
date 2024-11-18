@@ -193,8 +193,8 @@ async def InitDB():
     print('[DATABASE] No parking lot info found, reinitializing database')
     lots = [
         {
-            "lot_id": "P6",
             "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1288)],
+            "lot_id": "P6",
             "congestion_percent": 0
         }
     ]
