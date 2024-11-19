@@ -18,6 +18,7 @@ export default function App () {
   // States
   const [carLocation, setCarLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [zoom, setZoom] = useState(0);
 
   // Establish connection to server
   useEffect( () => {
@@ -168,6 +169,11 @@ const saveLocation = async () => {
         console.error('Error sending message:', error);
       }
     }
+  
+    const handleRegionChangeComplete = (region) => {
+      const zoomLevel = Math.log2(360 / region.latitudeDelta);
+      setZoom(zoomLevel); // Show polygons only if zoom level is 17 or higher
+    };
 
   return (
     <NavigationContainer>
@@ -183,6 +189,7 @@ const saveLocation = async () => {
                     heading: 50,
                 }}
                 minZoomLevel={15}
+                onRegionChange={handleRegionChangeComplete}
                 initialRegion={{
                     latitude: 36.81369124340123,
                     longitude: -119.7455163161234,
@@ -191,16 +198,17 @@ const saveLocation = async () => {
                 }}
               >
                 {/*Start of provisional code for parking spot overlay(part1)*/}
-                {parkingLots.map((lotCoords, index) => (
-                <Polygon
-                  key={index}
-                  coordinates={lotCoords}
-                  strokeColor="black"
-                  fillColor="rgba(0, 255, 0, 0.2)"
-                  strokeWidth={1}
-                  tappable
-                />
-                ))}
+                {zoom >= 15.78 && parkingLots.map((lotCoords, index) => ((
+                  <Polygon
+                    key={index}
+                    coordinates={lotCoords}
+                    strokeColor="black"
+                    fillColor="rgba(0, 255, 0, 0.2)"
+                    strokeWidth={1}
+                    tappable
+                  />
+                
+                )))}
                 {/*End of provisional code for parking spot overlay (part2)*/}
 
                 {carLocation != null && (
