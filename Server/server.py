@@ -96,7 +96,7 @@ async def UpdateName(name, passwd, newName):
 
     if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
         print("[ERROR] User already exists.")
-        return False
+        return False, "Username already taken."
     
     user = UserAuthenticate(name, passwd) # Check user's name and password
 
@@ -104,24 +104,26 @@ async def UpdateName(name, passwd, newName):
         filter = {"name": name} # Find document with old name
         update = {"$set": {"name": newName}} # Set new name
         USERS_COL.update_one(filter, update) # Update document
-        print("New username is set!")
-        return True
+        print("[SUCCESS] New username is set!")
+        return True, "Username updated successfully!"
     else:
         print("[ERROR] could not verify user")
 
 async def UpdatePass(name, passwd, newPass):
-    print(f"[OPERATION] CreateAccount({name})")
+    print(f"[OPERATION] UpdatePass({name})")
     
     user = UserAuthenticate(name, passwd) # Check user's name and password
 
     if (user):
+        hashed_password = hash_password(newPass) # Hash new password
         filter = {"name": name} # Find document
         update = {"$set": {"pass": newPass}} # Set new password
         USERS_COL.update_one(filter, update) # Push update to that document
         print("[SUCCESS] New password set!")
-        return True
+        return True, "Password updated successfully!"
     else:
         print("[ERROR] could not verify")
+        return False, "Incorrect username or password."
 
 async def RefreshData(): # Updates client with updated parking spot/lot information (congestion, occupancy); FIXME: implement this
     print('[OPERATION] RefreshData()')
@@ -158,15 +160,15 @@ async def HandleOperation(websocket, rcvdJson):
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newName = rcvdJson["newName"]
-            success = await UpdateName(name, passwd, newName)
-            await websocket.send(json.dumps({"success": success}))
+            success, message = await UpdateName(name, passwd, newName)
+            await websocket.send(json.dumps({"success": success, "message": message}))
             
         elif rcvdJson["op"] == "UpdatePass":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newPass = rcvdJson["newPass"]
-            success = await UpdatePass(name, passwd, newPass)
-            await websocket.send(json.dumps({"success": success}))
+            success, message = await UpdatePass(name, passwd, newPass)
+            await websocket.send(json.dumps({"success": success, "message": message}))
 
         elif rcvdJson["op"] == "RefreshData":
             data = await RefreshData()
