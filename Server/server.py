@@ -125,7 +125,14 @@ async def UpdatePass(name, passwd, newPass):
 
 async def RefreshData(): # Updates client with updated parking spot/lot information (congestion, occupancy); FIXME: implement this
     print('[OPERATION] RefreshData()')
-    return "Not Yet Implemented"
+    try:
+        data = list(SPOTS_COL.find({}, {'_id': False}))
+        print('[INFO] Retrieved {len(data)} records from the DB.')
+
+        return json.dumps(data)
+    except Exception as e:
+        print('[ERROR]: {e}')
+        return json.dumps({"Error": "Failed to refresh."})
     
 async def HandleOperation(websocket, rcvdJson):
     try:

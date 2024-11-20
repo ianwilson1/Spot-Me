@@ -23,6 +23,20 @@ const Toolbar = ({realignMap, saveLocation, refreshData, navigation, isLoggedIn,
     }
   };
 
+  const handleRefresh = async () => {
+    setLoading(true);
+    try {
+      await refreshData();
+    }
+    catch (error) {
+      console.error('Error in refreshing:', data);
+      Alert.alert('Error', 'Failed to refresh data, try again.')
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
     return (
       <View style={styles.toolbar}>
         <TouchableOpacity onPress={realignMap} style={styles.iconContainer}>

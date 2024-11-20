@@ -162,13 +162,14 @@ const saveLocation = async () => {
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
         const data = await sendMsg(msg);
+        console.log('Refresh successful:', data);
 
 
       } 
       catch (error) {
         console.error('Error sending message:', error);
       }
-    }
+    };
   
     const handleRegionChangeComplete = (region) => {
       const zoomLevel = Math.log2(360 / region.latitudeDelta);
