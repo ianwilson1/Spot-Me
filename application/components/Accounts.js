@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button} from "react-native";
 
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
@@ -108,6 +108,43 @@ export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
             </TouchableOpacity>
         </View>
     );
+};
+
+//feature 5.3 from system req doc
+export const UpdateAccount = () => {
+    const [currPasswd, setCurrPasswd] = useState("");
+    const [newUsername, setNewUsername] = useState("");
+    const [newPasswd, setNewPasswd] = useState("");
+
+    const handleUpdateUsername = () => {
+        
+    };
+
+    const handleUpdatePasswd = () => {
+
+    };
+
+
+};
+
+//feature 5.4 from system req doc
+export const YourPermits = ({}) => {
+
+};
+
+//feature 5.5 from system req doc
+export const WeeklySchedule = ({}) => {
+
+};
+
+//feature 5.6 from system req doc
+export const LogOut = ({}) => {
+
+};
+
+//feature 5.7 from system req doc
+export const DelAcct = ({}) => {
+
 };
 
 const styles = StyleSheet.create({
