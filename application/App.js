@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Alert, StyleSheet} from 'react-native';
+import { View, Alert, StyleSheet, Text} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker, Polygon } from 'react-native-maps';
 import {LoginScreen, RegisterScreen, AccountMenuScreen} from './components/Accounts.js';
@@ -182,6 +182,9 @@ const saveLocation = async () => {
         <Stack.Screen name = "Main" options={{headerShown: false}}>
           {props => (
             <View style={ styles.container }>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>SpotMe</Text>
+              </View>
 
               <MapView 
                 ref={mapRef}
@@ -280,8 +283,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontWeight: 'bold',
+    fontSize: 26,
+    color: 'darkblue',
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 62,
+    width: '100%',
+    alignItems: 'center', // Center the title horizontally
+    zIndex: 10, // Ensure it is on top of the map
   },
   map: {
     ...StyleSheet.absoluteFillObject,
