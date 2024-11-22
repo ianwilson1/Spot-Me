@@ -158,12 +158,20 @@ const saveLocation = async () => {
   }
 };
 
-  const refreshData = async () => {
+const fileUri = `${FileSystem.documentDirectory}localData.json`;
+  const refreshData = async () => { // TODO: Still need to finish this function, not fully functional
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
         const data = await sendMsg(msg);
         console.log('Refresh successful:', data);
 
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        let updateData = data;
+
+        if (fileInfo.exists) {
+          const localData = await FileSystem.readAsStringAsync(fileUri);
+          const parsedLocalData = JSON.parse(localData.json)
+        }
 
       } 
       catch (error) {
