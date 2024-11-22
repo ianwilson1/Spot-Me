@@ -7,6 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
 
 const Stack = createStackNavigator();
 
@@ -91,8 +92,24 @@ export default function App () {
     }
   }
 
+const checkPermissions = async () => {
+  const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+  if (status !== 'granted') {
+    Alert.alert('Permission required to save the file.');
+    return false;
+  }
+  return true;
+};
+
+
   // Save user's parked car location (aka create persistent marker of current location)
 const saveLocation = async () => {
+  const permission = await checkPermissions();
+  if(!permission) {
+    console.log("Incorrect permissions");
+    return;
+  }
+  console.log("You have permission!");
   if (carLocation == null) {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
