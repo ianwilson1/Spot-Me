@@ -34,6 +34,10 @@ export default function App () {
     const zoomLevel = Math.log2(360 / region.latitudeDelta);
     setZoom(zoomLevel);
   };
+  // Function to handle tapping spot
+  const handlePolygonPress = (parkingLot, spotId, blockId) => {
+    Alert.alert(`Parking Lot: ${parkingLot}`, `Block ID: ${blockId}\nSpot ID: ${spotId}\n`);
+  };
 
   // Establish connection to server
   useEffect( () => {
@@ -49,7 +53,7 @@ export default function App () {
         socketRef.current.close();
       }
     }
-  }, [])
+  }, {});
 
   // CALL THIS TO SEND MESSAGE TO THE SERVER!
   // Returns the server response.
@@ -244,6 +248,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     fillColor="rgba(0, 255, 0, 0.2)"
                     strokeWidth={1}
                     tappable
+                    onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block)}
                   />
                 
                 )))}
