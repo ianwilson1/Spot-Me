@@ -8,6 +8,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
+import parkingData from './assets/parking_lot_data.json';
+
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,18 @@ export default function App () {
   const [carLocation, setCarLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [zoom, setZoom] = useState(0);
+  const [parkingSpots, setParkingSpots] = useState([]);
+
+  //Pull parking spot data from assets
+  useEffect(() =>{
+    setParkingSpots(parkingData);
+  }, {});
+
+  //Handle zoom to display parking lot
+  const handleRegionChangeComplete = (region) => {
+    const zoomLevel = Math.log2(360 / region.latitudeDelta);
+    setZoom(zoomLevel);
+  };
 
   // Establish connection to server
   useEffect( () => {
@@ -60,7 +74,7 @@ export default function App () {
     });
   };
 
-  //Start of provisional code for parking lot overlay (part1)
+  /*Start of provisional code for parking lot overlay (part1)
   //Define first parking spot coordinates
   const parkingLotBaseCoords = [
     { latitude: 36.8139167, longitude: -119.7424710 }, // Lower Left
@@ -83,8 +97,8 @@ export default function App () {
     }));
     parkingLots.push(newParkingLotCoords);
   }
-  //End of provisional code for parking lot overlay (part1)
-
+  End of provisional code for parking lot overlay (part1)
+*/
   // Re-orient map to north (compass button)
   const realignMap = () => {
     if (mapRef.current) {
@@ -196,11 +210,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
       }
     };
   
-    const handleRegionChangeComplete = (region) => {
-      const zoomLevel = Math.log2(360 / region.latitudeDelta);
-      setZoom(zoomLevel); // Show polygons only if zoom level is 17 or higher
-    };
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
@@ -227,10 +236,10 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 }}
               >
                 {/*Start of provisional code for parking spot overlay(part1)*/}
-                {zoom >= 15.78 && parkingLots.map((lotCoords, index) => ((
+                {zoom >= 15.78 && parkingSpots.map((spot) => ((
                   <Polygon
-                    key={index}
-                    coordinates={lotCoords}
+                    key={spot.id}
+                    coordinates={spot.coordinates}
                     strokeColor="black"
                     fillColor="rgba(0, 255, 0, 0.2)"
                     strokeWidth={1}
@@ -255,7 +264,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
               <Toolbar 
                 {...props} 
                 realignMap={realignMap} 
-                aveLocation={saveLocation} 
+                saveLocation={saveLocation} 
                 refreshData={refreshData}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
@@ -316,8 +325,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 62,
     width: '100%',
-    alignItems: 'center', // Center the title horizontally
-    zIndex: 10, // Ensure it is on top of the map
+    alignItems: 'center', 
+    zIndex: 10, 
   },
   map: {
     ...StyleSheet.absoluteFillObject,
