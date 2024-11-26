@@ -12,6 +12,16 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row, rows_per_
     for block in range(blocks):
         # Compute the block's starting lower-left corner
         block_start_lat = start_lat - (block * (rows_per_block * row_height + block_separation))
+        spots_per_row = default_spots_per_row
+
+        if block == 15:
+            spots_per_row = 44
+        elif block == 16:  # Block 17: 43 spots
+            spots_per_row = 43
+        elif block == 17:  # Block 18: 40 spots
+            spots_per_row = 40
+        elif block == 18:  # Block 19: upper row only with 39 spots
+            spots_per_row = 39
 
         for row in range(rows_per_block):
             # Compute the row's starting lower-left corner
@@ -37,15 +47,15 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row, rows_per_
 # Example usage
 starting_latitude = 36.81409
 starting_longitude = -119.74248
-number_of_blocks = 11
+number_of_blocks = 19
 rows_per_block = 2
-spots_per_row = 48
+default_spots_per_row = 48
 
 parking_lot_data = generate_parking_data(
     start_lat=starting_latitude,
     start_lon=starting_longitude,
     blocks=number_of_blocks,
-    spots_per_row=spots_per_row,
+    spots_per_row=default_spots_per_row,
     rows_per_block=rows_per_block
 )
 
