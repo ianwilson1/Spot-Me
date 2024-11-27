@@ -46843,5 +46843,3731 @@
                 "longitude": -119.7410183
             }
         ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1736,
+        "coordinates": [
+            {
+                "latitude": 36.8142663,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142663,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8142416,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8142416,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142663,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1737,
+        "coordinates": [
+            {
+                "latitude": 36.8142416,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142416,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8142169,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8142169,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142416,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1738,
+        "coordinates": [
+            {
+                "latitude": 36.8142169,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142169,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141922,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141922,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8142169,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1739,
+        "coordinates": [
+            {
+                "latitude": 36.8141922,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141922,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.814167499999996,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.814167499999996,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141922,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1740,
+        "coordinates": [
+            {
+                "latitude": 36.814167499999996,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.814167499999996,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141428,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141428,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.814167499999996,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1741,
+        "coordinates": [
+            {
+                "latitude": 36.8141428,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141428,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141181,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8141181,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141428,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1742,
+        "coordinates": [
+            {
+                "latitude": 36.8141181,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141181,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140934,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140934,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8141181,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1743,
+        "coordinates": [
+            {
+                "latitude": 36.8140934,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140934,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140687,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140687,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140934,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1744,
+        "coordinates": [
+            {
+                "latitude": 36.8140687,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140687,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.814044,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.814044,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140687,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1745,
+        "coordinates": [
+            {
+                "latitude": 36.814044,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.814044,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140193,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8140193,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.814044,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1746,
+        "coordinates": [
+            {
+                "latitude": 36.8140193,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140193,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139946,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139946,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8140193,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1747,
+        "coordinates": [
+            {
+                "latitude": 36.8139946,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139946,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139699,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139699,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139946,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1748,
+        "coordinates": [
+            {
+                "latitude": 36.8139699,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139699,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139452,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139452,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139699,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1749,
+        "coordinates": [
+            {
+                "latitude": 36.8139452,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139452,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139205,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8139205,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139452,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1750,
+        "coordinates": [
+            {
+                "latitude": 36.8139205,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139205,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138958,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138958,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8139205,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1751,
+        "coordinates": [
+            {
+                "latitude": 36.8138958,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138958,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138711,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138711,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138958,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1752,
+        "coordinates": [
+            {
+                "latitude": 36.8138711,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138711,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138464,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138464,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138711,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1753,
+        "coordinates": [
+            {
+                "latitude": 36.8138464,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138464,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138217,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8138217,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138464,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1754,
+        "coordinates": [
+            {
+                "latitude": 36.8138217,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138217,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813797,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813797,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8138217,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1755,
+        "coordinates": [
+            {
+                "latitude": 36.813797,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813797,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137723,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137723,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813797,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1756,
+        "coordinates": [
+            {
+                "latitude": 36.8137723,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137723,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137476,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137476,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137723,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1757,
+        "coordinates": [
+            {
+                "latitude": 36.8137476,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137476,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137229,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8137229,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137476,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1758,
+        "coordinates": [
+            {
+                "latitude": 36.8137229,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137229,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136982,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136982,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8137229,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1759,
+        "coordinates": [
+            {
+                "latitude": 36.8136982,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136982,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136735,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136735,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136982,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1760,
+        "coordinates": [
+            {
+                "latitude": 36.8136735,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136735,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136488,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136488,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136735,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1761,
+        "coordinates": [
+            {
+                "latitude": 36.8136488,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136488,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136241,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8136241,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136488,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1762,
+        "coordinates": [
+            {
+                "latitude": 36.8136241,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136241,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135994,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135994,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8136241,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1763,
+        "coordinates": [
+            {
+                "latitude": 36.8135994,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135994,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135747,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135747,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135994,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1764,
+        "coordinates": [
+            {
+                "latitude": 36.8135747,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135747,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.81355,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.81355,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135747,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1765,
+        "coordinates": [
+            {
+                "latitude": 36.81355,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.81355,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135253,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135253,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.81355,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1766,
+        "coordinates": [
+            {
+                "latitude": 36.8135253,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135253,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8135006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135253,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1767,
+        "coordinates": [
+            {
+                "latitude": 36.8135006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8134759,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8134759,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8135006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1768,
+        "coordinates": [
+            {
+                "latitude": 36.8132664,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8132664,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8132437,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8132437,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8132664,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1769,
+        "coordinates": [
+            {
+                "latitude": 36.8132437,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8132437,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813221000000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813221000000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8132437,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1770,
+        "coordinates": [
+            {
+                "latitude": 36.813221000000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813221000000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131983,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131983,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813221000000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1771,
+        "coordinates": [
+            {
+                "latitude": 36.8131983,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131983,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131756,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131756,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131983,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1772,
+        "coordinates": [
+            {
+                "latitude": 36.8131756,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131756,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813152900000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813152900000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131756,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1773,
+        "coordinates": [
+            {
+                "latitude": 36.813152900000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813152900000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131302,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131302,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813152900000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1774,
+        "coordinates": [
+            {
+                "latitude": 36.8131302,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131302,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131075,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8131075,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131302,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1775,
+        "coordinates": [
+            {
+                "latitude": 36.8131075,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131075,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813084800000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813084800000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8131075,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1776,
+        "coordinates": [
+            {
+                "latitude": 36.813084800000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813084800000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8130621,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8130621,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813084800000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1777,
+        "coordinates": [
+            {
+                "latitude": 36.8130621,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8130621,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8130394,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8130394,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8130621,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1778,
+        "coordinates": [
+            {
+                "latitude": 36.8130394,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8130394,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813016700000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.813016700000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8130394,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1779,
+        "coordinates": [
+            {
+                "latitude": 36.813016700000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813016700000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812994,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812994,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.813016700000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1780,
+        "coordinates": [
+            {
+                "latitude": 36.812994,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812994,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129713,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129713,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812994,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1781,
+        "coordinates": [
+            {
+                "latitude": 36.8129713,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129713,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812948600000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812948600000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129713,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1782,
+        "coordinates": [
+            {
+                "latitude": 36.812948600000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812948600000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129259,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129259,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812948600000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1783,
+        "coordinates": [
+            {
+                "latitude": 36.8129259,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129259,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129032,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8129032,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129259,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1784,
+        "coordinates": [
+            {
+                "latitude": 36.8129032,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129032,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812880500000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812880500000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8129032,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1785,
+        "coordinates": [
+            {
+                "latitude": 36.812880500000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812880500000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8128578,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8128578,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812880500000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1786,
+        "coordinates": [
+            {
+                "latitude": 36.8128578,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8128578,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8128351,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8128351,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8128578,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1787,
+        "coordinates": [
+            {
+                "latitude": 36.8128351,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8128351,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812812400000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812812400000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8128351,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1788,
+        "coordinates": [
+            {
+                "latitude": 36.812812400000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812812400000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8127897,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8127897,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812812400000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1789,
+        "coordinates": [
+            {
+                "latitude": 36.8127897,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8127897,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812767,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812767,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8127897,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1790,
+        "coordinates": [
+            {
+                "latitude": 36.812767,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812767,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812744300000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812744300000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812767,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1791,
+        "coordinates": [
+            {
+                "latitude": 36.812744300000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812744300000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8127216,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8127216,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812744300000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1792,
+        "coordinates": [
+            {
+                "latitude": 36.8127216,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8127216,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126989,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126989,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8127216,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1793,
+        "coordinates": [
+            {
+                "latitude": 36.8126989,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126989,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812676200000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812676200000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126989,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1794,
+        "coordinates": [
+            {
+                "latitude": 36.812676200000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812676200000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126535,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126535,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812676200000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1795,
+        "coordinates": [
+            {
+                "latitude": 36.8126535,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126535,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126308,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8126308,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126535,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1796,
+        "coordinates": [
+            {
+                "latitude": 36.8126308,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126308,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812608100000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812608100000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8126308,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1797,
+        "coordinates": [
+            {
+                "latitude": 36.812608100000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812608100000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125854,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125854,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812608100000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1798,
+        "coordinates": [
+            {
+                "latitude": 36.8125854,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125854,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125627,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125627,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125854,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1799,
+        "coordinates": [
+            {
+                "latitude": 36.8125627,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125627,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812540000000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812540000000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125627,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1800,
+        "coordinates": [
+            {
+                "latitude": 36.812540000000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812540000000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125173,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8125173,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812540000000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1801,
+        "coordinates": [
+            {
+                "latitude": 36.8125173,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125173,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124946,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124946,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8125173,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1802,
+        "coordinates": [
+            {
+                "latitude": 36.8124946,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124946,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812471900000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812471900000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124946,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1803,
+        "coordinates": [
+            {
+                "latitude": 36.812471900000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812471900000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124492,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124492,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812471900000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1804,
+        "coordinates": [
+            {
+                "latitude": 36.8124492,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124492,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124265,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8124265,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124492,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1805,
+        "coordinates": [
+            {
+                "latitude": 36.8124265,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124265,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812403800000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812403800000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8124265,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1806,
+        "coordinates": [
+            {
+                "latitude": 36.812403800000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812403800000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8123811,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8123811,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812403800000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1807,
+        "coordinates": [
+            {
+                "latitude": 36.8123811,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8123811,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8123584,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8123584,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8123811,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1808,
+        "coordinates": [
+            {
+                "latitude": 36.8123584,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8123584,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812335700000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812335700000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8123584,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1809,
+        "coordinates": [
+            {
+                "latitude": 36.812335700000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812335700000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812313,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812313,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812335700000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1810,
+        "coordinates": [
+            {
+                "latitude": 36.812313,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812313,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8122903,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8122903,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812313,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1811,
+        "coordinates": [
+            {
+                "latitude": 36.8122903,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8122903,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812267600000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.812267600000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.8122903,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1812,
+        "coordinates": [
+            {
+                "latitude": 36.812267600000006,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812267600000006,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8122449,
+                "longitude": -119.7408627
+            },
+            {
+                "latitude": 36.8122449,
+                "longitude": -119.7409249
+            },
+            {
+                "latitude": 36.812267600000006,
+                "longitude": -119.7409249
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1813,
+        "coordinates": [
+            {
+                "latitude": 36.8119623,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8119623,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811939599999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811939599999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8119623,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1814,
+        "coordinates": [
+            {
+                "latitude": 36.811939599999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811939599999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8119169,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8119169,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811939599999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1815,
+        "coordinates": [
+            {
+                "latitude": 36.8119169,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8119169,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118942,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118942,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8119169,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1816,
+        "coordinates": [
+            {
+                "latitude": 36.8118942,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118942,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811871499999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811871499999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118942,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1817,
+        "coordinates": [
+            {
+                "latitude": 36.811871499999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811871499999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118488,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118488,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811871499999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1818,
+        "coordinates": [
+            {
+                "latitude": 36.8118488,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118488,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118261,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8118261,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118488,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1819,
+        "coordinates": [
+            {
+                "latitude": 36.8118261,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118261,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811803399999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811803399999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8118261,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1820,
+        "coordinates": [
+            {
+                "latitude": 36.811803399999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811803399999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8117807,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8117807,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811803399999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1821,
+        "coordinates": [
+            {
+                "latitude": 36.8117807,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8117807,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811758,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811758,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8117807,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1822,
+        "coordinates": [
+            {
+                "latitude": 36.811758,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811758,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811735299999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811735299999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811758,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1823,
+        "coordinates": [
+            {
+                "latitude": 36.811735299999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811735299999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8117126,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8117126,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811735299999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1824,
+        "coordinates": [
+            {
+                "latitude": 36.8117126,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8117126,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116899,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116899,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8117126,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1825,
+        "coordinates": [
+            {
+                "latitude": 36.8116899,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116899,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811667199999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811667199999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116899,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1826,
+        "coordinates": [
+            {
+                "latitude": 36.811667199999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811667199999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116445,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116445,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811667199999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1827,
+        "coordinates": [
+            {
+                "latitude": 36.8116445,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116445,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116218,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8116218,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116445,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1828,
+        "coordinates": [
+            {
+                "latitude": 36.8116218,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116218,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811599099999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811599099999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8116218,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1829,
+        "coordinates": [
+            {
+                "latitude": 36.811599099999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811599099999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115764,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115764,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811599099999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1830,
+        "coordinates": [
+            {
+                "latitude": 36.8115764,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115764,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115537,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115537,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115764,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1831,
+        "coordinates": [
+            {
+                "latitude": 36.8115537,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115537,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811530999999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811530999999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115537,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1832,
+        "coordinates": [
+            {
+                "latitude": 36.811530999999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811530999999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115083,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8115083,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811530999999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1833,
+        "coordinates": [
+            {
+                "latitude": 36.8115083,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115083,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114856,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114856,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8115083,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1834,
+        "coordinates": [
+            {
+                "latitude": 36.8114856,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114856,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811462899999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811462899999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114856,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1835,
+        "coordinates": [
+            {
+                "latitude": 36.811462899999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811462899999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114402,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114402,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811462899999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1836,
+        "coordinates": [
+            {
+                "latitude": 36.8114402,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114402,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114175,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8114175,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114402,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1837,
+        "coordinates": [
+            {
+                "latitude": 36.8114175,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114175,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811394799999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811394799999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8114175,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1838,
+        "coordinates": [
+            {
+                "latitude": 36.811394799999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811394799999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8113721,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8113721,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811394799999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1839,
+        "coordinates": [
+            {
+                "latitude": 36.8113721,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8113721,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8113494,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8113494,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8113721,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1840,
+        "coordinates": [
+            {
+                "latitude": 36.8113494,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8113494,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811326699999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811326699999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8113494,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1841,
+        "coordinates": [
+            {
+                "latitude": 36.811326699999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811326699999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811304,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811304,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811326699999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1842,
+        "coordinates": [
+            {
+                "latitude": 36.811304,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811304,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112813,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112813,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811304,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1843,
+        "coordinates": [
+            {
+                "latitude": 36.8112813,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112813,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811258599999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811258599999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112813,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1844,
+        "coordinates": [
+            {
+                "latitude": 36.811258599999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811258599999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112359,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112359,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811258599999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1845,
+        "coordinates": [
+            {
+                "latitude": 36.8112359,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112359,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112132,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8112132,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112359,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1846,
+        "coordinates": [
+            {
+                "latitude": 36.8112132,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112132,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811190499999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811190499999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8112132,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1847,
+        "coordinates": [
+            {
+                "latitude": 36.811190499999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811190499999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8111678,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8111678,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811190499999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1848,
+        "coordinates": [
+            {
+                "latitude": 36.8111678,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8111678,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8111451,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8111451,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8111678,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1849,
+        "coordinates": [
+            {
+                "latitude": 36.8111451,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8111451,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811122399999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811122399999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8111451,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1850,
+        "coordinates": [
+            {
+                "latitude": 36.811122399999995,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811122399999995,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8110997,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.8110997,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.811122399999995,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1851,
+        "coordinates": [
+            {
+                "latitude": 36.8110997,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8110997,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811077,
+                "longitude": -119.7408678
+            },
+            {
+                "latitude": 36.811077,
+                "longitude": -119.74093
+            },
+            {
+                "latitude": 36.8110997,
+                "longitude": -119.74093
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1852,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.742505
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7424739
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7424739
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.742505
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.742505
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1853,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7424739
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74244279999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74244279999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7424739
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7424739
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1854,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74244279999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74241169999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74241169999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74244279999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74244279999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1855,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74241169999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74238059999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74238059999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74241169999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74241169999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1856,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74238059999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74234949999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74234949999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74238059999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74238059999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1857,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74234949999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74231839999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74231839999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74234949999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74234949999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1858,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74231839999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422873
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422873
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74231839999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74231839999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1859,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422873
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422562
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422562
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422873
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422873
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1860,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422562
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422251
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422251
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422562
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422562
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1861,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422251
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.742194
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.742194
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7422251
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7422251
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1862,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.742194
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421629
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421629
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.742194
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.742194
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1863,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421629
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421318
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421318
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421629
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421629
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1864,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421318
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421007
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421007
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421318
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421318
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1865,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421007
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7420696
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7420696
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7421007
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7421007
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1866,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7420696
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74203849999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74203849999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.7420696
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.7420696
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1867,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74203849999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74200739999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74200739999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74203849999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74203849999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 21,
+        "id": 1868,
+        "coordinates": [
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74200739999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74197629999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74197629999999
+            },
+            {
+                "latitude": 36.814317200000005,
+                "longitude": -119.74200739999999
+            },
+            {
+                "latitude": 36.814255,
+                "longitude": -119.74200739999999
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1869,
+        "coordinates": [
+            {
+                "latitude": 36.814207,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.814207,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141843,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141843,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.814207,
+                "longitude": -119.7426
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1870,
+        "coordinates": [
+            {
+                "latitude": 36.8141843,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141843,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.814161600000006,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.814161600000006,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141843,
+                "longitude": -119.7426
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1871,
+        "coordinates": [
+            {
+                "latitude": 36.814161600000006,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.814161600000006,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141389,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141389,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.814161600000006,
+                "longitude": -119.7426
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1872,
+        "coordinates": [
+            {
+                "latitude": 36.8141389,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141389,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141162,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.8141162,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141389,
+                "longitude": -119.7426
+            }
+        ]
+    },
+    {
+        "parkingLot": "P6",
+        "block": 20,
+        "id": 1873,
+        "coordinates": [
+            {
+                "latitude": 36.8141162,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141162,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.814093500000006,
+                "longitude": -119.7425378
+            },
+            {
+                "latitude": 36.814093500000006,
+                "longitude": -119.7426
+            },
+            {
+                "latitude": 36.8141162,
+                "longitude": -119.7426
+            }
+        ]
     }
 ]
