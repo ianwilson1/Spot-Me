@@ -9,6 +9,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
     parking_data = []
     spot_id = 1
 
+    # Horizontal spots facing north
     for block in range(blocks):
         # Determine the number of rows and spots per block based on the block index (According to Fresno State map && Google Earth)
         if block < 11: 
@@ -42,17 +43,17 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             row_start_lat = block_start_lat + (row * row_height)
             if (block in [16, 17]) and row == 0: # This blocks have a deleted spot on the lower left corner
                 final_spots_per_row = spots_per_row - 1 # Reduce number of spots by 1 due to shifting
-                final_lon = start_lon + spot_width  # Shift spots to the left
+                adj_lon = start_lon + spot_width  # Shift spots to the left
             else:
-                final_lon = start_lon
+                adj_lon = start_lon
                 final_spots_per_row = spots_per_row
 
             for spot in range(final_spots_per_row):
                 # Compute the spot's coordinates
-                lower_left = {"latitude": row_start_lat, "longitude": final_lon + (spot * spot_width)}
-                lower_right = {"latitude": row_start_lat, "longitude": final_lon + ((spot + 1) * spot_width)}
-                upper_right = {"latitude": row_start_lat + row_height, "longitude": final_lon + ((spot + 1) * spot_width)}
-                upper_left = {"latitude": row_start_lat + row_height, "longitude": final_lon + (spot * spot_width)}
+                lower_left = {"latitude": row_start_lat, "longitude": adj_lon + (spot * spot_width)}
+                lower_right = {"latitude": row_start_lat, "longitude": adj_lon + ((spot + 1) * spot_width)}
+                upper_right = {"latitude": row_start_lat + row_height, "longitude": adj_lon + ((spot + 1) * spot_width)}
+                upper_left = {"latitude": row_start_lat + row_height, "longitude": adj_lon + (spot * spot_width)}
 
                 # Add spot data
                 parking_data.append({
@@ -63,6 +64,129 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
                 })
 
                 spot_id += 1
+    
+    # Vertical blocks facing east (1st block)            
+    extra1_start_lat = 36.8142663
+    extra1_start_lon = -119.7409249
+    final_spots_per_row = 32
+    block = blocks + 1
+    
+    extra_spots_width = 0.0000247 # latitude offset
+    extra_spots_height = 0.0000622 # longitude offset
+    for spot in range(final_spots_per_row):
+        # Compute the spot's coordinates
+            lower_left = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon}
+            lower_right = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_right = {"latitude": extra1_start_lat  -((spot + 1) * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_left = {"latitude": extra1_start_lat - ((spot + 1) * extra_spots_width), "longitude": extra1_start_lon}
+
+            # Add spot data
+            parking_data.append({
+                "parkingLot": "P6",
+                "block": blocks,
+                "id": spot_id,
+                "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
+                })
+
+            spot_id += 1
+
+    # Vertical blocks facing east (2nd block)            
+    extra1_start_lat = 36.8132664
+    extra1_start_lon = -119.7409249
+    final_spots_per_row = 45
+    block = blocks + 1
+    
+    extra_spots_width = 0.0000227 # latitude offset
+    extra_spots_height = 0.0000622 # longitude offset
+    for spot in range(final_spots_per_row):
+        # Compute the spot's coordinates
+            lower_left = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon}
+            lower_right = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_right = {"latitude": extra1_start_lat  -((spot + 1) * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_left = {"latitude": extra1_start_lat - ((spot + 1) * extra_spots_width), "longitude": extra1_start_lon}
+
+            # Add spot data
+            parking_data.append({
+                "parkingLot": "P6",
+                "block": blocks,
+                "id": spot_id,
+                "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
+                })
+
+            spot_id += 1
+    
+    # Vertical blocks facing east (3rd block)            
+    extra1_start_lat = 36.8119623
+    extra1_start_lon = -119.74093
+    final_spots_per_row = 39
+    block = blocks + 1
+    
+    extra_spots_width = 0.0000227 # latitude offset
+    extra_spots_height = 0.0000622 # longitude offset
+    for spot in range(final_spots_per_row):
+        # Compute the spot's coordinates
+            lower_left = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon}
+            lower_right = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_right = {"latitude": extra1_start_lat  -((spot + 1) * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_left = {"latitude": extra1_start_lat - ((spot + 1) * extra_spots_width), "longitude": extra1_start_lon}
+
+            # Add spot data
+            parking_data.append({
+                "parkingLot": "P6",
+                "block": blocks,
+                "id": spot_id,
+                "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
+                })
+
+            spot_id += 1
+
+    # Horizontal blocks facing norht (Northmost)            
+    extra1_start_lat = 36.814255
+    extra1_start_lon = -119.742505
+    final_spots_per_row = 17
+    block = blocks + 1
+
+    for spot in range(final_spots_per_row):
+            # Compute the spot's coordinates
+            lower_left = {"latitude": extra1_start_lat, "longitude": extra1_start_lon + (spot * spot_width)}
+            lower_right = {"latitude": extra1_start_lat, "longitude": extra1_start_lon + ((spot + 1) * spot_width)}
+            upper_right = {"latitude": extra1_start_lat + row_height, "longitude": extra1_start_lon + ((spot + 1) * spot_width)}
+            upper_left = {"latitude": extra1_start_lat + row_height, "longitude": extra1_start_lon + (spot * spot_width)}
+
+            # Add spot data
+            parking_data.append({
+                "parkingLot": "P6",
+                "block": block,
+                "id": spot_id,
+                "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
+            })
+
+            spot_id += 1
+    
+    # Vertical blocks facing east (4th block, handicap)            
+    extra1_start_lat = 36.814207
+    extra1_start_lon = -119.74260
+    final_spots_per_row = 5
+    block = blocks + 1
+    
+    extra_spots_width = 0.0000227 # latitude offset
+    extra_spots_height = 0.0000622 # longitude offset
+    for spot in range(final_spots_per_row):
+        # Compute the spot's coordinates
+            lower_left = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon}
+            lower_right = {"latitude": extra1_start_lat - (spot * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_right = {"latitude": extra1_start_lat  -((spot + 1) * extra_spots_width), "longitude": extra1_start_lon + extra_spots_height}
+            upper_left = {"latitude": extra1_start_lat - ((spot + 1) * extra_spots_width), "longitude": extra1_start_lon}
+
+            # Add spot data
+            parking_data.append({
+                "parkingLot": "P6",
+                "block": blocks,
+                "id": spot_id,
+                "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
+                })
+
+            spot_id += 1
 
     return parking_data
 
@@ -72,12 +196,14 @@ starting_latitude = 36.81409
 starting_longitude = -119.74248
 number_of_blocks = 20
 default_spots_per_row = 48
+#extra_blocks = 1
 
 parking_lot_data = generate_parking_data(
     start_lat=starting_latitude,
     start_lon=starting_longitude,
     blocks=number_of_blocks,
     spots_per_row=default_spots_per_row,
+    #extra = extra_blocks,
 )
 
 json_string = json.dumps(parking_lot_data)
