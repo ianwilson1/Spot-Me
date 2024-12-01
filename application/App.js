@@ -27,7 +27,7 @@ export default function App () {
   //Pull parking spot data from assets
   useEffect(() =>{
     setParkingSpots(parkingData);
-  }, {});
+  }, []);
 
   //Handle zoom to display parking lot
   const handleRegionChangeComplete = (region) => {
@@ -53,7 +53,7 @@ export default function App () {
         socketRef.current.close();
       }
     }
-  }, {});
+  }, []);
 
   // CALL THIS TO SEND MESSAGE TO THE SERVER!
   // Returns the server response.
@@ -201,12 +201,24 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         console.log('Refresh successful:', data);
 
         const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        let updateData = data;
-
+        const updatedStatus = JSON.parse(data)[0].spaces; // Assuming data is an array with "spaces" key
+        
+        // Update parking spots with the status from the server
+        const updatedSpots = parkingSpots.map((spot) => {
+          const spaceStatus = updatedStatus.find((s) => s.space_id === spot.id);
+          return {
+            ...spot,
+            status: spaceStatus ? spaceStatus.status : 0, // Default to 0 if no status is found
+          };
+        });
+    
+        setParkingSpots(updatedSpots); // Update state with the new statuses
+       
+        /*
         if (fileInfo.exists) {
           const localData = await FileSystem.readAsStringAsync(fileUri);
           const parsedLocalData = JSON.parse(localData.json)
-        }
+        }*/
 
       } 
       catch (error) {
@@ -240,18 +252,27 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 }}
               >
                 {/*Start of provisional code for parking spot overlay(part1)*/}
-                {zoom >= 15.78 && parkingSpots.map((spot) => ((
-                  <Polygon
-                    key={spot.id}
-                    coordinates={spot.coordinates}
-                    strokeColor="black"
-                    fillColor="rgba(0, 255, 0, 0.2)"
-                    strokeWidth={1}
-                    tappable
-                    onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block)}
-                  />
-                
-                )))}
+                {zoom >= 15.78 
+                  && parkingSpots.map((spot) => {
+                  // Determine the fill color based on the status
+                  const statusColors = {
+                    0: "rgba(255, 0, 0, 0.5)", // Red for unavailable
+                    1: "rgba(0, 255, 0, 0.5)", // Green for available
+                    2: "rgba(255, 255, 0, 0.5)", // Yellow for reserved
+                  };
+                  const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Gray as default
+                  return (
+                    <Polygon
+                      key={spot.id}
+                      coordinates={spot.coordinates}
+                      strokeColor="black"
+                      fillColor={fillColor}
+                      strokeWidth={1}
+                      tappable
+                      onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block)}
+                    />
+                  );  
+                })}
                 {/*End of provisional code for parking spot overlay (part2)*/}
 
                 {carLocation != null && (
