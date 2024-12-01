@@ -1,10 +1,3 @@
-# List of operations:
-#   - UpdateSpot: update a spot's occupancy status
-#   - CreateAccount: create a new account
-#   - UpdateName: update a user's name
-#   - UpdatePass: update a user's password
-#   - UpdatePermit: update a user's list of permits
-
 import bcrypt
 import json
 import pymongo
@@ -19,9 +12,10 @@ DB_CLIENT = pymongo.MongoClient('localhost', 27017)
 DB = DB_CLIENT['SpotMeDB']
 USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
-####################################################
 
-def hash_password(password): # Password security, will hash a given passed in password
+#################################################### Server-side helper functions
+
+def hash_password(password):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
@@ -37,7 +31,7 @@ def UserAuthenticate(name, passwd):
     else:
         print("[ERROR] User could not be found :(")
 
-async def CongestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
+async def CongestionCalc(id):
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
 
@@ -49,7 +43,9 @@ async def CongestionCalc(id): # Calculate the current congestion % of a given lo
 
     SPOTS_COL.update_one({"spaces": {"$elemMatch": {"space_id": id}}}, {"$set": {"congestion_percent": sum / lot_length }}) # Update congestion field with sum of filled lots by total spaces
 
-async def Login(name, passwd): # Function to return whether a login is successful or not
+#################################################### Server<->Client Functions
+
+async def Login(name, passwd):
     print(f"[OPERATION] Login({name})")
     user = USERS_COL.find_one({"name": name}) # Find a user by given name; names are unique
     
@@ -64,11 +60,10 @@ async def Login(name, passwd): # Function to return whether a login is successfu
         print("[ERROR] User not found.")
         return False
     
-async def UpdateSpot(id, status): # Function to update the parking status of a lot; 0 = empty, 1 = full, 2 = soft reserved
-
+async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id} # Find spot
-    update = {"$set": {"spaces.$.status": status}} # Set new status
+    update = {"$set": {"spaces.$.status": status}} # Set new status; # 0 = empty, 1 = full, 2 = soft reserved
     
     SPOTS_COL.update_one(filter, update) # Update document
     await CongestionCalc(id) # Update congestion level of lot
@@ -124,10 +119,10 @@ async def UpdatePass(name, passwd, newPass):
         print("[ERROR] could not verify")
         return False, "Incorrect username or password."
 
-async def RefreshData(): # Updates client with updated parking spot/lot information (congestion, occupancy);
+async def RefreshData():
     print('[OPERATION] RefreshData()')
     try:
-        data = list(SPOTS_COL.find({}, {'_id': False}))
+        data = list(SPOTS_COL.find({}, {'_id': False})) # Updated parking spot/lot information (congestion, occupancy);
         print(f'[INFO] Retrieved {len(data)} records from the DB.')
 
         return json.dumps(data)
@@ -141,6 +136,8 @@ async def UpdatePermits(newPermits):                        # FIXME: Implement!
 async def DeleteAccount(name, passwd):                      # FIXME: Implement!
     print(f'[OPERATION] DeleteAccount({name})')
     
+#################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
+
 async def HandleOperation(websocket, rcvdJson):
     try:
         if rcvdJson["op"] == "Login":
@@ -208,6 +205,7 @@ async def HandleMsg(websocket):
         rcvdJson = json.loads(msg)
         await HandleOperation(websocket, rcvdJson)
 
+#################################################### Database initialization (for resetting the server-side information)
 
 async def InitDB():
     ### TODO: Make sure to change later to implement as many spots and lots as needed
@@ -230,6 +228,8 @@ async def InitDB():
     ]
     
     SPOTS_COL.insert_many(lots) # Insert array of lots
+
+#################################################### Server startup
 
 async def Start():
     await InitDB()
