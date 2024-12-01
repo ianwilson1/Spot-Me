@@ -95,36 +95,182 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
 };
 
 export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
+    //log out function from syst req
     const handleLogout = () => {
         setIsLoggedIn(false);
         navigation.navigate("Main");
     };
 
+    const handleDeleteAccount = () => {
+
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Account Menu</Text>
+            <TouchableOpacity onPress = {() => navigation.navigate("UpdateAccount")}>
+                <Text style={styles.container}>Update Account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress = {(navigation.navigate("YourPermits"))}>
+                <Text style={styles.container}>
+                    My Permits
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("WeeklySchedule")}>
+                <Text style={styles.container}>
+                    Weekly Schedule
+                </Text>
+            </TouchableOpacity>
             <TouchableOpacity title="Logout" onPress={handleLogout}>
                 <Text style={styles.container}>Log Out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity title="DelAct" onPress={handleDeleteAccount}>
+                <Text style={styles.container}>
+                    Delete Account
+                </Text>
             </TouchableOpacity>
         </View>
     );
 };
 
 //feature 5.3 from system req doc
-export const UpdateAccount = () => {
-    const [currPasswd, setCurrPasswd] = useState("");
-    const [newUsername, setNewUsername] = useState("");
-    const [newPasswd, setNewPasswd] = useState("");
+export const UpdateAccount = ({navigation}) => {
 
-    const handleUpdateUsername = () => {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Update Account</Text>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("UpdateUsername")}>
+                <Text style={styles.text}>Update Username</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("UpdatePasswd")}>
+                <Text style={styles.text}>Update Password</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
+export const UpdateUsername = ({sendMsg, navigation}) => {
+
+    const [currUsername, setCurrUsername] = useState('');
+    const [currPasswd, setCurrPasswd] = useState('');
+    const [newUsername, setNewUsername] = useState('');
+
+    const handleUpdateUsername = async () => {
+        if (!newUsername || !currPasswd){
+            Alert.alert("Error, Current password and new username are required.");
+            return;
+        }
+
+        try{
+            const msgObj = {
+                "op": "UpdateName",
+                "name": currUsername,
+                "passwd": currPasswd,
+                "newName": newUsername,
+            };
+
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.sucess) {
+                Alert.alert("Success", "Username updated successfully!");
+                navigation.navigate("AccountMenu");
+            } else {
+                Alert.alert("Update failed", serverResponse.error || "Unknown error");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Could not connect to the server.");
+            console.error(error);
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Update Username</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Current Username"
+                value={currUsername}
+                onChangeText={setCurrUsername}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry
+                value={currPasswd}
+                onChangeText={setCurrPasswd}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="New Username"
+                value={newUsername}
+                onChangeText={setNewUsername}
+            />
+            <TouchableOpacity style={styles.buttons} onPress={handleUpdateUsername}>
+                <Text style={styles.text}>Update Username</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
+export const UpdatePasswd = ({sendMsg, navigation}) => {
+
+    const [currUsername, setCurrUsername] = useState('');
+    const [currPasswd, setCurrPasswd] = useState('');
+    const [newPasswd, setNewPasswd] = useState('');
+
+    const handleUpdatePasswd = async () => {
+        try {
+            const msgObj = {
+                "op": "UpdatePass",
+                "name": currUsername,
+                "passwd": currPasswd,
+                "newPass": newPasswd,
+            };
         
-    };
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
 
-    const handleUpdatePasswd = () => {
+            if (serverResponse.success){
+                Alert.alert("Password updated successfully!");
+                navigation.navigate("AccountMenu");
+            } else {
+                Alert.alert("Update failed", serverResponse.error || "Unknown error");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Could not connect to the server.");
+            console.error(error);
+        }
+    }
 
-    };
-
-
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Update Password</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={currUsername}
+                onChangeText={setCurrUsername}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Current Password"
+                secureTextEntry
+                value={currPasswd}
+                onChangeText={setCurrPasswd}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="New Password"
+                secureTextEntry
+                value={newPasswd}
+                onChangeText={setNewPasswd}
+            />
+            <TouchableOpacity style={styles.buttons} onPress={handleUpdatePasswd}>
+                <Text style={styles.text}>Update Password</Text>
+            </TouchableOpacity>
+        </View>
+    );
 };
 
 //feature 5.4 from system req doc
@@ -137,10 +283,6 @@ export const WeeklySchedule = ({}) => {
 
 };
 
-//feature 5.6 from system req doc
-export const LogOut = ({}) => {
-
-};
 
 //feature 5.7 from system req doc
 export const DelAcct = ({}) => {

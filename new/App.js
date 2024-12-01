@@ -2,14 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Alert, StyleSheet, Text} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker, Polygon } from 'react-native-maps';
-import {LoginScreen, RegisterScreen, AccountMenuScreen, UpdateAccount, UpdateUsername, UpdatePasswd} from './components/Accounts.js';
+import {LoginScreen, RegisterScreen, AccountMenuScreen} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
-import parkingData from './assets/parking_lot_data.json';
-
 
 const Stack = createStackNavigator();
 
@@ -22,22 +20,6 @@ export default function App () {
   const [carLocation, setCarLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [zoom, setZoom] = useState(0);
-  const [parkingSpots, setParkingSpots] = useState([]);
-
-  //Pull parking spot data from assets
-  useEffect(() =>{
-    setParkingSpots(parkingData);
-  }, {});
-
-  //Handle zoom to display parking lot
-  const handleRegionChangeComplete = (region) => {
-    const zoomLevel = Math.log2(360 / region.latitudeDelta);
-    setZoom(zoomLevel);
-  };
-  // Function to handle tapping spot
-  const handlePolygonPress = (parkingLot, spotId, blockId) => {
-    Alert.alert(`Parking Lot: ${parkingLot}`, `Block ID: ${blockId}\nSpot ID: ${spotId}\n`);
-  };
 
   // Establish connection to server
   useEffect( () => {
@@ -53,7 +35,7 @@ export default function App () {
         socketRef.current.close();
       }
     }
-  }, {});
+  }, [])
 
   // CALL THIS TO SEND MESSAGE TO THE SERVER!
   // Returns the server response.
@@ -78,7 +60,7 @@ export default function App () {
     });
   };
 
-  /*Start of provisional code for parking lot overlay (part1)
+  //Start of provisional code for parking lot overlay (part1)
   //Define first parking spot coordinates
   const parkingLotBaseCoords = [
     { latitude: 36.8139167, longitude: -119.7424710 }, // Lower Left
@@ -101,8 +83,8 @@ export default function App () {
     }));
     parkingLots.push(newParkingLotCoords);
   }
-  End of provisional code for parking lot overlay (part1)
-*/
+  //End of provisional code for parking lot overlay (part1)
+
   // Re-orient map to north (compass button)
   const realignMap = () => {
     if (mapRef.current) {
@@ -214,6 +196,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
       }
     };
   
+    const handleRegionChangeComplete = (region) => {
+      const zoomLevel = Math.log2(360 / region.latitudeDelta);
+      setZoom(zoomLevel); // Show polygons only if zoom level is 17 or higher
+    };
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
@@ -240,15 +227,14 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 }}
               >
                 {/*Start of provisional code for parking spot overlay(part1)*/}
-                {zoom >= 15.78 && parkingSpots.map((spot) => ((
+                {zoom >= 15.78 && parkingLots.map((lotCoords, index) => ((
                   <Polygon
-                    key={spot.id}
-                    coordinates={spot.coordinates}
+                    key={index}
+                    coordinates={lotCoords}
                     strokeColor="black"
                     fillColor="rgba(0, 255, 0, 0.2)"
                     strokeWidth={1}
                     tappable
-                    onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block)}
                   />
                 
                 )))}
@@ -269,7 +255,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
               <Toolbar 
                 {...props} 
                 realignMap={realignMap} 
-                saveLocation={saveLocation} 
+                aveLocation={saveLocation} 
                 refreshData={refreshData}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
@@ -309,32 +295,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
             />
           )}
         />
-        <Stack.Screen
-          name='UpdateAccount'
-          children={(screenProps) => (
-            <UpdateAccount
-              {...screenProps}
-            />
-          )}
-          />
-          <Stack.Screen
-            name='UpdateUsername'
-            children={(screenProps) => 
-              <UpdateUsername
-                {...screenProps}
-                sendMsg={sendMsg}
-              />
-            }
-          />
-          <Stack.Screen
-            name='UpdatePasswd'
-            children={(screenProps) =>
-              <UpdatePasswd
-                {...screenProps}
-                sendMsg={sendMsg}
-              />
-            }
-          />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -356,8 +316,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 62,
     width: '100%',
-    alignItems: 'center', 
-    zIndex: 10, 
+    alignItems: 'center', // Center the title horizontally
+    zIndex: 10, // Ensure it is on top of the map
   },
   map: {
     ...StyleSheet.absoluteFillObject,
