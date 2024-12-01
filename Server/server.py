@@ -37,7 +37,6 @@ def UserAuthenticate(name, passwd):
     else:
         print("[ERROR] User could not be found :(")
 
-
 async def CongestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
@@ -125,16 +124,22 @@ async def UpdatePass(name, passwd, newPass):
         print("[ERROR] could not verify")
         return False, "Incorrect username or password."
 
-async def RefreshData(): # Updates client with updated parking spot/lot information (congestion, occupancy); FIXME: implement this
+async def RefreshData(): # Updates client with updated parking spot/lot information (congestion, occupancy);
     print('[OPERATION] RefreshData()')
     try:
         data = list(SPOTS_COL.find({}, {'_id': False}))
-        print('[INFO] Retrieved {len(data)} records from the DB.')
+        print(f'[INFO] Retrieved {len(data)} records from the DB.')
 
         return json.dumps(data)
     except Exception as e:
         print('[ERROR]: {e}')
         return json.dumps({"Error": "Failed to refresh."})
+    
+async def UpdatePermits(newPermits):                        # FIXME: Implement!
+    print(f'[OPERATION] UpdatePermits({newPermits})')
+
+async def DeleteAccount(name, passwd):                      # FIXME: Implement!
+    print(f'[OPERATION] DeleteAccount({name})')
     
 async def HandleOperation(websocket, rcvdJson):
     try:
@@ -173,6 +178,17 @@ async def HandleOperation(websocket, rcvdJson):
         elif rcvdJson["op"] == "RefreshData":
             data = await RefreshData()
             await websocket.send(data)
+
+        elif rcvdJson["op"] == "UpdatePermits":
+            newPermits = rcvdJson["permits"]
+            success = await UpdatePermits(newPermits)
+            await websocket.send(json.dumps({"success": success}))
+
+        elif rcvdJson["op"] == "DeleteAccount":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            success = await DeleteAccount(name,passwd)
+            await websocket.send(json.dumps({"success": success}))
             
     except websockets.exceptions.ConnectionClosedError:
         print("[ERROR] Connection closed while handling operation.")
@@ -204,6 +220,11 @@ async def InitDB():
         {
             "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1288)],
             "lot_id": "P6",
+            "congestion_percent": 0
+        },
+        {
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1289,1873)],
+            "lot_id": "P5",
             "congestion_percent": 0
         }
     ]
