@@ -95,9 +95,14 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
 };
 
 export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
+    //log out function from syst req
     const handleLogout = () => {
         setIsLoggedIn(false);
         navigation.navigate("Main");
+    };
+
+    const handleDeleteAccount = () => {
+
     };
 
     return (
@@ -106,8 +111,23 @@ export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
             <TouchableOpacity onPress = {() => navigation.navigate("UpdateAccount")}>
                 <Text style={styles.container}>Update Account</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress = {(navigation.navigate("YourPermits"))}>
+                <Text style={styles.container}>
+                    My Permits
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("WeeklySchedule")}>
+                <Text style={styles.container}>
+                    Weekly Schedule
+                </Text>
+            </TouchableOpacity>
             <TouchableOpacity title="Logout" onPress={handleLogout}>
                 <Text style={styles.container}>Log Out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity title="DelAct" onPress={handleDeleteAccount}>
+                <Text style={styles.container}>
+                    Delete Account
+                </Text>
             </TouchableOpacity>
         </View>
     );
@@ -263,10 +283,6 @@ export const WeeklySchedule = ({}) => {
 
 };
 
-//feature 5.6 from system req doc
-export const LogOut = ({}) => {
-
-};
 
 //feature 5.7 from system req doc
 export const DelAcct = ({}) => {
