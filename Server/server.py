@@ -79,7 +79,8 @@ async def CreateAccount(name, passwd):
     
     user = { # Set document
         "name": name,
-        "pass": hashed_password
+        "pass": hashed_password,
+        "permits": [False, False, False, False, False] # [green,yellow,black,gold,handicap]
     }
 
     USERS_COL.insert_one(user) # Insert document
@@ -130,11 +131,29 @@ async def RefreshData():
         print('[ERROR]: {e}')
         return json.dumps({"Error": "Failed to refresh."})
     
-async def UpdatePermits(newPermits):                        # FIXME: Implement!
+async def UpdatePermits(name, passwd, newPermits):                        # FIXME: Implement!
     print(f'[OPERATION] UpdatePermits({newPermits})')
+    # [green,yellow,black,gold,handicap]
+    user = UserAuthenticate(name, passwd)
+    if (user):
+        filter = {"name": name},
+        update = {"permits": newPermits}
+        SPOTS_COL.update_one(filter, update)
+        return True
+    else:
+        return False
 
 async def DeleteAccount(name, passwd):                      # FIXME: Implement!
     print(f'[OPERATION] DeleteAccount({name})')
+    
+    user = UserAuthenticate(name, passwd)
+    if (user):
+        filter = {"name": name}
+        USERS_COL.delete_one(filter)
+        return True
+    else:
+        return False
+
     
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
@@ -177,8 +196,10 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(data)
 
         elif rcvdJson["op"] == "UpdatePermits":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
             newPermits = rcvdJson["permits"]
-            success = await UpdatePermits(newPermits)
+            success = await UpdatePermits(name, passwd, newPermits)
             await websocket.send(json.dumps({"success": success}))
 
         elif rcvdJson["op"] == "DeleteAccount":
@@ -216,12 +237,12 @@ async def InitDB():
     print('[DATABASE] No parking lot info found, reinitializing database')
     lots = [
         {
-            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1288)],
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1251)],
             "lot_id": "P6",
             "congestion_percent": 0
         },
         {
-            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1289,1873)],
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1252,1873)],
             "lot_id": "P5",
             "congestion_percent": 0
         }
