@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button} from "react-native";
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button, Modal} from "react-native";
 
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
@@ -12,7 +12,6 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
                 "name": username,
                 "passwd": password
             };
-
         const response = await sendMsg(JSON.stringify(msgObj));
         const serverResponse = JSON.parse(response);
 
@@ -94,15 +93,41 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
     );
 };
 
-export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
+export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedIn}) => {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+
     //log out function from syst req
     const handleLogout = () => {
         setIsLoggedIn(false);
         navigation.navigate("Main");
     };
 
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
+        try {
+            const msgObj = {
+                "op": "DeleteAccount",
+                "name": username,
+                "passwd": password
+            };
 
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.success) {
+                setModalVisible(false);
+                setIsLoggedIn(false);
+                Alert.alert("Account deleted successfully");
+                navigation.navigate("Main");
+            } else {
+                Alert.alert("Operation failed", serverResponse.error || "Unknown error");
+            }
+        }   catch(error) {
+            Alert.alert("Error", "Could not connect to server.");
+            console.error(error);
+        }
     };
 
     return (
@@ -111,7 +136,7 @@ export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
             <TouchableOpacity onPress = {() => navigation.navigate("UpdateAccount")}>
                 <Text style={styles.container}>Update Account</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress = {(navigation.navigate("YourPermits"))}>
+            <TouchableOpacity onPress = {() => navigation.navigate("YourPermits")}>
                 <Text style={styles.container}>
                     My Permits
                 </Text>
@@ -124,11 +149,51 @@ export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
             <TouchableOpacity title="Logout" onPress={handleLogout}>
                 <Text style={styles.container}>Log Out</Text>
             </TouchableOpacity>
-            <TouchableOpacity title="DelAct" onPress={handleDeleteAccount}>
+            <TouchableOpacity title="DelAct" onPress={() => setModalVisible(true)}>
                 <Text style={styles.container}>
                     Delete Account
                 </Text>
             </TouchableOpacity>
+            <Modal 
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Delete account</Text>
+                        <TextInput
+                            placeholder="Username"
+                            value={username}
+                            onChangeText={setUsername}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            style={styles.input}
+                        />
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                onPress={handleDeleteAccount}
+                                style={styles.button}
+                            >
+                                <Text style={styles.buttonText}>Confirm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => setModalVisible(false)}
+                                style={[styles.button, styles.cancelButton]}
+                            >
+                                <Text style={styles.buttonText}>Cancle</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
         </View>
     );
 };
@@ -172,7 +237,7 @@ export const UpdateUsername = ({sendMsg, navigation}) => {
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.sucess) {
+            if (serverResponse.success) {
                 Alert.alert("Success", "Username updated successfully!");
                 navigation.navigate("AccountMenu");
             } else {
@@ -274,18 +339,12 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 };
 
 //feature 5.4 from system req doc
-export const YourPermits = ({}) => {
+export const YourPermits = ({navigation, sendMsg}) => {
 
 };
 
 //feature 5.5 from system req doc
-export const WeeklySchedule = ({}) => {
-
-};
-
-
-//feature 5.7 from system req doc
-export const DelAcct = ({}) => {
+export const WeeklySchedule = ({navigation, sendMsg}) => {
 
 };
 
@@ -294,5 +353,51 @@ const styles = StyleSheet.create({
     title: {fontSize: 24, marginBottom: 20, textAlign: 'center'},
     input: {height: 40, borderColor: 'black', borderWidth: 1, marginBottom: 12, paddingLeft: 8, borderRadius: 5},
     buttons: {height: 25, alignItems: 'center', backgroundColor: 'darkblue', padding: 2},
-    text: {color: 'white'}
+    text: {color: 'white'},
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    modalContent: {
+        width: '80%',
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center'
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20
+    },
+    input: {
+        width: '100%',
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginBottom: 20
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%'
+    },
+    button: {
+        flex: 1,
+        marginHorizontal: 5,
+        backgroundColor: '#007BFF',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center'
+    },
+    cancelButton: {
+        backgroundColor: 'red'
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
+    }
 });
