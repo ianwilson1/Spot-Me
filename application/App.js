@@ -206,8 +206,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         const fileInfo = await FileSystem.getInfoAsync(fileUri);
         // Gather spaces across all parking lots
         let updatedStatus = [];
+        let congestionData = {};
+
         parsedData.forEach((lot) => {
           updatedStatus = updatedStatus.concat(lot.spaces); // Add spaces from each lot
+          congestionData[lot.lot_id] = lot.congestion_percent; //Log the congestion data for each parking lot (P6, P5)
         });
         
         // Update parking spots with the status from the server
@@ -220,6 +223,13 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         });
 
         setParkingSpots(updatedSpots);
+
+        //For testing purposes
+        let congestionP6 = congestionData['P6'];
+        let congestionP5 = congestionData['P5'];
+        console.log(`Congestion for P6: ${congestionP6 * 100}%`);
+        console.log(`Congestion for P5: ${congestionP5 * 100}%`);
+
 
         /* OPTION 2 OF CODE (in testing mode)
          Parse the data and initialize updatedStatus as an empty array
