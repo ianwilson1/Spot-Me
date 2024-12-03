@@ -23,6 +23,7 @@ export default function App () {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
+  const [congestionData, setCongestionData] = useState({});
 
   //Pull parking spot data from assets
   useEffect(() =>{
@@ -78,31 +79,6 @@ export default function App () {
     });
   };
 
-  /*Start of provisional code for parking lot overlay (part1)
-  //Define first parking spot coordinates
-  const parkingLotBaseCoords = [
-    { latitude: 36.8139167, longitude: -119.7424710 }, // Lower Left
-    { latitude: 36.8139167, longitude: -119.7424399 }, // Lower Right
-    { latitude: 36.8139700, longitude: -119.7424399 }, // Upper Right
-    { latitude: 36.8139700, longitude: -119.7424710 }, // Upper Left
-    { latitude: 36.8139167, longitude: -119.7424710 }, // Close the rectangle
-  ];
-
-  // Longitude offset for each additional parking spot (9 feet wide)
-  const longitudeOffset = 0.0000311;  // 9 feet in degrees of longitude
-
-  // Generate coordinates for 48 parking spots (1 base + 47 more to the right)
-  const parkingLots = [];
-  for (let i = 0; i < 48; i++) {
-    const offsetLongitude = -119.7422222 + (i * longitudeOffset);
-    const newParkingLotCoords = parkingLotBaseCoords.map(coord => ({
-      latitude: coord.latitude,
-      longitude: coord.longitude + (i * longitudeOffset), // Increment longitude for each new spot
-    }));
-    parkingLots.push(newParkingLotCoords);
-  }
-  End of provisional code for parking lot overlay (part1)
-*/
   // Re-orient map to north (compass button)
   const realignMap = () => {
     if (mapRef.current) {
@@ -119,6 +95,19 @@ const checkPermissions = async () => {
   return true;
 };
 
+const parkingLots = [
+  { name: 'P5', coordinates: { latitude: 36.811609, longitude: -119.741742 }, congestionKey: 'P5' },
+  { name: 'P6', coordinates: { latitude: 36.813302, longitude: -119.741799 }, congestionKey: 'P6'},
+];
+
+
+// Function to determine pin color based on congestion
+const getPinColor = (congestion) => {
+  if (congestion == 2) return "darkblue"
+  else if (congestion > 0.85) return "red"; // High congestion
+  else if (congestion > 0.65) return "yellow"; // Medium congestion
+  else return "green"; // Low congestion
+};
 
   // Save user's parked car location (aka create persistent marker of current location)
 const saveLocation = async () => {
@@ -206,8 +195,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         const fileInfo = await FileSystem.getInfoAsync(fileUri);
         // Gather spaces across all parking lots
         let updatedStatus = [];
+        let newCongestionData = {};
+
         parsedData.forEach((lot) => {
           updatedStatus = updatedStatus.concat(lot.spaces); // Add spaces from each lot
+          newCongestionData[lot.lot_id] = lot.congestion_percent; //Log the congestion data for each parking lot (P6, P5)
         });
         
         // Update parking spots with the status from the server
@@ -220,32 +212,13 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         });
 
         setParkingSpots(updatedSpots);
+        setCongestionData(newCongestionData);
 
-        /* OPTION 2 OF CODE (in testing mode)
-         Parse the data and initialize updatedStatus as an empty array
-        const parsedData = JSON.parse(data);
-        var updatedStatus = [];
-
-        // Add spaces from each parking lot to updatedStatus
-        for (let i = 0; i < parsedData.length; i++) {
-          updatedStatus.push(...parsedData[i].spaces); // Use spread operator to add individual spaces
-        }
-
-        // Update parking spots with the status from the server
-        const updatedSpots = parkingSpots.map((spot) => {
-          const spaceStatus = updatedStatus.find((s) => s.space_id === spot.id);
-          return {
-            ...spot,
-            status: spaceStatus ? spaceStatus.status : 0, // Default to 0 if no status is found
-          };
-        });
-        */
-       
-        /* FIXME : needed?
-        if (fileInfo.exists) {
-          const localData = await FileSystem.readAsStringAsync(fileUri);
-          const parsedLocalData = JSON.parse(localData.json)
-        }*/
+        //For testing purposes
+        let congestionP6 = congestionData['P6'];
+        let congestionP5 = congestionData['P5'];
+        console.log(`Congestion for P6: ${congestionP6 * 100}%`);
+        console.log(`Congestion for P5: ${congestionP5 * 100}%`);
 
       } 
       catch (error) {
@@ -278,7 +251,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     longitudeDelta: 0.02,
                 }}
               >
-                {/*Start of provisional code for parking spot overlay(part1)*/}
                 {zoom >= 15.78 
                   && parkingSpots.map((spot) => {
                   // Determine the fill color based on the status
@@ -300,7 +272,20 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     />
                   );  
                 })}
-                {/*End of provisional code for parking spot overlay (part2)*/}
+                                
+                {parkingLots.map((lot, index) => {
+                  const congestion = congestionData[lot.congestionKey] || 2;
+                  const pinColor =getPinColor(congestion);
+                  return(
+                    <Marker
+                      key={index}
+                      title={`${lot.name}`}
+                      description={`(${Math.round(congestion * 100)}% full)`}
+                      pinColor={pinColor}
+                      coordinate={lot.coordinates}
+                    />
+                  );
+                })}
 
                 {carLocation != null && (
                     <Marker
