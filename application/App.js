@@ -230,33 +230,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         console.log(`Congestion for P6: ${congestionP6 * 100}%`);
         console.log(`Congestion for P5: ${congestionP5 * 100}%`);
 
-
-        /* OPTION 2 OF CODE (in testing mode)
-         Parse the data and initialize updatedStatus as an empty array
-        const parsedData = JSON.parse(data);
-        var updatedStatus = [];
-
-        // Add spaces from each parking lot to updatedStatus
-        for (let i = 0; i < parsedData.length; i++) {
-          updatedStatus.push(...parsedData[i].spaces); // Use spread operator to add individual spaces
-        }
-
-        // Update parking spots with the status from the server
-        const updatedSpots = parkingSpots.map((spot) => {
-          const spaceStatus = updatedStatus.find((s) => s.space_id === spot.id);
-          return {
-            ...spot,
-            status: spaceStatus ? spaceStatus.status : 0, // Default to 0 if no status is found
-          };
-        });
-        */
-       
-        /* FIXME : needed?
-        if (fileInfo.exists) {
-          const localData = await FileSystem.readAsStringAsync(fileUri);
-          const parsedLocalData = JSON.parse(localData.json)
-        }*/
-
       } 
       catch (error) {
         console.error('Error sending message:', error);

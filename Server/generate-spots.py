@@ -28,6 +28,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             # Add spot data
             parking_data.append({
                 "parkingLot": parkingLotID,
+                # "marker" : getCoordinatesMarker(parkingLotID),
                 "block": block,
                 "id": spot_id,
                 "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -52,6 +53,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             # Add spot data
             parking_data.append({
                 "parkingLot": parkingLotID,
+                # "marker" : getCoordinatesMarker(parkingLotID),
                 "block": block,
                 "id": spot_id,
                 "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -78,6 +80,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             # Add spot data
             parking_data.append({
                 "parkingLot": parkingLotID,
+                #"marker" : getCoordinatesMarker(parkingLotID),
                 "block": block,
                 "id": spot_id,
                 "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -104,6 +107,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             # Add spot data
             parking_data.append({
                 "parkingLot": parkingLotID,
+                #"marker" : getCoordinatesMarker(parkingLotID),
                 "block": block,
                 "id": spot_id,
                 "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -164,6 +168,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
                 # Add spot data
                 parking_data.append({
                     "parkingLot": parkingLotID,
+                    #"marker" : getCoordinatesMarker(parkingLotID),
                     "block": block,
                     "id": spot_id,
                     "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -190,6 +195,7 @@ def generate_parking_data(start_lat, start_lon, blocks, spots_per_row):
             # Add spot data
             parking_data.append({
                 "parkingLot": parkingLotID,
+                # "marker" : getCoordinatesMarker(parkingLotID),
                 "block": block,
                 "id": spot_id,
                 "coordinates": [lower_left, lower_right, upper_right, upper_left, lower_left],
@@ -206,6 +212,18 @@ starting_longitude = -119.74248
 number_of_blocks = 20
 default_spots_per_row = 48
 #extra_blocks = 1
+
+def getCoordinatesMarker(lot_name):
+    # Define the coordinates for each parking lot
+    if lot_name == "P6":
+        # Coordinates format: (latitude, longitude)
+        return [(36.813302, -119.741799)]
+    elif lot_name == "P5":
+        return [(36.811609, -119.741742
+)]
+    else:
+        return "Parking lot not found"
+
 
 parking_lot_data = generate_parking_data(
     start_lat=starting_latitude,
