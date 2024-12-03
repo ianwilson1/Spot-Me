@@ -103,7 +103,7 @@ const parkingLots = [
 
 // Function to determine pin color based on congestion
 const getPinColor = (congestion) => {
-  if (congestion == 2) return "darkblue"
+  if (congestion == 2) return "#696969"
   else if (congestion > 0.85) return "red"; // High congestion
   else if (congestion > 0.65) return "yellow"; // Medium congestion
   else return "green"; // Low congestion
@@ -215,8 +215,8 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         setCongestionData(newCongestionData);
 
         //For testing purposes
-        let congestionP6 = congestionData['P6'];
-        let congestionP5 = congestionData['P5'];
+        let congestionP6 = newCongestionData['P6'];
+        let congestionP5 = newCongestionData['P5'];
         console.log(`Congestion for P6: ${congestionP6 * 100}%`);
         console.log(`Congestion for P5: ${congestionP5 * 100}%`);
 
@@ -225,7 +225,13 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         console.error('Error sending message:', error);
       }
     };
-  
+
+      /* Tried this code to automatically refresh app when opened
+       useEffect(() => {
+        refreshData();
+      }, []); // Empty dependency array ensures it runs only once on mount
+      */
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
