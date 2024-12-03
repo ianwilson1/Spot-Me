@@ -132,30 +132,24 @@ async def RefreshData():
         print('[ERROR]: {e}')
         return json.dumps({"Error": "Failed to refresh."})
     
-async def UpdatePermits(name, passwd, newPermits):                        
+async def UpdatePermits(name, newPermits):                        
     print(f'[OPERATION] UpdatePermits({newPermits})')
     # [green,yellow,black,gold,handicap]
 
     if not all(permit in VALID_PERMITS for permit in newPermits):
         print("[FAILURE] Invalid permits provided.")
         return False
-    
-    user = UserAuthenticate(name, passwd)
 
-    if (user):
-        filter = {"name": name},
-        update = {"$set": {"permits": newPermits}}
+    filter = {"name": name},
+    update = {"$set": {"permits": newPermits}}
         
-        result = await SPOTS_COL.update_one(filter, update)
+    result = await SPOTS_COL.update_one(filter, update)
         
-        if result.modified_count > 0:
-            print("[SUCCESS] Permits updated successfully!")
-            return True
-        else:
-            print("[FAILURE] Permits update failed.")
-            return False
+    if result.modified_count > 0:
+        print("[SUCCESS] Permits updated successfully!")
+        return True
     else:
-        print("[FAILURE] Authentication failed.")
+        print("[FAILURE] Permits update failed.")
         return False
 
 async def DeleteAccount(name, passwd):                      
@@ -214,9 +208,8 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
-            passwd = rcvdJson["passwd"]
             newPermits = rcvdJson["permits"]
-            success = await UpdatePermits(name, passwd, newPermits)
+            success = await UpdatePermits(name, newPermits)
             await websocket.send(json.dumps({"success": success}))
 
         elif rcvdJson["op"] == "DeleteAccount":
