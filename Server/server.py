@@ -14,6 +14,7 @@ USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
 
 #################################################### Server-side helper functions
+VALID_PERMITS = {"green", "yellow", "black", "gold", "handicap"} #permit options
 
 def hash_password(password):
     salt = bcrypt.gensalt()
@@ -131,26 +132,37 @@ async def RefreshData():
         print('[ERROR]: {e}')
         return json.dumps({"Error": "Failed to refresh."})
     
-async def UpdatePermits(name, passwd, newPermits):
+async def UpdatePermits(name, newPermits):                        
     print(f'[OPERATION] UpdatePermits({newPermits})')
-    user = UserAuthenticate(name, passwd)
-    if (user):
-        filter = {"name": name},
-        update = {"permits": newPermits}
-        SPOTS_COL.update_one(filter, update)
-        return True
-    else:
+    # [green,yellow,black,gold,handicap]
+
+    if not all(permit in VALID_PERMITS for permit in newPermits):
+        print("[FAILURE] Invalid permits provided.")
         return False
 
-async def DeleteAccount(name, passwd):
+    filter = {"name": name},
+    update = {"$set": {"permits": newPermits}}
+        
+    result = await SPOTS_COL.update_one(filter, update)
+        
+    if result.modified_count > 0:
+        print("[SUCCESS] Permits updated successfully!")
+        return True
+    else:
+        print("[FAILURE] Permits update failed.")
+        return False
+
+async def DeleteAccount(name, passwd):                      
     print(f'[OPERATION] DeleteAccount({name})')
     
     user = UserAuthenticate(name, passwd)
+
     if (user):
         filter = {"name": name}
-        USERS_COL.delete_one(filter)
-        return True
+        result = await USERS_COL.delete_one(filter)
+        print(f"[SUCCESS] Account for user {logged_in_user['name']} deleted successfully.")
     else:
+        print("[FAILURE] Authentication failed.")
         return False
 
     
@@ -196,9 +208,8 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
-            passwd = rcvdJson["passwd"]
             newPermits = rcvdJson["permits"]
-            success = await UpdatePermits(name, passwd, newPermits)
+            success = await UpdatePermits(name, newPermits)
             await websocket.send(json.dumps({"success": success}))
 
         elif rcvdJson["op"] == "DeleteAccount":
@@ -236,12 +247,12 @@ async def InitDB():
     print('[DATABASE] No parking lot info found, reinitializing database')
     lots = [
         {
-            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1288)],
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1251)],
             "lot_id": "P6",
             "congestion_percent": 0
         },
         {
-            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1289,1873)],
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1252,1873)],
             "lot_id": "P5",
             "congestion_percent": 0
         }

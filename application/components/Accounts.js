@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button} from "react-native";
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button, Modal, FlatList} from "react-native";
+import CheckBox from '@react-native-community/checkbox';
 
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
@@ -12,7 +13,6 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
                 "name": username,
                 "passwd": password
             };
-
         const response = await sendMsg(JSON.stringify(msgObj));
         const serverResponse = JSON.parse(response);
 
@@ -94,41 +94,107 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
     );
 };
 
-export const AccountMenuScreen = ({navigation, setIsLoggedIn, isLoggedIn}) => {
+export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedIn}) => {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+
     //log out function from syst req
     const handleLogout = () => {
         setIsLoggedIn(false);
         navigation.navigate("Main");
     };
 
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
+        try {
+            const msgObj = {
+                "op": "DeleteAccount",
+                "name": username,
+                "passwd": password
+            };
 
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.success) {
+                setModalVisible(false);
+                setIsLoggedIn(false);
+                Alert.alert("Account deleted successfully");
+                navigation.navigate("Main");
+            } else {
+                Alert.alert("Operation failed", serverResponse.error || "Unknown error");
+            }
+        }   catch(error) {
+            Alert.alert("Error", "Could not connect to server.");
+            console.error(error);
+        }
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Account Menu</Text>
-            <TouchableOpacity onPress = {() => navigation.navigate("UpdateAccount")}>
-                <Text style={styles.container}>Update Account</Text>
+            <TouchableOpacity style={styles.buttons} onPress = {() => navigation.navigate("UpdateAccount")}>
+                <Text style={styles.text}>Update Account</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress = {(navigation.navigate("YourPermits"))}>
-                <Text style={styles.container}>
+            <TouchableOpacity style={styles.buttons} onPress = {() => navigation.navigate("YourPermits")}>
+                <Text style={styles.text}>
                     My Permits
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("WeeklySchedule")}>
-                <Text style={styles.container}>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("WeeklySchedule")}>
+                <Text style={styles.text}>
                     Weekly Schedule
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity title="Logout" onPress={handleLogout}>
-                <Text style={styles.container}>Log Out</Text>
+            <TouchableOpacity style={styles.buttons} title="Logout" onPress={handleLogout}>
+                <Text style={styles.text}>Log Out</Text>
             </TouchableOpacity>
-            <TouchableOpacity title="DelAct" onPress={handleDeleteAccount}>
-                <Text style={styles.container}>
+            <TouchableOpacity style={styles.deleteButtons} title="DelAct" onPress={() => setModalVisible(true)}>
+                <Text style={styles.text}>
                     Delete Account
                 </Text>
             </TouchableOpacity>
+            <Modal 
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Delete account</Text>
+                        <TextInput
+                            placeholder="Username"
+                            value={username}
+                            onChangeText={setUsername}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            style={styles.input}
+                        />
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                onPress={handleDeleteAccount}
+                                style={styles.button}
+                            >
+                                <Text style={styles.buttonText}>Confirm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => setModalVisible(false)}
+                                style={[styles.button, styles.cancelButton]}
+                            >
+                                <Text style={styles.buttonText}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
         </View>
     );
 };
@@ -172,7 +238,7 @@ export const UpdateUsername = ({sendMsg, navigation}) => {
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.sucess) {
+            if (serverResponse.success) {
                 Alert.alert("Success", "Username updated successfully!");
                 navigation.navigate("AccountMenu");
             } else {
@@ -274,25 +340,182 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 };
 
 //feature 5.4 from system req doc
-export const YourPermits = ({}) => {
+export const YourPermits = ({navigation, sendMsg}) => {
+    const [username, setUsername] = useState('');
+    const [permit, setPermit] = useState({
+        green: false,
+        yellow: false,
+        black: false,
+        gold: false,
+        blue: false,
+    });
 
+    const handleYourPermits = async () => {
+        try{
+            const msgObj = {
+                "op": "UpdatePermits",
+                "name": username,
+                "permits": permit,
+            };
+
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.success){
+                Alert.alert("Permit updated successfully!");
+                navigation.navigate("AccountMenu");
+            } else {
+                Alert.alert("Error", serverResponse.error || "Failed to update permit.");
+            }
+        } catch(error) {
+            Alert.alert("Could not connect to server.");
+            console.error(error);
+        }
+    };
+
+    const permitOptions = [
+        {label: 'Student Permit', key: 'green'},
+        {label: 'Faculty Permit', key: 'yellow'},
+        {label: 'Motorcycle Permit', key: 'black'},
+        {label: 'Special Permit', key: 'gold'},
+        {label: 'Handicap Permit', key: 'blue'}
+    ]
+
+    const togglePermit = (key) => {
+        setPermit((prevPermit) => ({
+            ...prevPermit,
+            [key]: !prevPermit[key],
+        }));
+    };
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Your Permit</Text>
+            <FlatList
+                data={permitOptions}
+                keyExtractor={(item) => item.key}
+                renderItem={({ item }) => (
+                    <View style={styles.checkBoxContainer}>
+                        <CheckBox
+                            value={permit[item.key]}
+                            onValueChange={() => togglePermit(item.key)}
+                        />
+                        <Text style={styles.label}>{item.label}</Text>
+                    </View>
+                )}
+            />
+            <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
+                <Text style={styles.saveButtonText}>Save & Sync</Text>
+            </TouchableOpacity>
+        </View>
+    );
 };
 
 //feature 5.5 from system req doc
-export const WeeklySchedule = ({}) => {
-
-};
-
-
-//feature 5.7 from system req doc
-export const DelAcct = ({}) => {
+export const WeeklySchedule = ({navigation, sendMsg}) => {
 
 };
 
 const styles = StyleSheet.create({
-    container: {flex: 1, justifyContent: 'center', padding: 20},
-    title: {fontSize: 24, marginBottom: 20, textAlign: 'center'},
+    container: {flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#f6f6f6'},
+    title: {fontSize: 24, marginBottom: 20, textAlign: 'center', fontFamily: 'Helvetica', marginTop: -100},
     input: {height: 40, borderColor: 'black', borderWidth: 1, marginBottom: 12, paddingLeft: 8, borderRadius: 5},
-    buttons: {height: 25, alignItems: 'center', backgroundColor: 'darkblue', padding: 2},
-    text: {color: 'white'}
+    buttons: {height: 50, alignItems: 'center', backgroundColor: '#002e6d', padding: 15, marginBottom: 20, borderRadius: 10},
+    deleteButtons: {height: 50, alignItems: 'center', backgroundColor: '#db0032', padding: 15, marginBottom: 20, borderRadius: 10},
+    text: {color: 'white', fontWeight: 'bold', fontFamily: 'Helvetica'},
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    modalContent: {
+        width: '80%',
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center'
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontFamily: 'Helvetica',
+        marginBottom: 20
+    },
+    input: {
+        width: '100%',
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginBottom: 20
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%'
+    },
+    button: {
+        flex: 1,
+        marginHorizontal: 5,
+        backgroundColor: '#002e6d',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center'
+    },
+    cancelButton: {
+        backgroundColor: '#d4d4d4'
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    label: {
+        fontSize: 18,
+        marginBottom: 10,
+    },
+    selectedText: {
+        marginTop: 20,
+        fontSize: 16,
+        color: 'green',
+    },
+    checkBoxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    saveButton: {
+        backgroundColor: '#007AFF',
+        padding: 15,
+        borderRadius: 8,
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
 });
