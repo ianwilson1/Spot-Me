@@ -123,12 +123,12 @@ async def UpdatePass(name, passwd, newPass):                              # FIXM
     else:
         print("[ERROR] could not verify")
 
-    async def refreshLot(): # Return all congestion values for each lot.
-        congestion = SPOTS_COL.find({}, {"lot_id": 1, "congestion_percent": 1})
+async def refreshLot(): # Return all congestion values for each lot.
+    congestion = SPOTS_COL.find({}, {"lot_id": 1, "congestion_percent": 1})
 
-        currCong = {lot["lot_id"]: lot["congestion_percent"] for lot in congestion}
+    currCong = {lot["lot_id"]: lot["congestion_percent"] for lot in congestion}
 
-        return json.dumps(currCong)
+    return json.dumps(currCong)
 
     
 async def HandleOperation(websocket, rcvdJson):
@@ -164,6 +164,10 @@ async def HandleOperation(websocket, rcvdJson):
             newPass = rcvdJson["newPass"]
             success = await UpdatePass(name, passwd, newPass)
             await websocket.send(json.dumps({"success": success}))
+
+        elif rcvdJson["op"] == "RefreshData":
+            data = await refreshLot()
+            await websocket.send(data)
             
     except websockets.exceptions.ConnectionClosedError:
         print("[ERROR] Connection closed while handling operation.")
