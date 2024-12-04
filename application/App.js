@@ -7,7 +7,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
 import parkingData from './assets/parking_lot_data.json';
 
 
@@ -110,73 +109,13 @@ const getPinColor = (congestion) => {
 };
 
   // Save user's parked car location (aka create persistent marker of current location)
-<<<<<<< HEAD
-  const saveLocation = async () => {
-    if (carLocation == null) {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('Location permission required to use this feature.');
-          return;
-        }
-        Alert.alert(
-          "Save car location?", "", [
-            { 
-              text: "Yes",
-              onPress: async () => {
-                let carLoc = await Location.getCurrentPositionAsync({});
-                            
-                setCarLocation(carLoc.coords);
-              }
-            },
-            { 
-              text: "Cancel" 
-            }
-          ]
-        );
-    } 
-    else {
-      Alert.alert(
-        "Already saved!", "", [
-          { 
-            text: "Locate",
-            onPress: () => {
-              if (mapRef.current) {
-                mapRef.current.animateToRegion({ // Center and zoom in on car's location
-                    latitude: carLocation.latitude,
-                    longitude: carLocation.longitude,
-                    latitudeDelta: 0.003,
-                    longitudeDelta: 0.003,
-                }, 1000);
-              }
-            }
-          },
-          {
-            text: "Update", // TODO: Update saved car location
-            onPress: async () => {
-              let newLoc = await Location.getCurrentPositionAsync({});
-              setCarLocation(newLoc.coords);
-            }
-          },
-          {
-            text: "Forget",
-            onPress: () => setCarLocation(null)
-          },
-        ]
-      );
-=======
 const saveLocation = async () => {
-  const permission = await checkPermissions();
-  if(!permission) {
-    console.log("Incorrect permissions");
-    return;
-  }
-  console.log("You have permission!");
+
   if (carLocation == null) {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Location permission required to use this feature.');
       return;
->>>>>>> 78be397f8155ee056b30587f4ee0206e8facfbfb
     }
     Alert.alert(
       "Save car location?", "", [
@@ -185,19 +124,19 @@ const saveLocation = async () => {
           onPress: async () => {
             let carLoc = await Location.getCurrentPositionAsync({});
                         
+            console.log(carLoc.coords);
             setCarLocation(carLoc.coords);
 
-            const locJSON = JSON.stringify(carLoc);
-            const fileUri = FileSystem.documentDirectory + './cache/carloc.json';
-
+            /*
             try {
               await FileSystem.writeAsStringAsync(fileUri, locJSON, {
                 encoding: FileSystem.EncodingType.UTF8
               });
-              console.log('Car location saved:', fileUri);
+              console.log('Car location saved!');
             } catch (error) {
               console.error('Error saving car location:', error);
             }
+            */
           }
         },
         { 
