@@ -19,8 +19,8 @@ async def Send(websocket, msg):
 # Make sure to clear the collection before testing the next test case!
 async def Start():
     async with websockets.connect(ADDR) as websocket:
-        await Send(websocket, json.dumps({"op":"RefreshLot"}))
-        message = await websocket.recv;
+        await Send(websocket, json.dumps({"op":"RefreshData"}))
+        message = await websocket.recv()
         print(message)
 '''
     # Test Case 0 - Create an account with a duplicate name
@@ -52,9 +52,4 @@ async def Start():
 
         await Send(websocket, DISCON_MSG)
 '''
-    
-    
-
-    
-
 asyncio.run(Start())

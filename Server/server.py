@@ -1,10 +1,3 @@
-# List of operations:
-#   - UpdateSpot: update a spot's occupancy status
-#   - CreateAccount: create a new account
-#   - UpdateName: update a user's name
-#   - UpdatePass: update a user's password
-#   - UpdatePermit: update a user's list of permits
-
 import bcrypt
 import json
 import pymongo
@@ -19,14 +12,16 @@ DB_CLIENT = pymongo.MongoClient('localhost', 27017)
 DB = DB_CLIENT['SpotMeDB']
 USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
-####################################################
 
-def hash_password(password): # Password security, will hash a given passed in password
+#################################################### Server-side helper functions
+VALID_PERMITS = {"green", "yellow", "black", "gold", "handicap"} #permit options
+
+def hash_password(password):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
 
-def userAuthenticate(name, passwd):
+def UserAuthenticate(name, passwd):
     user = USERS_COL.find_one({"name": name}) # Finds a user by their unique username
 
     if (user): # Checks password for user
@@ -37,8 +32,7 @@ def userAuthenticate(name, passwd):
     else:
         print("[ERROR] User could not be found :(")
 
-
-async def congestionCalc(id): # Calculate the current congestion % of a given lot, identified by space id
+async def CongestionCalc(id):
     sum = 0
     lot = SPOTS_COL.find_one({"spaces": {"$elemMatch": {"space_id": id}}})
 
@@ -50,8 +44,10 @@ async def congestionCalc(id): # Calculate the current congestion % of a given lo
 
     SPOTS_COL.update_one({"spaces": {"$elemMatch": {"space_id": id}}}, {"$set": {"congestion_percent": sum / lot_length }}) # Update congestion field with sum of filled lots by total spaces
 
-async def Login(name, passwd): # Function to return whether a login is successful or not
-    print(f"[OPERATION] logIn({name},{passwd})")
+#################################################### Server<->Client Functions
+
+async def Login(name, passwd):
+    print(f"[OPERATION] Login({name})")
     user = USERS_COL.find_one({"name": name}) # Find a user by given name; names are unique
     
     if (user):
@@ -65,17 +61,16 @@ async def Login(name, passwd): # Function to return whether a login is successfu
         print("[ERROR] User not found.")
         return False
     
-async def UpdateSpot(id, status): # Function to update the parking status of a lot; 0 = empty, 1 = full, 2 = soft reserved
-
+async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id} # Find spot
-    update = {"$set": {"spaces.$.status": status}} # Set new status
+    update = {"$set": {"spaces.$.status": status}} # Set new status; # 0 = empty, 1 = full, 2 = soft reserved
     
     SPOTS_COL.update_one(filter, update) # Update document
-    await congestionCalc(id) # Update congestion level of lot
+    await CongestionCalc(id) # Update congestion level of lot
 
 async def CreateAccount(name, passwd): 
-    print(f"[OPERATION] CreateAccount({name},{passwd})")
+    print(f"[OPERATION] CreateAccount({name})")
 
     if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
         print("[ERROR] User already exists.")
@@ -85,52 +80,94 @@ async def CreateAccount(name, passwd):
     
     user = { # Set document
         "name": name,
-        "pass": hashed_password
+        "pass": hashed_password,
+        "permits": [False, False, False, False, False] # [green,yellow,black,gold,handicap]
     }
 
     USERS_COL.insert_one(user) # Insert document
     return True 
 
-async def UpdateName(name, passwd, newName):                    # FIXME: does not check password!
-    print(f"[OPERATION] UpdateName({name},{passwd},{newName})")
+async def UpdateName(name, passwd, newName):
+    print(f"[OPERATION] UpdateName({name},{newName})")
 
     if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
         print("[ERROR] User already exists.")
-        return False
+        return False, "Username already taken."
     
-    user = userAuthenticate(name, passwd) # Check user's name and password
+    user = UserAuthenticate(name, passwd) # Check user's name and password
 
     if (user):
         filter = {"name": name} # Find document with old name
         update = {"$set": {"name": newName}} # Set new name
         USERS_COL.update_one(filter, update) # Update document
-        print("New username is set!")
-        return True
+        print("[SUCCESS] New username is set!")
+        return True, "Username updated successfully!"
     else:
         print("[ERROR] could not verify user")
 
-async def UpdatePass(name, passwd, newPass):                              # FIXME: does not check username!
-    print(f"[OPERATION] CreateAccount({name},{passwd},{newPass})")
+async def UpdatePass(name, passwd, newPass):
+    print(f"[OPERATION] UpdatePass({name})")
     
-    user = userAuthenticate(name, passwd) # Check user's name and password
+    user = UserAuthenticate(name, passwd) # Check user's name and password
 
     if (user):
+        hashed_password = hash_password(newPass) # Hash new password
         filter = {"name": name} # Find document
         update = {"$set": {"pass": newPass}} # Set new password
         USERS_COL.update_one(filter, update) # Push update to that document
         print("[SUCCESS] New password set!")
-        return True
+        return True, "Password updated successfully!"
     else:
         print("[ERROR] could not verify")
+        return False, "Incorrect username or password."
 
-async def refreshLot(): # Return all congestion values for each lot.
-    congestion = SPOTS_COL.find({}, {"lot_id": 1, "congestion_percent": 1})
+async def RefreshData():
+    print('[OPERATION] RefreshData()')
+    try:
+        data = list(SPOTS_COL.find({}, {'_id': False})) # Updated parking spot/lot information (congestion, occupancy);
+        print(f'[INFO] Retrieved {len(data)} records from the DB.')
 
-    currCong = {lot["lot_id"]: lot["congestion_percent"] for lot in congestion}
+        return json.dumps(data)
+    except Exception as e:
+        print('[ERROR]: {e}')
+        return json.dumps({"Error": "Failed to refresh."})
+    
+async def UpdatePermits(name, newPermits):                        
+    print(f'[OPERATION] UpdatePermits({newPermits})')
+    # [green,yellow,black,gold,handicap]
 
-    return json.dumps(currCong)
+    if not all(permit in VALID_PERMITS for permit in newPermits):
+        print("[FAILURE] Invalid permits provided.")
+        return False
+
+    filter = {"name": name},
+    update = {"$set": {"permits": newPermits}}
+        
+    result = await SPOTS_COL.update_one(filter, update)
+        
+    if result.modified_count > 0:
+        print("[SUCCESS] Permits updated successfully!")
+        return True
+    else:
+        print("[FAILURE] Permits update failed.")
+        return False
+
+async def DeleteAccount(name, passwd):                      
+    print(f'[OPERATION] DeleteAccount({name})')
+    
+    user = UserAuthenticate(name, passwd)
+
+    if (user):
+        filter = {"name": name}
+        result = await USERS_COL.delete_one(filter)
+        print(f"[SUCCESS] Account for user {logged_in_user['name']} deleted successfully.")
+    else:
+        print("[FAILURE] Authentication failed.")
+        return False
 
     
+#################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
+
 async def HandleOperation(websocket, rcvdJson):
     try:
         if rcvdJson["op"] == "Login":
@@ -155,14 +192,30 @@ async def HandleOperation(websocket, rcvdJson):
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newName = rcvdJson["newName"]
-            success = await UpdateName(name, passwd, newName)
-            await websocket.send(json.dumps({"success": success}))
+            success, message = await UpdateName(name, passwd, newName)
+            await websocket.send(json.dumps({"success": success, "message": message}))
             
         elif rcvdJson["op"] == "UpdatePass":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newPass = rcvdJson["newPass"]
-            success = await UpdatePass(name, passwd, newPass)
+            success, message = await UpdatePass(name, passwd, newPass)
+            await websocket.send(json.dumps({"success": success, "message": message}))
+
+        elif rcvdJson["op"] == "RefreshData":
+            data = await RefreshData()
+            await websocket.send(data)
+
+        elif rcvdJson["op"] == "UpdatePermits":
+            name = rcvdJson["name"]
+            newPermits = rcvdJson["permits"]
+            success = await UpdatePermits(name, newPermits)
+            await websocket.send(json.dumps({"success": success}))
+
+        elif rcvdJson["op"] == "DeleteAccount":
+            name = rcvdJson["name"]
+            passwd = rcvdJson["passwd"]
+            success = await DeleteAccount(name,passwd)
             await websocket.send(json.dumps({"success": success}))
 
         elif rcvdJson["op"] == "RefreshData":
@@ -187,30 +240,37 @@ async def HandleMsg(websocket):
         rcvdJson = json.loads(msg)
         await HandleOperation(websocket, rcvdJson)
 
+#################################################### Database initialization (for resetting the server-side information)
 
 async def InitDB():
     ### TODO: Make sure to change later to implement as many spots and lots as needed
-    ## Example lot for testing with 10 lots
+    
     if (SPOTS_COL.count_documents({}) > 0):
         return
     
-    lots = [] # Set array
-    lot = { # Example lot
-        "lot_id": "P_example",
-        "permit_required": 0,
-        "spaces": [{"space_id": j + 1, "status": 0, "isHandicap" : 0} for j in range(300)],
-        "congestion_percent": 0
-    }
+    print('[DATABASE] No parking lot info found, reinitializing database')
+    lots = [
+        {
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1251)],
+            "lot_id": "P6",
+            "congestion_percent": 0
+        },
+        {
+            "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1252,1873)],
+            "lot_id": "P5",
+            "congestion_percent": 0
+        }
+    ]
     
-    lots.append(lot) # Just one append for now, incorporate loop for # of lots
     SPOTS_COL.insert_many(lots) # Insert array of lots
+
+#################################################### Server startup
 
 async def Start():
     await InitDB()
     async with websockets.serve(HandleMsg, '0.0.0.0', PORT) as server:
         print(f"[LISTENING] Server listening on port {PORT}")
         await server.serve_forever()
-
 
 print("[STARTING]")
 asyncio.run(Start())
