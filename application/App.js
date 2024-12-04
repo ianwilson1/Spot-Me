@@ -255,8 +255,8 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   && parkingSpots.map((spot) => {
                   // Determine the fill color based on the status
                   const statusColors = {
-                    0: "rgba(255, 0, 0, 0.5)", // Red for unavailable
-                    1: "rgba(0, 255, 0, 0.5)", // Green for available
+                    0: "rgba(0, 255, 0, 0.5)", // Green for available
+                    1: "rgba(255, 0, 0, 0.5)", // Red for unavailable
                     2: "rgba(255, 255, 0, 0.5)", // Yellow for reserved
                   };
                   const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Gray as default
