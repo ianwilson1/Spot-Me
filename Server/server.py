@@ -131,9 +131,8 @@ async def RefreshData():
         print('[ERROR]: {e}')
         return json.dumps({"Error": "Failed to refresh."})
     
-async def UpdatePermits(name, passwd, newPermits):                        # FIXME: Implement!
+async def UpdatePermits(name, passwd, newPermits):
     print(f'[OPERATION] UpdatePermits({newPermits})')
-    # [green,yellow,black,gold,handicap]
     user = UserAuthenticate(name, passwd)
     if (user):
         filter = {"name": name},
@@ -143,7 +142,7 @@ async def UpdatePermits(name, passwd, newPermits):                        # FIXM
     else:
         return False
 
-async def DeleteAccount(name, passwd):                      # FIXME: Implement!
+async def DeleteAccount(name, passwd):
     print(f'[OPERATION] DeleteAccount({name})')
     
     user = UserAuthenticate(name, passwd)
