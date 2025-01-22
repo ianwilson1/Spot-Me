@@ -102,10 +102,10 @@ const parkingLots = [
 
 // Function to determine pin color based on congestion
 const getPinColor = (congestion) => {
-  if (congestion == 2) return "#696969" // Default value (cannot be 0, it would mean empty, not default)
+  if (congestion == 2) return "white" // Default value (cannot be 0, it would mean empty, not default)
   else if (congestion > 0.85) return "red"; // High congestion
   else if (congestion > 0.65) return "yellow"; // Medium congestion
-  else return "green"; // Low congestion
+  else return "purple"; // Low congestion
 };
 
   // Save user's parked car location (aka create persistent marker of current location)
