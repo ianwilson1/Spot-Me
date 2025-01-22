@@ -36,7 +36,7 @@ export default function App () {
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId) => {
-    Alert.alert(`Parking Lot: ${parkingLot}`, `Block ID: ${blockId}\nSpot ID: ${spotId}\n`);
+    Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`);   // `Block ID: ${blockId}\n   --> for testing 
   };
 
   // Establish connection to server
@@ -280,7 +280,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     <Marker
                       key={index}
                       title={`${lot.name}`}
-                      description={`(${Math.round(congestion * 100)}% full)`}
+                      description={
+                        congestion >= 0 && congestion <= 1 
+                          ? `(${Math.round(congestion * 100)}% full)` 
+                          : "No data. Refresh"
+                      }
                       pinColor={pinColor}
                       coordinate={lot.coordinates}
                     />
