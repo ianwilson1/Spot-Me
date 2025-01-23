@@ -7,7 +7,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
 import parkingData from './assets/parking_lot_data.json';
 
 
@@ -37,7 +36,7 @@ export default function App () {
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId) => {
-    Alert.alert(`Parking Lot: ${parkingLot}`, `Block ID: ${blockId}\nSpot ID: ${spotId}\n`);
+    Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`);   // `Block ID: ${blockId}\n   --> for testing 
   };
 
   // Establish connection to server
@@ -111,12 +110,7 @@ const getPinColor = (congestion) => {
 
   // Save user's parked car location (aka create persistent marker of current location)
 const saveLocation = async () => {
-  const permission = await checkPermissions();
-  if(!permission) {
-    console.log("Incorrect permissions");
-    return;
-  }
-  console.log("You have permission!");
+
   if (carLocation == null) {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -130,19 +124,19 @@ const saveLocation = async () => {
           onPress: async () => {
             let carLoc = await Location.getCurrentPositionAsync({});
                         
+            console.log(carLoc.coords);
             setCarLocation(carLoc.coords);
 
-            const locJSON = JSON.stringify(carLoc);
-            const fileUri = FileSystem.documentDirectory + './cache/carloc.json';
-
+            /*
             try {
               await FileSystem.writeAsStringAsync(fileUri, locJSON, {
                 encoding: FileSystem.EncodingType.UTF8
               });
-              console.log('Car location saved:', fileUri);
+              console.log('Car location saved!');
             } catch (error) {
               console.error('Error saving car location:', error);
             }
+            */
           }
         },
         { 
@@ -261,8 +255,8 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   && parkingSpots.map((spot) => {
                   // Determine the fill color based on the status
                   const statusColors = {
-                    0: "rgba(255, 0, 0, 0.5)", // Red for unavailable
-                    1: "rgba(0, 255, 0, 0.5)", // Green for available
+                    0: "rgba(0, 255, 0, 0.5)", // Green for available
+                    1: "rgba(255, 0, 0, 0.5)", // Red for unavailable
                     2: "rgba(255, 255, 0, 0.5)", // Yellow for reserved
                   };
                   const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Gray as default
@@ -286,7 +280,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     <Marker
                       key={index}
                       title={`${lot.name}`}
-                      description={`(${Math.round(congestion * 100)}% full)`}
+                      description={
+                        congestion >= 0 && congestion <= 1 
+                          ? `(${Math.round(congestion * 100)}% full)` 
+                          : "No data. Refresh"
+                      }
                       pinColor={pinColor}
                       coordinate={lot.coordinates}
                     />
