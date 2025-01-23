@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button, Modal, FlatList} from "react-native";
-import CheckBox from '@react-native-community/checkbox';
+import { CheckBox } from 'react-native-paper';
+import { SafeAreaView } from "react-native-safe-area-context";
+
+console.log(CheckBox);
 
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
@@ -22,7 +25,7 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             navigation.navigate("Main");
         }
         else {
-            Alert.alert("Login failed", serverResponse.error || "Unknown error");
+            Alert.alert("Login failed", serverResponse.error || "Wrong username or password");
         }
         } catch (error) {
             Alert.alert("Error", "Could not connect to server.");
@@ -137,7 +140,7 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
             <TouchableOpacity style={styles.buttons} onPress = {() => navigation.navigate("UpdateAccount")}>
                 <Text style={styles.text}>Update Account</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttons} onPress = {() => navigation.navigate("YourPermits")}>
+            <TouchableOpacity style={styles.buttons} onPress = {()=> navigation.navigate("YourPermits")}>
                 <Text style={styles.text}>
                     My Permits
                 </Text>
@@ -343,11 +346,11 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 export const YourPermits = ({navigation, sendMsg}) => {
     const [username, setUsername] = useState('');
     const [permit, setPermit] = useState({
-        green: false,
-        yellow: false,
-        black: false,
-        gold: false,
-        blue: false,
+        "green": false,
+        "yellow": false,
+        "black": false,
+        "gold": false,
+        "blue": false,
     });
 
     const handleYourPermits = async () => {
@@ -355,7 +358,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
             const msgObj = {
                 "op": "UpdatePermits",
                 "name": username,
-                "permits": permit,
+                "newPermits": permit,
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
@@ -378,7 +381,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
         {label: 'Faculty Permit', key: 'yellow'},
         {label: 'Motorcycle Permit', key: 'black'},
         {label: 'Special Permit', key: 'gold'},
-        {label: 'Handicap Permit', key: 'blue'}
+        {label: 'Handicap Permit', key: 'blue'},
     ]
 
     const togglePermit = (key) => {
@@ -389,16 +392,22 @@ export const YourPermits = ({navigation, sendMsg}) => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Your Permit</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+            />
             <FlatList
                 data={permitOptions}
-                keyExtractor={(item) => item.key}
+                keyExtractor={item => item.key}
                 renderItem={({ item }) => (
                     <View style={styles.checkBoxContainer}>
                         <CheckBox
-                            value={permit[item.key]}
-                            onValueChange={() => togglePermit(item.key)}
+                            status={permit[item.key] ? 'checked' : 'unchecked'}
+                            onPress={() => togglePermit(item.key)}
                         />
                         <Text style={styles.label}>{item.label}</Text>
                     </View>
@@ -407,7 +416,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
                 <Text style={styles.saveButtonText}>Save & Sync</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 
