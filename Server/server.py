@@ -111,12 +111,16 @@ async def UpdatePass(name, passwd, newPass):
     user = UserAuthenticate(name, passwd) # Check user's name and password
 
     if (user):
-        hashed_password = hash_password(newPass) # Hash new password
-        filter = {"name": name} # Find document
-        update = {"$set": {"pass": newPass}} # Set new password
-        USERS_COL.update_one(filter, update) # Push update to that document
-        print("[SUCCESS] New password set!")
-        return True, "Password updated successfully!"
+        if passwd == newPass: # Make sure the new password is not the same as the old password
+            print("[ERROR] new password is the same as the old one.")
+            return False
+        else:
+            hashed_password = hash_password(newPass) # Hash new password
+            filter = {"name": name} # Find document
+            update = {"$set": {"pass": hashed_password}} # Set new password
+            USERS_COL.update_one(filter, update) # Push update to that document
+            print("[SUCCESS] New password set!")
+            return True, "Password updated successfully!"
     else:
         print("[ERROR] could not verify")
         return False, "Incorrect username or password."
