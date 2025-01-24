@@ -51,7 +51,9 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
                 <Text style={styles.text}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity title="Register" onPress={() => navigation.navigate('Register')}/>
+            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate('RegisterScreen')}>
+                <Text style={styles.text}>Register</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -76,7 +78,7 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
                 setIsLoggedIn(true);
                 navigation.navigate("Main");
             } else {
-                Alert.alert("Registration failed", serverResponse.error || "Unknown error");
+                Alert.alert("Registration failed", serverResponse.error || "Username already in use");
             }
         } catch (error){
             Alert.alert("Error", "Could not connect to server.");
@@ -126,7 +128,7 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
                 Alert.alert("Account deleted successfully");
                 navigation.navigate("Main");
             } else {
-                Alert.alert("Operation failed", serverResponse.error || "Unknown error");
+                Alert.alert("Operation failed", serverResponse.error || "Incorrect password");
             }
         }   catch(error) {
             Alert.alert("Error", "Could not connect to server.");
@@ -245,7 +247,7 @@ export const UpdateUsername = ({sendMsg, navigation}) => {
                 Alert.alert("Success", "Username updated successfully!");
                 navigation.navigate("AccountMenu");
             } else {
-                Alert.alert("Update failed", serverResponse.error || "Unknown error");
+                Alert.alert("Update failed", serverResponse.error || "Incorrect credentials");
             }
         } catch (error) {
             Alert.alert("Error", "Could not connect to the server.");
@@ -304,7 +306,7 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
                 Alert.alert("Password updated successfully!");
                 navigation.navigate("AccountMenu");
             } else {
-                Alert.alert("Update failed", serverResponse.error || "Unknown error");
+                Alert.alert("Update failed", serverResponse.error || "Incorrect credentials");
             }
         } catch (error) {
             Alert.alert("Error", "Could not connect to the server.");
