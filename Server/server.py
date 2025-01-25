@@ -14,7 +14,7 @@ USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
 
 #################################################### Server-side helper functions
-VALID_PERMITS = {"green", "yellow", "black", "gold", "handicap"} #permit options
+VALID_PERMITS = {"green", "yellow", "black", "gold", "blue"} #permit options
 
 def hash_password(password):
     salt = bcrypt.gensalt()
@@ -144,7 +144,7 @@ async def UpdatePermits(name, newPermits):
         print("[FAILURE] Invalid permits provided.")
         return False
 
-    filter = {"name": name},
+    filter = {"name": name}
     update = {"$set": {"permits": newPermits}}
         
     result = await SPOTS_COL.update_one(filter, update)

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button, Modal, FlatList} from "react-native";
-import { CheckBox } from 'react-native-paper';
+import { Checkbox, CheckBox, CheckboxItem} from 'react-native-paper';
+/*import CheckboxItem from "react-native-paper/lib/typescript/components/Checkbox/CheckboxItem";*/
 import { SafeAreaView } from "react-native-safe-area-context";
 
 console.log(CheckBox);
@@ -170,17 +171,17 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Delete account</Text>
                         <TextInput
-                            placeholder="Username"
+                            style={styles.input}
+                            placeholder="Username" 
                             value={username}
                             onChangeText={setUsername}
-                            style={styles.input}
                         />
                         <TextInput
+                            style={styles.input}
                             placeholder="Password"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
-                            style={styles.input}
                         />
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
@@ -347,20 +348,28 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 //feature 5.4 from system req doc
 export const YourPermits = ({navigation, sendMsg}) => {
     const [username, setUsername] = useState('');
-    const [permit, setPermit] = useState({
-        "green": false,
-        "yellow": false,
-        "black": false,
-        "gold": false,
-        "blue": false,
+    const [permits, setPermits] = useState({
+        green: false,
+        yellow: false,
+        black: false,
+        gold: false,
+        blue: false,
     });
+
+    const handleCheckedItem = (itemId) => {
+        setPermits((prevPermit) => ({
+            ...prevPermit,
+            [itemId]: !prevPermit[itemId],
+        }));
+    };
 
     const handleYourPermits = async () => {
         try{
+            const selectedPermits = Object.keys(permits).filter((key) => permits[key]);
             const msgObj = {
                 "op": "UpdatePermits",
                 "name": username,
-                "newPermits": permit,
+                "newPermits": selectedPermits,
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
@@ -378,43 +387,37 @@ export const YourPermits = ({navigation, sendMsg}) => {
         }
     };
 
-    const permitOptions = [
-        {label: 'Student Permit', key: 'green'},
-        {label: 'Faculty Permit', key: 'yellow'},
-        {label: 'Motorcycle Permit', key: 'black'},
-        {label: 'Special Permit', key: 'gold'},
-        {label: 'Handicap Permit', key: 'blue'},
-    ]
-
-    const togglePermit = (key) => {
-        setPermit((prevPermit) => ({
-            ...prevPermit,
-            [key]: !prevPermit[key],
-        }));
-    };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Your Permit</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-            />
-            <FlatList
-                data={permitOptions}
-                keyExtractor={item => item.key}
-                renderItem={({ item }) => (
-                    <View style={styles.checkBoxContainer}>
-                        <CheckBox
-                            status={permit[item.key] ? 'checked' : 'unchecked'}
-                            onPress={() => togglePermit(item.key)}
-                        />
-                        <Text style={styles.label}>{item.label}</Text>
-                    </View>
-                )}
-            />
+           <Text style={styles.title}>Your Permits</Text>
+           <View style={styles.checkBoxContainer}>
+                <Checkbox.Item
+                    status={permits["green"] ? 'checked' : 'unchecked'}
+                    onPress={() => handleCheckedItem('green')}
+                    label="Student Permit"
+                />
+                <Checkbox.Item
+                    status={permits["yellow"] ? 'checked' : 'unchecked'}
+                    onPress={() => handleCheckedItem('yellow')}
+                    label="Faculty Permit"
+                />
+                <Checkbox.Item
+                    status={permits["black"] ? 'checked' : 'unchecked'}
+                    onPress={() => handleCheckedItem('black')}
+                    label="Motorcycle Permit"
+                />
+                <Checkbox.Item
+                    status={permits["gold"] ? 'checked' : 'unchecked'}
+                    onPress={() => handleCheckedItem('gold')}
+                    label="Special Permit"
+                />
+                <Checkbox.Item
+                    status={permits["blue"] ? 'checked' : 'unchecked'}
+                    onPress={() => handleCheckedItem('blue')}
+                    label="Handicap Permit"
+                />
+          </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
                 <Text style={styles.saveButtonText}>Save & Sync</Text>
             </TouchableOpacity>

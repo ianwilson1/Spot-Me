@@ -8,6 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
 import parkingData from './assets/parking_lot_data.json';
+import { Checkbox } from 'react-native-paper';
 
 
 const Stack = createStackNavigator();
