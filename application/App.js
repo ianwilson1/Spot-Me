@@ -316,6 +316,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         </Stack.Screen>
         <Stack.Screen
           name="Register"
+          options={{headerShown: false}}
           children={(screenProps) => (
             <RegisterScreen 
               {...screenProps} 
@@ -327,6 +328,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         />
         <Stack.Screen
           name="Login"
+          options={{headerShown: false}}
           children={(screenProps) => (
             <LoginScreen 
               {...screenProps} 
@@ -338,6 +340,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         />
         <Stack.Screen
           name="AccountMenu"
+          options={{headerShown: false}}
           children={(screenProps) =>(
             <AccountMenuScreen
               {...screenProps}
@@ -349,6 +352,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         />
         <Stack.Screen
           name='UpdateAccount'
+          options={{headerShown: false}}
           children={(screenProps) => (
             <UpdateAccount
               {...screenProps}
@@ -357,6 +361,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
           />
           <Stack.Screen
             name='UpdateUsername'
+            options={{headerShown: false}}
             children={(screenProps) => 
               <UpdateUsername
                 {...screenProps}
@@ -366,6 +371,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
           />
           <Stack.Screen
             name='UpdatePasswd'
+            options={{headerShown: false}}
             children={(screenProps) =>
               <UpdatePasswd
                 {...screenProps}
@@ -375,6 +381,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
           />
           <Stack.Screen
             name='YourPermits'
+            options={{headerShown: false}}
             children={(screenProps) => 
               <YourPermits
                 {...screenProps}
@@ -384,6 +391,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
           />
           <Stack.Screen
             name='WeeklySchedule'
+            options={{headerShown: false}}
             children={(screenProps) => 
               <WeeklySchedule
                 {...screenProps}
@@ -406,7 +414,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 26,
-    color: 'darkblue',
+    color: '#002e6d',
   },
   titleContainer: {
     position: 'absolute',

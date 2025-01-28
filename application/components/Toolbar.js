@@ -79,7 +79,7 @@ const Toolbar = ({realignMap, saveLocation, refreshData, navigation, isLoggedIn,
       height: 90,
       justifyContent: 'space-around',
       paddingBottom: 30,
-      backgroundColor: 'darkblue',
+      backgroundColor: '#002e6d',
     },
     iconContainer: {
       alignItems: 'center',
