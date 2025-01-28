@@ -42,7 +42,7 @@ export default function App () {
   // Establish connection to server
   useEffect( () => {
     const ConnectToServer = () => {
-      const client = new WebSocket('ws://34.105.119.88:15024')
+      const client = new WebSocket('ws://34.169.42.70:15024')
       socketRef.current = client;
     };
 
