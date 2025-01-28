@@ -8,7 +8,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
 import parkingData from './assets/parking_lot_data.json';
-import { Checkbox } from 'react-native-paper';
 
 
 const Stack = createStackNavigator();
@@ -43,7 +42,7 @@ export default function App () {
   // Establish connection to server
   useEffect( () => {
     const ConnectToServer = () => {
-      const client = new WebSocket('ws://34.105.119.88:15024')
+      const client = new WebSocket('ws://34.169.42.70:15024')
       socketRef.current = client;
     };
 
