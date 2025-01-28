@@ -221,10 +221,6 @@ async def HandleOperation(websocket, rcvdJson):
             passwd = rcvdJson["passwd"]
             success = await DeleteAccount(name,passwd)
             await websocket.send(json.dumps({"success": success}))
-
-        elif rcvdJson["op"] == "RefreshData":
-            data = await refreshLot()
-            await websocket.send(data)
             
     except websockets.exceptions.ConnectionClosedError:
         print("[ERROR] Connection closed while handling operation.")
