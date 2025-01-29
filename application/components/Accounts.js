@@ -322,12 +322,16 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
     const [newPasswd, setNewPasswd] = useState('');
 
     const handleUpdatePasswd = async () => {
+        if (!currUsername || !currPasswd){
+            Alert.alert("Error, Current password and new username are required.");
+            return;
+        }
         try {
             const msgObj = {
                 "op": "UpdatePass",
                 "name": currUsername,
                 "passwd": currPasswd,
-                "newPass": newPasswd,
+                "newPass": newPasswd
             };
         
             const response = await sendMsg(JSON.stringify(msgObj));
@@ -343,16 +347,19 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
             else if (serverResponse.status === "invalid_pass") {
                 Alert.alert("Invalid password!", "Please check your password and try again.");
             }
-            else if (serverResponse.status == "short_pass") {
+            else if (serverResponse.status === "same_pass") {
+                Alert.alert("Same password!", "New password cannot be the same as old one.");
+            }
+            else if (serverResponse.status === "short_pass") {
                 Alert.alert("Password requirements not met!", "Please make your password at least 8 characters.");
             }
-            else if (serverResponse.status == "no_num") {
+            else if (serverResponse.status === "no_num") {
                 Alert.alert("Password requirements not met!", "Please contain at least one number.");
             }
-            else if (serverResponse.status == "no_caps") {
+            else if (serverResponse.status === "no_caps") {
                 Alert.alert("Password requirements not met!", "Please contain at least one capital letter.");
             }
-            else if (serverResponse.status == "no_spec_chars") {
+            else if (serverResponse.status === "no_spec_chars") {
                 Alert.alert("Password requirements not met!", "Please contain at least one special character (!@#$%^&*-_).");
             }
             else {

@@ -17,7 +17,7 @@ SPOTS_COL = DB['spots']
 
 #################################################### Server-side helper functions
 
-async def ValidatePassword(passwd):
+def ValidatePassword(passwd):
     # 8 characters in length minimum 
     if len(passwd) < 8:
         print("Password is not at least 8 characters long!")
@@ -138,7 +138,7 @@ async def UpdatePass(name, passwd, newPass):
             print("[UPD_PASS] new password is the same as the old one.")
             return "same_pass"
 
-        passwordValidationStatus = ValidatePassword(passwd)
+        passwordValidationStatus = ValidatePassword(newPass)
 
         if passwordValidationStatus != "valid":
             print("[UPD_PASS] Password requirements not met: " + passwordValidationStatus)
