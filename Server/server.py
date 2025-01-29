@@ -3,8 +3,10 @@ import json
 import pymongo
 import asyncio
 import websockets
+import re
 
 #################################################### Constants
+
 PORT = 15024
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
@@ -13,10 +15,40 @@ DB = DB_CLIENT['SpotMeDB']
 USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
 
-#################################################### Server-side helper functions
 VALID_PERMITS = {"green", "yellow", "black", "gold", "blue"} #permit options
 
-def hash_password(password):
+#################################################### Server-side helper functions
+
+# Function to ensure password meets minimum requirements:
+# Be 8 characters long
+# Contain at least one number, 
+# One capital letter, 
+# And one non-alphanumeric character.
+async def ValidatePassword(passwd):
+    # 8 characters in length minimum 
+    if len(passwd) < 8:
+        print("Password is not at least 8 characters long!")
+        return "short_pass"
+        
+    # at least one number
+    if not re.search(r"\d", passwd):
+        print("Password needs at least one number!")
+        return "no_num"
+    
+    # at least one capital letter
+    if not re.search(r"[A-Z]", passwd):
+        print("Password needs at least one capital letter!")
+        return "no_caps"
+    
+    # at least one non-alphanumeric character
+    if not re.search(r"[^\w]", passwd): 
+        print("Password needs at least one special character!")
+        return "no_spec_chars"
+    
+    # passes all cases
+    return "valid"
+
+def hash_password(password): #encrypts user's password
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
@@ -26,11 +58,14 @@ def UserAuthenticate(name, passwd):
 
     if (user): # Checks password for user
         if bcrypt.checkpw(passwd.encode("utf-8"), user['pass']):
-            return user # Return if both username and password check out
+            print(f"[AUTH] Successfully signed in: {user}")
+            return user
         else:
-            print("[ERROR] Wrong password :(")
+            print("[AUTH_ERR] Invalid password.")
     else:
-        print("[ERROR] User could not be found :(")
+        print("[AUTH_ERR] User could not be found :(")
+    
+    return False;
 
 async def CongestionCalc(id):
     sum = 0
@@ -53,13 +88,13 @@ async def Login(name, passwd):
     if (user):
         if bcrypt.checkpw(passwd.encode('utf-8'), user["pass"]):
             print("[SUCCESS] Login successful!")
-            return True
+            return "success"
         else:
             print("[ERROR] Login failed.")
-            return False
+            return "invalid_pass"
     else: 
         print("[ERROR] User not found.")
-        return False
+        return "null_user"
     
 async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
@@ -74,7 +109,10 @@ async def CreateAccount(name, passwd):
 
     if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
         print("[ERROR] User already exists.")
-        return False
+        return "name_used"
+    
+    if not ValidatePassword(passwd):
+        return "invalid_pass"
     
     hashed_password = hash_password(passwd) # Create the hashed password
     
@@ -113,17 +151,23 @@ async def UpdatePass(name, passwd, newPass):
     if (user):
         if passwd == newPass: # Make sure the new password is not the same as the old password
             print("[ERROR] new password is the same as the old one.")
-            return False
-        else:
-            hashed_password = hash_password(newPass) # Hash new password
-            filter = {"name": name} # Find document
-            update = {"$set": {"pass": hashed_password}} # Set new password
-            USERS_COL.update_one(filter, update) # Push update to that document
-            print("[SUCCESS] New password set!")
-            return True, "Password updated successfully!"
+            return "same_pass"
+
+        passwordValidationStatus = ValidatePassword(passwd)
+        
+        if passwordValidation != "valid":
+            return passwordValidationStatus
+
+        hashed_password = hash_password(newPass) # Hash new password
+        filter = {"name": name} # Find document
+        update = {"$set": {"pass": hashed_password}} # Set new password
+        USERS_COL.update_one(filter, update) # Push update to that document
+        print("[SUCCESS] New password set!")
+        return "pass_updated"
+
     else:
         print("[ERROR] could not verify")
-        return False, "Incorrect username or password."
+        return "failed_validation"
 
 async def RefreshData():
     print('[OPERATION] RefreshData()')
@@ -177,34 +221,33 @@ async def HandleOperation(websocket, rcvdJson):
         if rcvdJson["op"] == "Login":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            success = await Login(name, passwd)
-            await websocket.send(json.dumps({"success": success}))
+            status = await Login(name, passwd)
+            await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "UpdateSpot":
             id = rcvdJson["id"]
             status = rcvdJson["status"]
             await UpdateSpot(id, status)
-            await websocket.send(json.dumps({"status": "updated"}))
 
         elif rcvdJson["op"] == "CreateAccount":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            success = await CreateAccount(name, passwd)
-            await websocket.send(json.dumps({"success": success}))
+            status = await CreateAccount(name, passwd)
+            await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "UpdateName":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newName = rcvdJson["newName"]
-            success, message = await UpdateName(name, passwd, newName)
-            await websocket.send(json.dumps({"success": success, "message": message}))
+            status = await UpdateName(name, passwd, newName)
+            await websocket.send(json.dumps({"status": status}))
             
         elif rcvdJson["op"] == "UpdatePass":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newPass = rcvdJson["newPass"]
-            success, message = await UpdatePass(name, passwd, newPass)
-            await websocket.send(json.dumps({"success": success, "message": message}))
+            status = await UpdatePass(name, passwd, newPass)
+            await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "RefreshData":
             data = await RefreshData()
@@ -213,14 +256,14 @@ async def HandleOperation(websocket, rcvdJson):
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
             newPermits = rcvdJson["permits"]
-            success = await UpdatePermits(name, newPermits)
-            await websocket.send(json.dumps({"success": success}))
+            status = await UpdatePermits(name, newPermits)
+            await websocket.send(json.dumps({"status":status}))
 
         elif rcvdJson["op"] == "DeleteAccount":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            success = await DeleteAccount(name,passwd)
-            await websocket.send(json.dumps({"success": success}))
+            status = await DeleteAccount(name,passwd)
+            await websocket.send(json.dumps({"status": status}))
             
     except websockets.exceptions.ConnectionClosedError:
         print("[ERROR] Connection closed while handling operation.")
