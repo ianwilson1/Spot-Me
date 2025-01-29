@@ -91,7 +91,7 @@ async def CreateAccount(name, passwd):
         print("[CRTE_ACC] User already exists.")
         return "name_used"
 
-    passwordValidationStatus = ValidatePassword(password)
+    passwordValidationStatus = ValidatePassword(passwd)
     
     if passwordValidationStatus != "valid":
         print("[CRTE_ACC] Password requirements not met: " + passwordValidationStatus)
