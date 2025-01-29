@@ -71,8 +71,8 @@ async def CongestionCalc(id):
 
 #################################################### Server<->Client Functions
 
-async def Login(name, passwd):
-    print(f"[OPERATION] Login({name})")   
+async def Login(name, passwd):                                  ## TODO: Send the user's data when they log in!
+    print(f"[OPERATION] Login({name})")
     return UserAuthenticate(name, passwd)
     
 async def UpdateSpot(id, status): 
@@ -82,16 +82,20 @@ async def UpdateSpot(id, status):
     
     SPOTS_COL.update_one(filter, update) # Update document
     await CongestionCalc(id) # Update congestion level of lot
+    print("[UPD_SPOT] Updated spot successfully.")
 
 async def CreateAccount(name, passwd): 
     print(f"[OPERATION] CreateAccount({name})")
 
     if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
-        print("[ERROR] User already exists.")
+        print("[CRTE_ACC] User already exists.")
         return "name_used"
+
+    passwordValidationStatus = ValidatePassword(password)
     
-    if not ValidatePassword(passwd):
-        return "invalid_pass"
+    if passwordValidationStatus != "valid":
+        print("[CRTE_ACC] Password requirements not met: " + passwordValidationStatus)
+        return passwordValidationStatus
     
     hashed_password = hash_password(passwd) # Create the hashed password
     
@@ -102,13 +106,14 @@ async def CreateAccount(name, passwd):
     }
 
     USERS_COL.insert_one(user) # Insert document
+    print("[CRTE_ACC] New user created successfully.")
     return "account_created"
 
 async def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{newName})")
 
     if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
-        print("[ERROR] User already exists.")
+        print("[UPD_NAME] User already exists.")
         return "name_used"
     
     authStatus = UserAuthenticate(name, passwd)
@@ -117,9 +122,10 @@ async def UpdateName(name, passwd, newName):
         filter = {"name": name} # Find document with old name
         update = {"$set": {"name": newName}} # Set new name
         USERS_COL.update_one(filter, update) # Update document
-        print("[SUCCESS] New username is set!")
+        print("[UPD_NAME] New username is set!")
         return "updated_name"
     else:
+        print("[UPD_NAME] Authentication failed: " + authStatus)
         return authStatus
 
 async def UpdatePass(name, passwd, newPass):
@@ -129,34 +135,35 @@ async def UpdatePass(name, passwd, newPass):
 
     if authStatus == "valid":
         if passwd == newPass: # Make sure the new password is not the same as the old password
-            print("[ERROR] new password is the same as the old one.")
+            print("[UPD_PASS] new password is the same as the old one.")
             return "same_pass"
 
         passwordValidationStatus = ValidatePassword(passwd)
 
         if passwordValidationStatus != "valid":
+            print("[UPD_PASS] Password requirements not met: " + passwordValidationStatus)
             return passwordValidationStatus
 
         hashed_password = hash_password(newPass) # Hash new password
         filter = {"name": name} # Find document
         update = {"$set": {"pass": hashed_password}} # Set new password
         USERS_COL.update_one(filter, update) # Push update to that document
-        print("[SUCCESS] New password set!")
+        print("[UPD_PASS] New password set!")
         return "pass_updated"
 
     else:
-        print("[ERROR] Failed authentication")
+        print("[UPD_PASS] Failed authentication: " + authStatus)
         return authStatus
         
 async def RefreshData():
     print('[OPERATION] RefreshData()')
     try:
         data = list(SPOTS_COL.find({}, {'_id': False})) # Updated parking spot/lot information (congestion, occupancy);
-        print(f'[INFO] Retrieved {len(data)} records from the DB.')
+        print(f'[REFR_DATA] Retrieved {len(data)} records from the DB.')
         return "data_retrieved", json.dumps(data)
     
     except Exception as e:
-        print('[ERROR]: {e}')
+        print('[REFR_DATA]: {e}')
         return "data_error", ""
     
 async def UpdatePermits(name, newPermits):                        
@@ -169,10 +176,10 @@ async def UpdatePermits(name, newPermits):
     result = await SPOTS_COL.update_one(filter, update)
         
     if result.modified_count > 0:
-        print("[SUCCESS] Permits updated successfully!")
+        print("[UPD_PERM] Permits updated successfully!")
         return "permits_updated"
     else:
-        print("[FAILURE] Permits not updated.")
+        print("[UPD_PERM] Permits not updated.")
         return "permits_unchanged"
 
 async def DeleteAccount(name, passwd):                      
@@ -183,10 +190,10 @@ async def DeleteAccount(name, passwd):
     if authStatus == "valid":
         filter = {"name": name}
         result = await USERS_COL.delete_one(filter)
-        print(f"[SUCCESS] Account deleted successfully.")
+        print(f"[DEL_ACC] Account deleted successfully.")
         return "account_deleted"
     else:
-        print("[FAILURE] Authentication failed.")
+        print("[DEL_ACC] Failed authentication: " + authStatus)
         return authStatus
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
@@ -241,11 +248,11 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status}))
             
     except websockets.exceptions.ConnectionClosedError:
-        print("[ERROR] Connection closed while handling operation.")
+        print("[HANDLE_OP] Connection closed while handling operation.")
     except websockets.exceptions.ConnectionClosedOK:
-        print("[CLOSED] Connection closed with OK status.")
+        print("[HANDLE_OP] Connection closed with OK status.")
     except Exception as e:
-        print(f"[ERROR] Unexpected error: {e}")
+        print(f"[HANDLE_OP] Unexpected error: {e}")
 
 
     # TODO: Create branches for the rest of the operations
