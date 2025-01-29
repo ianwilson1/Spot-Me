@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Button, Modal, FlatList} from "react-native";
-import { Checkbox, CheckBox, CheckboxItem} from 'react-native-paper';
-/*import CheckboxItem from "react-native-paper/lib/typescript/components/Checkbox/CheckboxItem";*/
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image} from "react-native";
+import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 console.log(CheckBox);
@@ -396,26 +395,32 @@ export const YourPermits = ({navigation, sendMsg}) => {
                     status={permits["green"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('green')}
                     label="Student Permit"
-                />
+                    position="leading"
+                    color='#002e6d'
+                /> 
                 <Checkbox.Item
                     status={permits["yellow"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('yellow')}
                     label="Faculty Permit"
+                    position="leading"
                 />
                 <Checkbox.Item
                     status={permits["black"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('black')}
                     label="Motorcycle Permit"
+                    position="leading"
                 />
                 <Checkbox.Item
                     status={permits["gold"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('gold')}
                     label="Special Permit"
+                    position="leading"
                 />
                 <Checkbox.Item
                     status={permits["blue"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('blue')}
                     label="Handicap Permit"
+                    position="leading"
                 />
           </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
@@ -427,7 +432,14 @@ export const YourPermits = ({navigation, sendMsg}) => {
 
 //feature 5.5 from system req doc
 export const WeeklySchedule = ({navigation, sendMsg}) => {
-
+    return(
+    <View style={styles.container}>
+        <Image
+            width={500}
+            source={require('./gato.jpg')}
+        />
+    </View>
+    )
 };
 
 const styles = StyleSheet.create({
@@ -484,8 +496,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     label: {
-        fontSize: 18,
-        marginBottom: 10,
+        fontSize: 16,
+        marginLeft: 8,
     },
     selectedText: {
         marginTop: 20,
@@ -493,19 +505,23 @@ const styles = StyleSheet.create({
         color: 'green',
     },
     checkBoxContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         marginBottom: 10,
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginVertical: 8,
+        color: '#002e6d',
     },
     saveButton: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#002e6d',
         padding: 15,
         borderRadius: 8,
         marginTop: 20,
         alignItems: 'center',
     },
     saveButtonText: {
-        color: '#fff',
+        color: '#f6f6f6',
         fontSize: 16,
         fontWeight: 'bold',
     },
