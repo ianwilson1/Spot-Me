@@ -16,19 +16,23 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
                 "name": username,
                 "passwd": password
             };
-        const response = await sendMsg(JSON.stringify(msgObj));
-        const serverResponse = JSON.parse(response);
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
 
-        if(serverResponse.success) {
-            setIsLoggedIn(true);
-            Alert.alert("Login successful");
-            navigation.navigate("Main");
-        }
-        else {
-            Alert.alert("Login failed", serverResponse.error || "Wrong username or password");
-        }
+            if(serverResponse.status === "valid") {
+                setIsLoggedIn(true);
+                Alert.alert("Login successful.");
+                navigation.navigate("Main");
+            }
+            else if (serverResponse.status === "null_user") {
+                Alert.alert("User not found!", "Please try again.");
+            }
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Invalid password!", "Please try again.");
+            }
+
         } catch (error) {
-            Alert.alert("Error", "Could not connect to server.");
+            Alert.alert("Login error.", "Please try again.");
             console.error(error);
         }
     };
@@ -73,12 +77,16 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.success) {
+            if (serverResponse.status === "account_created") {
                 Alert.alert("Registration successful");
                 setIsLoggedIn(true);
                 navigation.navigate("Main");
-            } else {
-                Alert.alert("Registration failed", serverResponse.error || "Username already in use");
+            } 
+            else if (serverResponse.status === "name_used") {
+                Alert.alert("Username in use!","Please use another name.");
+            }
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Password does not meet requirements.");
             }
         } catch (error){
             Alert.alert("Error", "Could not connect to server.");
