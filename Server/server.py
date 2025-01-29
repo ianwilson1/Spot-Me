@@ -146,8 +146,8 @@ async def UpdatePass(name, passwd, newPass):
 
     else:
         print("[ERROR] Failed authentication")
-        return "failed_auth"
-
+        return authStatus
+        
 async def RefreshData():
     print('[OPERATION] RefreshData()')
     try:
@@ -187,7 +187,7 @@ async def DeleteAccount(name, passwd):
         return "account_deleted"
     else:
         print("[FAILURE] Authentication failed.")
-        return "failed_auth"
+        return authStatus
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 

@@ -30,9 +30,12 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             else if (serverResponse.status === "invalid_pass") {
                 Alert.alert("Invalid password!", "Please try again.");
             }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
 
         } catch (error) {
-            Alert.alert("Login error.", "Please try again.");
+            Alert.alert("Unexpected error!", "Please try again.");
             console.error(error);
         }
     };
@@ -88,8 +91,12 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
             else if (serverResponse.status === "invalid_pass") {
                 Alert.alert("Password does not meet requirements.");
             }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
+
         } catch (error){
-            Alert.alert("Error", "Could not connect to server.");
+            Alert.alert("Unexpected error!", "Please try again.");
             console.error(error);
         }
         };
@@ -130,16 +137,24 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.success) {
+            if (serverResponse.status === "account_deleted") {
                 setModalVisible(false);
                 setIsLoggedIn(false);
                 Alert.alert("Account deleted successfully");
                 navigation.navigate("Main");
-            } else {
-                Alert.alert("Operation failed", serverResponse.error || "Incorrect password");
+            } 
+            else if (serverResponse.status === "null_user") {
+                Alert.alert("User not found!", "Failed to find account. Please try again.");
             }
-        }   catch(error) {
-            Alert.alert("Error", "Could not connect to server.");
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Invalid password!", "Please check your password and try again.");
+            }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
+
+        } catch (error){
+            Alert.alert("Unexpected error!", "Please try again.");
             console.error(error);
         }
     };
@@ -251,14 +266,22 @@ export const UpdateUsername = ({sendMsg, navigation}) => {
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.success) {
+            if (serverResponse.status === "updated_name") {
                 Alert.alert("Success", "Username updated successfully!");
                 navigation.navigate("AccountMenu");
-            } else {
-                Alert.alert("Update failed", serverResponse.error || "Incorrect credentials");
+            } 
+            else if (serverResponse.status === "null_user") {
+                Alert.alert("User not found!", "Failed to find account. Please try again.");
             }
-        } catch (error) {
-            Alert.alert("Error", "Could not connect to the server.");
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Invalid password!", "Please check your password and try again.");
+            }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
+
+        }   catch (error) {
+            Alert.alert("Unexpected error!", "Please try again.");
             console.error(error);
         }
     };
@@ -310,11 +333,30 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.success){
+            if (serverResponse.status === "pass_updated"){
                 Alert.alert("Password updated successfully!");
                 navigation.navigate("AccountMenu");
-            } else {
-                Alert.alert("Update failed", serverResponse.error || "Incorrect credentials");
+            } 
+            else if (serverResponse.status === "null_user") {
+                Alert.alert("User not found!", "Failed to find account. Please try again.");
+            }
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Invalid password!", "Please check your password and try again.");
+            }
+            else if (serverResponse.status == "short_pass") {
+                Alert.alert("Password requirements not met!", "Please make your password at least 8 characters.");
+            }
+            else if (serverResponse.status == "no_num") {
+                Alert.alert("Password requirements not met!", "Please contain at least one number.");
+            }
+            else if (serverResponse.status == "no_caps") {
+                Alert.alert("Password requirements not met!", "Please contain at least one capital letter.");
+            }
+            else if (serverResponse.status == "no_spec_chars") {
+                Alert.alert("Password requirements not met!", "Please contain at least one special character (!@#$%^&*-_).");
+            }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
             }
         } catch (error) {
             Alert.alert("Error", "Could not connect to the server.");
@@ -376,18 +418,23 @@ export const YourPermits = ({navigation, sendMsg}) => {
             const msgObj = {
                 "op": "UpdatePermits",
                 "name": username,
-                "newPermits": selectedPermits,
+                "newPermits": selectedPermits
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
             const serverResponse = JSON.parse(response);
 
-            if (serverResponse.success){
+            if (serverResponse.status === "permits_updated"){
                 Alert.alert("Permit updated successfully!");
                 navigation.navigate("AccountMenu");
-            } else {
-                Alert.alert("Error", serverResponse.error || "Failed to update permit.");
+            } 
+            else if (serverResponse.status == "permits_unchanged") {
+                Alert.alert("Permits not updated.", "Unchanged from previous permits.");
             }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
+            
         } catch(error) {
             Alert.alert("Could not connect to server.");
             console.error(error);
