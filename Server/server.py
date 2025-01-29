@@ -15,15 +15,8 @@ DB = DB_CLIENT['SpotMeDB']
 USERS_COL = DB['userData']
 SPOTS_COL = DB['spots']
 
-VALID_PERMITS = {"green", "yellow", "black", "gold", "blue"} #permit options
-
 #################################################### Server-side helper functions
 
-# Function to ensure password meets minimum requirements:
-# Be 8 characters long
-# Contain at least one number, 
-# One capital letter, 
-# And one non-alphanumeric character.
 async def ValidatePassword(passwd):
     # 8 characters in length minimum 
     if len(passwd) < 8:
@@ -56,16 +49,13 @@ def hash_password(password): #encrypts user's password
 def UserAuthenticate(name, passwd):
     user = USERS_COL.find_one({"name": name}) # Finds a user by their unique username
 
-    if (user): # Checks password for user
-        if bcrypt.checkpw(passwd.encode("utf-8"), user['pass']):
-            print(f"[AUTH] Successfully signed in: {user}")
-            return user
-        else:
-            print("[AUTH_ERR] Invalid password.")
-    else:
-        print("[AUTH_ERR] User could not be found :(")
+    if not user:
+        return "null_user"
     
-    return False;
+    if not bcrypt.checkpw(passwd.encode("utf-8"), user['pass']):
+        return "invalid_pass"
+
+    return "valid"
 
 async def CongestionCalc(id):
     sum = 0
@@ -82,19 +72,8 @@ async def CongestionCalc(id):
 #################################################### Server<->Client Functions
 
 async def Login(name, passwd):
-    print(f"[OPERATION] Login({name})")
-    user = USERS_COL.find_one({"name": name}) # Find a user by given name; names are unique
-    
-    if (user):
-        if bcrypt.checkpw(passwd.encode('utf-8'), user["pass"]):
-            print("[SUCCESS] Login successful!")
-            return "success"
-        else:
-            print("[ERROR] Login failed.")
-            return "invalid_pass"
-    else: 
-        print("[ERROR] User not found.")
-        return "null_user"
+    print(f"[OPERATION] Login({name})")   
+    return UserAuthenticate(name, passwd)
     
 async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
@@ -123,39 +102,39 @@ async def CreateAccount(name, passwd):
     }
 
     USERS_COL.insert_one(user) # Insert document
-    return True 
+    return "account_created"
 
 async def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{newName})")
 
     if (USERS_COL.find_one({"name": newName})): # Ensures new username is unique
         print("[ERROR] User already exists.")
-        return False, "Username already taken."
+        return "name_used"
     
-    user = UserAuthenticate(name, passwd) # Check user's name and password
+    authStatus = UserAuthenticate(name, passwd)
 
-    if (user):
+    if authStatus == "valid":
         filter = {"name": name} # Find document with old name
         update = {"$set": {"name": newName}} # Set new name
         USERS_COL.update_one(filter, update) # Update document
         print("[SUCCESS] New username is set!")
-        return True, "Username updated successfully!"
+        return "updated_name"
     else:
-        print("[ERROR] could not verify user")
+        return authStatus
 
 async def UpdatePass(name, passwd, newPass):
     print(f"[OPERATION] UpdatePass({name})")
     
-    user = UserAuthenticate(name, passwd) # Check user's name and password
+    authStatus = UserAuthenticate(name, passwd) # Check user's name and password
 
-    if (user):
+    if authStatus == "valid":
         if passwd == newPass: # Make sure the new password is not the same as the old password
             print("[ERROR] new password is the same as the old one.")
             return "same_pass"
 
         passwordValidationStatus = ValidatePassword(passwd)
-        
-        if passwordValidation != "valid":
+
+        if passwordValidationStatus != "valid":
             return passwordValidationStatus
 
         hashed_password = hash_password(newPass) # Hash new password
@@ -166,27 +145,23 @@ async def UpdatePass(name, passwd, newPass):
         return "pass_updated"
 
     else:
-        print("[ERROR] could not verify")
-        return "failed_validation"
+        print("[ERROR] Failed authentication")
+        return "failed_auth"
 
 async def RefreshData():
     print('[OPERATION] RefreshData()')
     try:
         data = list(SPOTS_COL.find({}, {'_id': False})) # Updated parking spot/lot information (congestion, occupancy);
         print(f'[INFO] Retrieved {len(data)} records from the DB.')
-
-        return json.dumps(data)
+        return "data_retrieved", json.dumps(data)
+    
     except Exception as e:
         print('[ERROR]: {e}')
-        return json.dumps({"Error": "Failed to refresh."})
+        return "data_error", ""
     
 async def UpdatePermits(name, newPermits):                        
-    print(f'[OPERATION] UpdatePermits({newPermits})')
+    print(f'[OPERATION] UpdatePermits({name},{newPermits})')
     # [green,yellow,black,gold,handicap]
-
-    if not all(permit in VALID_PERMITS for permit in newPermits):
-        print("[FAILURE] Invalid permits provided.")
-        return False
 
     filter = {"name": name}
     update = {"$set": {"permits": newPermits}}
@@ -195,25 +170,25 @@ async def UpdatePermits(name, newPermits):
         
     if result.modified_count > 0:
         print("[SUCCESS] Permits updated successfully!")
-        return True
+        return "permits_updated"
     else:
-        print("[FAILURE] Permits update failed.")
-        return False
+        print("[FAILURE] Permits not updated.")
+        return "permits_unchanged"
 
 async def DeleteAccount(name, passwd):                      
     print(f'[OPERATION] DeleteAccount({name})')
     
-    user = UserAuthenticate(name, passwd)
+    authStatus = UserAuthenticate(name, passwd)
 
-    if (user):
+    if authStatus == "valid":
         filter = {"name": name}
         result = await USERS_COL.delete_one(filter)
-        print(f"[SUCCESS] Account for user {logged_in_user['name']} deleted successfully.")
+        print(f"[SUCCESS] Account deleted successfully.")
+        return "account_deleted"
     else:
         print("[FAILURE] Authentication failed.")
-        return False
-
-    
+        return "failed_auth"
+ 
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
 async def HandleOperation(websocket, rcvdJson):
@@ -250,8 +225,8 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "RefreshData":
-            data = await RefreshData()
-            await websocket.send(data)
+            status, data = await RefreshData()
+            await websocket.send({"status":status, "data": data})
 
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
