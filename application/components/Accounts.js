@@ -465,26 +465,36 @@ export const YourPermits = ({navigation, sendMsg}) => {
                     onPress={() => handleCheckedItem('yellow')}
                     label="Faculty Permit"
                     position="leading"
+                    color='#002e6d'
                 />
                 <Checkbox.Item
                     status={permits["black"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('black')}
                     label="Motorcycle Permit"
                     position="leading"
+                    color='#002e6d'
                 />
                 <Checkbox.Item
                     status={permits["gold"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('gold')}
                     label="Special Permit"
                     position="leading"
+                    color='#002e6d'
                 />
                 <Checkbox.Item
                     status={permits["blue"] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('blue')}
                     label="Handicap Permit"
                     position="leading"
+                    color='#002e6d'
                 />
           </View>
+          <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+            />
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
                 <Text style={styles.saveButtonText}>Save & Sync</Text>
             </TouchableOpacity>
@@ -497,7 +507,6 @@ export const WeeklySchedule = ({navigation, sendMsg}) => {
     return(
     <View style={styles.container}>
         <Image
-            width={500}
             source={require('./gato.jpg')}
         />
     </View>
