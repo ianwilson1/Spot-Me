@@ -233,7 +233,7 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "RefreshData":
             status, data = await RefreshData()
-            await websocket.send({"status":status, "data": data})
+            await websocket.send(json.dumps({"status":status, "data": data}))
 
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
