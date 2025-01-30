@@ -180,11 +180,12 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
   const refreshData = async () => { // TODO: Still need to finish this function, not fully functional
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
-        const data = await sendMsg(msg);
-        console.log('Refresh successful:', data);
+        const serverResponse = await sendMsg(msg);
+        console.log('Refresh successful:', serverResponse);
+        responseData = JSON.parse(serverResponse)
 
         // Parse the data and initialize updatedStatus as an empty array
-        const parsedData = JSON.parse(data);
+        const parsedData = JSON.parse(responseData.data);
 
         const fileInfo = await FileSystem.getInfoAsync(fileUri);
         // Gather spaces across all parking lots
