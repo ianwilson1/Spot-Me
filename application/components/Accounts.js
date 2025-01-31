@@ -405,11 +405,11 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 export const YourPermits = ({navigation, sendMsg}) => {
     const [username, setUsername] = useState('');
     const [permits, setPermits] = useState({
-        green: false,
-        yellow: false,
-        black: false,
-        gold: false,
-        blue: false,
+        'green': false,
+        'yellow': false,
+        'black': false,
+        'gold': false,
+        'blue': false,
     });
 
     const handleCheckedItem = (itemId) => {
@@ -421,11 +421,10 @@ export const YourPermits = ({navigation, sendMsg}) => {
 
     const handleYourPermits = async () => {
         try{
-            const selectedPermits = Object.keys(permits).filter((key) => permits[key]);
             const msgObj = {
                 "op": "UpdatePermits",
-                "name": username,
-                "newPermits": selectedPermits
+                "name": String(username),
+                "permits": Object.values(permits),
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
@@ -454,7 +453,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
            <Text style={styles.title}>Your Permits</Text>
            <View style={styles.checkBoxContainer}>
                 <Checkbox.Item
-                    status={permits["green"] ? 'checked' : 'unchecked'}
+                    status={permits['green'] ? 'checked' : 'unchecked'}
                     onPress={() => handleCheckedItem('green')}
                     label="Student Permit"
                     position="leading"
