@@ -173,7 +173,7 @@ async def UpdatePermits(name, newPermits):
     filter = {"name": name}
     update = {"$set": {"permits": newPermits}}
         
-    result = await SPOTS_COL.update_one(filter, update)
+    result = SPOTS_COL.update_one(filter, update)
         
     if result.modified_count > 0:
         print("[UPD_PERM] Permits updated successfully!")
