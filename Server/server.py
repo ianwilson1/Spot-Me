@@ -73,7 +73,16 @@ async def CongestionCalc(id):
 
 async def Login(name, passwd):                                  ## TODO: Send the user's data when they log in!
     print(f"[OPERATION] Login({name})")
-    return UserAuthenticate(name, passwd)
+
+    authStatus = UserAuthenticate(name, passwd)
+
+    if authStatus != "valid":
+        print("[LOGIN] Login failed: " + authStatus)
+        return authStatus, {}
+    
+    userData = {}                                             ## TODO: retrieved user data goes here
+
+    return authStatus, userData
     
 async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
