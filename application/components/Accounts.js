@@ -423,8 +423,8 @@ export const YourPermits = ({navigation, sendMsg}) => {
         try{
             const msgObj = {
                 "op": "UpdatePermits",
-                "name": username,
-                "newPermits": selectedPermits,
+                "name": String(username),
+                "newPermits": Object.values(permits),
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
