@@ -212,7 +212,7 @@ async def HandleOperation(websocket, rcvdJson):
         if rcvdJson["op"] == "Login":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            status = await Login(name, passwd)
+            status, userData = await Login(name, passwd)
             await websocket.send(json.dumps({"status": status, "userData":userData}))
 
         elif rcvdJson["op"] == "UpdateSpot":
