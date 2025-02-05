@@ -3,7 +3,7 @@ import json
 import pymongo
 import asyncio
 import websockets
-import re
+import ret
 
 #################################################### Constants
 
@@ -80,7 +80,7 @@ async def Login(name, passwd):                                  ## TODO: Send th
         print("[LOGIN] Login failed: " + authStatus)
         return authStatus, {}
     
-    userData = {}                                             ## TODO: retrieved user data goes here
+    userData = USERS_COL.find_one({"name":name}, {"pass": 0, "permits":1})                                          ## TODO: retrieved user data goes here
 
     return authStatus, userData
     
