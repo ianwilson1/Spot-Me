@@ -4,17 +4,18 @@ import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+const storeUserSession = async (userData) => {
+    try {
+        await AsyncStorage.setItem('userSession', JSON.stringify(userData));
+    } catch (error) {
+        console.error('Error saving users login credentials: ', error);
+    }
+};
+
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-   const storeUserSession = async (userData) => {
-        try {
-            await AsyncStorage.setItem('userSession', JSON.stringify(userData));
-        } catch (error) {
-            console.error('Error saving users login credentials: ', error);
-        }
-    };
 
     const handleLogin = async () => {
         try {
