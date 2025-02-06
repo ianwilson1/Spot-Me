@@ -82,7 +82,7 @@ async def Login(name, passwd):                                  ## TODO: Send th
     
     userData = USERS_COL.find_one({"name":name}, {"pass": False})                                          ## TODO: retrieved user data goes here
 
-    return authStatus, userData
+    return authStatus#, userData
     
 async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
@@ -212,8 +212,10 @@ async def HandleOperation(websocket, rcvdJson):
         if rcvdJson["op"] == "Login":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            status, userData = await Login(name, passwd)
-            await websocket.send(json.dumps({"status": status, "userData":userData}))
+            #status, userData = await Login(name, passwd)
+            #await websocket.send(json.dumps({"status": status, "userData":userData}))
+            status = await Login(name, passwd)
+            await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "UpdateSpot":
             id = rcvdJson["id"]
@@ -266,7 +268,7 @@ async def HandleOperation(websocket, rcvdJson):
 
     # TODO: Create branches for the rest of the operations
 
-async def HandleMsg(websocket):
+async def HandleMsg(websocket):#
     async for msg in websocket:
         if msg == DISCONNECT_MESSAGE:
             return
