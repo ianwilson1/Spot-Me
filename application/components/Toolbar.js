@@ -11,15 +11,7 @@ const Toolbar = ({realignMap, saveLocation, refreshData, navigation, isLoggedIn,
     if (isLoggedIn) {
       navigation.navigate('AccountMenu');
     } else {
-      Alert.alert(
-        "",
-        "You are currently not logged in.",
-        [
-          {text: "Log In", onPress: () => navigation.navigate('Login')},
-          {text: "Register", onPress: () => navigation.navigate('Register')},
-          {text: "Cancel", style: "Cancel"}
-        ]
-      );
+      navigation.navigate('Login');
     }
   };
 

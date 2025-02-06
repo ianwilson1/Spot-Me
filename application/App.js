@@ -316,18 +316,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
           )}
         </Stack.Screen>
         <Stack.Screen
-          name="Register"
-          options={{headerShown: false}}
-          children={(screenProps) => (
-            <RegisterScreen 
-              {...screenProps} 
-              sendMsg={sendMsg}
-              isLoggedIn={isLoggedIn}  
-              setIsLoggedIn={setIsLoggedIn}
-            />
-          )}
-        />
-        <Stack.Screen
           name="Login"
           options={{headerShown: false}}
           children={(screenProps) => (
