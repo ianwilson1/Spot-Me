@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image} from "react-native";
 import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
-
-console.log(CheckBox);
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+   const storeUserSession = async (userData) => {
+        try {
+            await AsyncStorage.setItem('userSession', JSON.stringify(userData));
+        } catch (error) {
+            console.error('Error saving users login credentials: ', error);
+        }
+    };
 
     const handleLogin = async () => {
         try {
@@ -22,6 +29,7 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             if(serverResponse.status === "valid") {
                 setIsLoggedIn(true);
                 Alert.alert("Login successful.");
+                await storeUserSession({username});
                 navigation.navigate("Main");
             }
             else if (serverResponse.status === "null_user") {
@@ -39,6 +47,39 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             console.error(error);
         }
     };
+
+    const handleRegister = async () => {
+        try{
+            const msgObj = {
+                "op": "CreateAccount",
+                "name": username,
+                "passwd": password
+            };
+
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.status === "account_created") {
+                Alert.alert("Registration successful");
+                setIsLoggedIn(true);
+                await storeUserSession({username});
+                navigation.navigate("Main");
+            } 
+            else if (serverResponse.status === "name_used") {
+                Alert.alert("Username in use!","Please use another name.");
+            }
+            else if (serverResponse.status === "invalid_pass") {
+                Alert.alert("Password does not meet requirements.");
+            }
+            else {
+                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
+            }
+
+        } catch (error){
+            Alert.alert("Unexpected error!", "Please try again.");
+            console.error(error);
+        }
+        };
 
     return (
         <View style={styles.container}>
@@ -58,14 +99,14 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
                 <Text style={styles.text}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate('RegisterScreen')}>
+            <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
                 <Text style={styles.text}>Register</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
-export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
+/*export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -112,7 +153,7 @@ export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn})
             <TouchableOpacity title="Go to login" onPress={() => navigation.navigate('Login')}/>
         </View>
     );
-};
+};*/
 
 export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedIn}) => {
 
@@ -121,9 +162,14 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
     const [modalVisible, setModalVisible] = useState(false);
 
     //log out function from syst req
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        navigation.navigate("Main");
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('userSession');
+            setIsLoggedIn(false);
+            navigation.navigate("Main");
+        } catch (error) {
+            console.error('Error clearing user session: ', error);
+        }
     };
 
     const handleDeleteAccount = async () => {
@@ -138,6 +184,7 @@ export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedI
             const serverResponse = JSON.parse(response);
 
             if (serverResponse.status === "account_deleted") {
+                await AsyncStorage.removeItem('userSession');
                 setModalVisible(false);
                 setIsLoggedIn(false);
                 Alert.alert("Account deleted successfully");
