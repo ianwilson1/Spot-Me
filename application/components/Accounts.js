@@ -3,6 +3,7 @@ import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image
 import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
 
 
 const storeUserSession = async (userData) => {
