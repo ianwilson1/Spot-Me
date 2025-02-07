@@ -78,9 +78,9 @@ async def Login(name, passwd):                                  ## TODO: Send th
 
     if authStatus != "valid":
         print("[LOGIN] Login failed: " + authStatus)
-        return authStatus, {}
+        return authStatus, ""
     
-    userData = USERS_COL.find_one({"name":name})                                          ## TODO: retrieved user data goes here
+    userData = json.dumps(USERS_COL.find_one({"name":name}))
     print(userData)
 
     return authStatus, userData
