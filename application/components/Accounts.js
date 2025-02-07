@@ -14,6 +14,20 @@ const storeUserSession = async (userData) => {
     }
 };
 
+const getUsername = async () => {
+    try {
+        const userSession = await AsyncStorage.getItem('userSession');
+        if (userSession) {
+            const parsedSession = JSON.parse(userSession);
+            return parsedSession.username;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error retrieving username: ', error);
+        return null;
+    }
+};
+
 export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -452,7 +466,6 @@ export const UpdatePasswd = ({sendMsg, navigation}) => {
 
 //feature 5.4 from system req doc
 export const YourPermits = ({navigation, sendMsg}) => {
-    const [username, setUsername] = useState('');
     const [permits, setPermits] = useState({
         'green': false,
         'yellow': false,
@@ -470,6 +483,12 @@ export const YourPermits = ({navigation, sendMsg}) => {
 
     const handleYourPermits = async () => {
         try{
+            const username = await getUsername();
+            if(!username){
+                console.error("No user found in session");
+                return;
+            }
+            
             const msgObj = {
                 "op": "UpdatePermits",
                 "name": String(username),
@@ -537,12 +556,6 @@ export const YourPermits = ({navigation, sendMsg}) => {
                     color='#002e6d'
                 />
           </View>
-          <TextInput
-                style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-            />
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
                 <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
