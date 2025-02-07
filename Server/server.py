@@ -80,7 +80,7 @@ async def Login(name, passwd):
         print("[LOGIN] Login failed: " + authStatus)
         return authStatus, ""
     
-    userData = json.dumps(USERS_COL.find_one({"name":name}, {"_id": 0}))
+    userData = json.dumps(USERS_COL.find_one({"name":name}, {"_id": 0,"pass": 0}))
     print(userData)
 
     return authStatus, userData
