@@ -184,7 +184,7 @@ async def UpdatePermits(name, newPermits):
         
     result = USERS_COL.update_one(filter, update)
         
-    if result.modified_count >= 0:
+    if result.modified_count > 0:
         print("[UPD_PERM] Permits updated successfully!")
         return "permits_updated"
     else:
