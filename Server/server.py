@@ -83,7 +83,7 @@ async def Login(name, passwd):                                  ## TODO: Send th
     userData = USERS_COL.find_one({"name":name})                                          ## TODO: retrieved user data goes here
     print(userData)
 
-    return authStatus#, userData
+    return authStatus, userData
     
 async def UpdateSpot(id, status): 
     print(f"[OPERATION] UpdateSpot({id},{status})")
@@ -213,10 +213,8 @@ async def HandleOperation(websocket, rcvdJson):
         if rcvdJson["op"] == "Login":
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
-            #status, userData = await Login(name, passwd)
-            #await websocket.send(json.dumps({"status": status, "userData":userData}))
-            status = await Login(name, passwd)
-            await websocket.send(json.dumps({"status": status}))
+            status, userData = await Login(name, passwd)
+            await websocket.send(json.dumps({"status": status, "userData":userData}))
 
         elif rcvdJson["op"] == "UpdateSpot":
             id = rcvdJson["id"]
