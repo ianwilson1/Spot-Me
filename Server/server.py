@@ -71,7 +71,7 @@ async def CongestionCalc(id):
 
 #################################################### Server<->Client Functions
 
-async def Login(name, passwd):                                  ## TODO: Send the user's data when they log in!
+async def Login(name, passwd):
     print(f"[OPERATION] Login({name})")
 
     authStatus = UserAuthenticate(name, passwd)
@@ -80,7 +80,7 @@ async def Login(name, passwd):                                  ## TODO: Send th
         print("[LOGIN] Login failed: " + authStatus)
         return authStatus, ""
     
-    userData = json.dumps(USERS_COL.find_one({"name":name}))
+    userData = json.dumps(USERS_COL.find_one({"name":name}, {"_id": 0}))
     print(userData)
 
     return authStatus, userData
