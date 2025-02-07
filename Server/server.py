@@ -80,7 +80,7 @@ async def Login(name, passwd):                                  ## TODO: Send th
         print("[LOGIN] Login failed: " + authStatus)
         return authStatus, {}
     
-    userData = USERS_COL.find_one({"name":name}, {"pass": passwd})                                          ## TODO: retrieved user data goes here
+    userData = USERS_COL.find_one({"name":name})                                          ## TODO: retrieved user data goes here
     print(userData)
 
     return authStatus#, userData
