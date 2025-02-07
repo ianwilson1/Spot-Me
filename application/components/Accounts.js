@@ -473,7 +473,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
             const msgObj = {
                 "op": "UpdatePermits",
                 "name": String(username),
-                "newPermits": Object.values(permits),
+                "permits": Object.values(permits),
             };
 
             const response = await sendMsg(JSON.stringify(msgObj));
@@ -544,7 +544,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
                 onChangeText={setUsername}
             />
             <TouchableOpacity style={styles.saveButton} onPress={handleYourPermits}>
-                <Text style={styles.saveButtonText}>Save & Sync</Text>
+                <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
