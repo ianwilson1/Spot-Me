@@ -1,7 +1,8 @@
+import asyncio
 import bcrypt
 import json
 import pymongo
-import asyncio
+import datetime
 import websockets
 import re
 
@@ -288,12 +289,90 @@ async def InitDB():
         {
             "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1251)],
             "lot_id": "P6",
-            "congestion_percent": 0
+            "congestion_percent": 0,
+            "histData" : {
+                "monday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "tuesday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "wednesday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "thursday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "friday" :[
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ]
+            },
+            "avgCong" : {
+                "monday" :      [-1 for i in range(0,32)],
+                "tuesday" :     [-1 for i in range(0,32)],
+                "wedensday" :   [-1 for i in range(0,32)],
+                "thursday" :    [-1 for i in range(0,32)],
+                "friday" :      [-1 for i in range(0,32)]
+            }
         },
         {
             "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1252,1873)],
             "lot_id": "P5",
-            "congestion_percent": 0
+            "congestion_percent": 0,
+            "histData" : {
+                "monday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "tuesday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "wednesday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "thursday" : [
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ],
+                "friday" :[
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)],
+                    [-1 for i in range(0,32)]
+                ]
+            },
+            "avgCong" : {
+                "monday" :      [-1 for i in range(0,32)],
+                "tuesday" :     [-1 for i in range(0,32)],
+                "wedensday" :   [-1 for i in range(0,32)],
+                "thursday" :    [-1 for i in range(0,32)],
+                "friday" :      [-1 for i in range(0,32)]
+            }
         }
     ]
     
