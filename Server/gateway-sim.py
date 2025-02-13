@@ -10,8 +10,8 @@ DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from 
 
 MAX_SPOTS = 1873                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
 
-# vvv For local testing only (comment out when testing on server)
-# ADDR = 'ws://localhost:15024'
+# vvv For local testing only (comment out when running on server)
+ADDR = 'ws://localhost:15024'
 
 ####################################################
 
@@ -42,6 +42,6 @@ async def Start():
             print(f"[OUTBOUND] {msg}")
             await Send(websocket, msg)
 
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(1)
 
 asyncio.run(Start())

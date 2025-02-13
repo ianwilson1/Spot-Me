@@ -2,7 +2,7 @@ import asyncio
 import bcrypt
 import json
 import pymongo
-import datetime
+from datetime import datetime
 import websockets
 import re
 
@@ -12,11 +12,103 @@ PORT = 15024
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
 DB_CLIENT = pymongo.MongoClient('localhost', 27017)
-DB = DB_CLIENT['SpotMeDB']
-USERS_COL = DB['userData']
-SPOTS_COL = DB['spots']
+DB = DB_CLIENT['spotme']
+USERS_COL = DB['users']
+SPOTS_COL = DB['lots']
+
+REGISTERED_LOTS = ["P6","P5"]
 
 #################################################### Server-side helper functions
+
+async def UpdCongAvg(lot, week, day, index):
+    print(f"[UPD_CONG_AVG] Updating congestion average for {lot}")
+    key = f"histData.{day}"
+    doc = SPOTS_COL.find_one({"lot_id": lot}, {key:1, "_id": 0})
+    congHist = doc["histData"][day]
+
+    sum = 0
+    divisor = 0
+
+    for i in range(0,4):
+        sum += congHist[i][index] if congHist[i][index] != -1 else 0
+        divisor += 1 if congHist[i][index] != -1 else 0
+
+    # if no data exists for that day in any of the 4 weeks, set the average to 0
+    if divisor == 0:
+        avg = -1
+    else:
+        avg = sum / divisor
+
+    avg = sum / divisor
+
+    key = f"avgCong.{day}.{index}"
+    SPOTS_COL.update_one(
+        {"lot_id": lot},
+        {"$set": {key:avg}}
+    )
+
+async def UpdLotCongHist(lot, key):
+    doc = SPOTS_COL.find_one({"lot_id": lot}, {"congestion_percent": 1, "_id": 0})
+    currCong = doc["congestion_percent"]
+    SPOTS_COL.update_one(
+        {"lot_id": lot},
+        {"$set": {key: currCong}}
+    )
+
+async def UpdCongHist():
+    print('[UPD_CONG_HIST] Updating congestion history!')
+
+    currTime = datetime.now()
+    currDay = currTime.weekday() # 0 - 6, Monday - Sunday
+    currHour = currTime.hour
+    currMinute = currTime.minute
+
+    currDayStr = "monday"    if currDay == 0 else   \
+                 "tuesday"   if currDay == 1 else   \
+                 "wednesday" if currDay == 2 else   \
+                 "thursday"  if currDay == 3 else   \
+                 "friday"
+
+    doc = SPOTS_COL.find_one({"lot_id": "P6"}, {"histData.weekNumber": 1, "_id": 0})
+    currWeekOfHist = doc["histData"]["weekNumber"] if doc else None
+
+    if currWeekOfHist == None:
+        print('[UPD_CONG_HIST] No document returned, doing nothing!')
+        return
+    
+    currIndex = (currHour - 6) * 2 + (0 if currMinute >= 0 and currMinute < 30 else 1)
+
+    # Update each lot's congestion history and then calculate the average over 4 weeks
+    for lot in REGISTERED_LOTS:
+        key = f"histData.{currDayStr}.{currWeekOfHist}.{currIndex}"
+        await UpdLotCongHist(lot, key)
+
+        key = f"avgCong.{currDayStr}.{currIndex}"
+        await UpdCongAvg(lot, currWeekOfHist, currDayStr, currIndex)
+
+    # Increment current week of congestion history if its the last day of the week and the last time slot
+    if currDay == 4 and currIndex == 31:
+        newCurrWeek = currWeekOfHist + 1 if currWeekOfHist < 3 else 0
+        SPOTS_COL.update_one(
+            {"lot_id": "P6"},
+            {"$set": {"histData.weekNumber": newCurrWeek}}
+        )
+
+async def UpdCongHistLoop():
+    print('[STARTUP] Running congestion history update loop.')
+    while True:
+        await asyncio.sleep(60)
+
+        currTime = datetime.now()
+
+        if currTime.weekday() == 5 or currTime.weekday() == 6: # Ignore weekends
+            continue
+        if currTime.hour < 6 or currTime.hour >= 22: # Ignore times outside of 6am - 10pm
+            continue
+        if currTime.minute != 0 and currTime.minute != 30: # Ignore times that aren't X:00 or X:30
+            continue
+
+        await UpdCongHist()
 
 def ValidatePassword(passwd):
     # 8 characters in length minimum 
@@ -169,7 +261,7 @@ async def UpdatePass(name, passwd, newPass):
 async def RefreshData():
     print('[OPERATION] RefreshData()')
     try:
-        data = list(SPOTS_COL.find({}, {'_id': False})) # Updated parking spot/lot information (congestion, occupancy);
+        data = list(SPOTS_COL.find({}, {'_id': False, 'histData' : False})) # Updated parking spot/lot information (congestion, occupancy);
         print(f'[REFR_DATA] Retrieved {len(data)} records from the DB.')
         return "data_retrieved", json.dumps(data)
     
@@ -280,17 +372,21 @@ async def HandleMsg(websocket):#
 
 async def InitDB():
     ### TODO: Make sure to change later to implement as many spots and lots as needed
+
+    print('[INITDB] Running DB Precheck...')
     
     if (SPOTS_COL.count_documents({}) > 0):
+        print('[INITDB] DB exists, doing nothing.')
         return
     
-    print('[DATABASE] No parking lot info found, reinitializing database')
+    print('[INITDB] No DB found, reinitializing!')
     lots = [
         {
             "spaces": [{"space_id": j + 1, "status": 0 } for j in range(1251)],
             "lot_id": "P6",
             "congestion_percent": 0,
             "histData" : {
+                "weekNumber" : 0,
                 "monday" : [
                     [-1 for i in range(0,32)],
                     [-1 for i in range(0,32)],
@@ -325,7 +421,7 @@ async def InitDB():
             "avgCong" : {
                 "monday" :      [-1 for i in range(0,32)],
                 "tuesday" :     [-1 for i in range(0,32)],
-                "wedensday" :   [-1 for i in range(0,32)],
+                "wednesday" :   [-1 for i in range(0,32)],
                 "thursday" :    [-1 for i in range(0,32)],
                 "friday" :      [-1 for i in range(0,32)]
             }
@@ -369,7 +465,7 @@ async def InitDB():
             "avgCong" : {
                 "monday" :      [-1 for i in range(0,32)],
                 "tuesday" :     [-1 for i in range(0,32)],
-                "wedensday" :   [-1 for i in range(0,32)],
+                "wednesday" :   [-1 for i in range(0,32)],
                 "thursday" :    [-1 for i in range(0,32)],
                 "friday" :      [-1 for i in range(0,32)]
             }
@@ -381,10 +477,13 @@ async def InitDB():
 #################################################### Server startup
 
 async def Start():
+    print('[STARTUP] Starting server...')
     await InitDB()
+    asyncio.create_task(UpdCongHistLoop())
     async with websockets.serve(HandleMsg, '0.0.0.0', PORT) as server:
-        print(f"[LISTENING] Server listening on port {PORT}")
+        print(f"[STARTUP] Server listening on port {PORT}.")
         await server.serve_forever()
 
-print("[STARTING]")
-asyncio.run(Start())
+if __name__ == "__main__":
+    print("[STARTING]")
+    asyncio.run(Start())
