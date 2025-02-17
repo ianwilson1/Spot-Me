@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Alert, StyleSheet, Text} from 'react-native';
+import { View, Alert, StyleSheet, Text, Modal, TouchableOpacity} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker, Polygon } from 'react-native-maps';
 import {LoginScreen, RegisterScreen, AccountMenuScreen, UpdateAccount, UpdateUsername, UpdatePasswd, YourPermits, WeeklySchedule} from './components/Accounts.js';
@@ -23,6 +23,9 @@ export default function App () {
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedLot, setSelectedLot] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   //Pull parking spot data from assets
   useEffect(() =>{
@@ -106,6 +109,25 @@ const getPinColor = (congestion) => {
   else if (congestion > 0.85) return "red"; // High congestion
   else if (congestion > 0.65) return "yellow"; // Medium congestion
   else return "purple"; // Low congestion
+};
+
+// Function to handle tapping the parking lot marker
+const handleMarkerPress = (lot) => {
+  setSelectedMarker(lot.name);
+  setSelectedLot(lot);
+  setIsModalVisible(true); // Show the modal when a marker is pressed
+};
+
+// Function to close the modal
+const closeModal = () => {
+  setIsModalVisible(false);
+  setSelectedLot(null);
+  setSelectedMarker(null);
+};
+
+// Function to determine marker scale based on selection
+const getMarkerScale = (lotName) => {
+  return lotName === selectedMarker ? 1.5 : 1; // Larger scale if selected
 };
 
   // Save user's parked car location (aka create persistent marker of current location)
@@ -280,14 +302,16 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   return(
                     <Marker
                       key={index}
-                      title={`${lot.name}`}
+                      /*title={`${lot.name}`}
                       description={
                         congestion >= 0 && congestion <= 1 
                           ? `(${Math.round(congestion * 100)}% full)` 
                           : "No data. Refresh"
-                      }
+                      }*/
                       pinColor={pinColor}
                       coordinate={lot.coordinates}
+                      onPress={() => handleMarkerPress(lot)}  // Show modal on press
+                      style={{ transform: [{ scale: getMarkerScale(lot.name) }] }}
                     />
                   );
                 })}
@@ -302,7 +326,29 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                         }}
                     />
                 )}
-            </MapView>
+              </MapView>
+
+              {/* Pop-up Modal for Expected Congestion */}
+              <Modal
+                visible={isModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={closeModal}
+              >
+                <View style={styles.modalBackground}>
+                  <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>Expected Congestion</Text>
+                    {selectedLot && (
+                      <Text style={styles.modalText}>
+                        {selectedLot.name} - Congestion: {Math.round(congestionData[selectedLot.congestionKey] * 100)}%
+                      </Text>
+                    )}
+                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
 
               <Toolbar 
                 {...props} 
@@ -414,5 +460,36 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-  }
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#002e6d',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
