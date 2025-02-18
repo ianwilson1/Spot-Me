@@ -23,14 +23,24 @@ export default function App () {
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedLot, setSelectedLot] = useState(null);
-  const [selectedMarker, setSelectedMarker] = useState(null);
+
 
   //Pull parking spot data from assets
   useEffect(() =>{
     setParkingSpots(parkingData);
   }, []);
+
+  const getInitialDay = () => {
+    const today = new Date().getDay();
+    return today === 0 || today === 6 ? 0 : today - 1; // Map Sunday (0) & Saturday (6) to Monday (0)
+  };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedLot, setSelectedLot] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(new Date().getDay() - 1); // Monday = 0
+  const [selectedDay, setSelectedDay] = useState(getInitialDay()); // Initialize to current day
+  
 
   //Handle zoom to display parking lot
   const handleRegionChangeComplete = (region) => {
@@ -115,8 +125,18 @@ const getPinColor = (congestion) => {
 const handleMarkerPress = (lot) => {
   setSelectedMarker(lot.name);
   setSelectedLot(lot);
+  setSelectedDay(getInitialDay());
   setIsModalVisible(true); // Show the modal when a marker is pressed
 };
+
+const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const handlePrevDay = () => {
+  setSelectedDayIndex((prev) => (prev === 0 ? 4 : prev - 1));
+};
+const handleNextDay = () => {
+  setSelectedDayIndex((prev) => (prev === 4 ? 0 : prev + 1));
+};
+
 
 // Function to close the modal
 const closeModal = () => {
@@ -337,18 +357,39 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
               >
                 <View style={styles.modalBackground}>
                   <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Expected Congestion</Text>
                     {selectedLot && (
-                      <Text style={styles.modalText}>
-                        {selectedLot.name} - Congestion: {Math.round(congestionData[selectedLot.congestionKey] * 100)}%
-                      </Text>
+                      <>
+                        <Text style={styles.modalTitle}>{selectedLot.name} Expected Congestion</Text>
+                        <Text style={styles.modalTextOne}>
+                            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"][selectedDay]}{": "}
+                            {Math.round((congestionData[selectedLot.congestionKey]?.[selectedDay] || 0) * 100)}%
+                          </Text>
+                        <View style={styles.modalNavigation}>
+                          <TouchableOpacity 
+                            onPress={() => setSelectedDay((selectedDay - 1 + 5) % 5)} 
+                            disabled={selectedDay === 0}
+                            style={styles.navButtonWrapper}
+                          >
+                            <Text style={styles.navButton}>{'<'}</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity 
+                            onPress={() => setSelectedDay((selectedDay + 1) % 5)} 
+                            disabled={selectedDay === 4}
+                            style={styles.navButtonWrapper}
+                          >
+                            <Text style={styles.navButton}>{'>'}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </>
                     )}
+
                     <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
                       <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
               </Modal>
+
 
               <Toolbar 
                 {...props} 
@@ -474,14 +515,24 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
+  modalNavigation: {
+    flexDirection: "row",      // Arrange elements in a row
+    alignItems: "center",      // Align elements vertically in the center
+    justifyContent: "space-between", // Space elements evenly
+    width: "80%",              // Adjust width to prevent excessive spacing
+    marginTop: 10,
+  },
+  navButtonWrapper: {
+    paddingHorizontal: 15, // Add spacing around buttons for easier touch
+  },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  modalText: {
+  modalTextOne: {
     fontSize: 16,
-    marginBottom: 20,
+    textAlign: "center",
   },
   closeButton: {
     backgroundColor: '#002e6d',
@@ -491,5 +542,17 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  navRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginVertical: 10,
+  },
+  navButton: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "black",
   },
 });
