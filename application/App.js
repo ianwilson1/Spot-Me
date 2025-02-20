@@ -8,6 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
 import parkingData from './assets/parking_lot_data.json';
+import Histogram from './components/histogram.js'
 
 
 const Stack = createStackNavigator();
@@ -35,12 +36,28 @@ export default function App () {
     return today === 0 || today === 6 ? 0 : today - 1; // Map Sunday (0) & Saturday (6) to Monday (0)
   };
 
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedDayIndex, setSelectedDayIndex] = useState(new Date().getDay() - 1); // Monday = 0
   const [selectedDay, setSelectedDay] = useState(getInitialDay()); // Initialize to current day
   
+  //This is provisional
+  const getDayData = (day) => {
+    const congestionDataMap = {
+      monday: [0.32, 0.03, 0.36, 0.19, 0.55, 0.93, 0.49, 0.13, 0.01, 0.39, 0.67, 0.88, 0.47, 0.5, 0.13, 0.11, 0.24, 0.78, 0.67, 0.62, 0.13, 0.84, 0.69, 0.01, 0.88, 0.9, 0.86, 0.62, 0.99, 0.49, 0.09, 0.12],
+      tuesday: [0.23, 0.35, 0.7, 0.66, 0.2, 0.56, 0.15, 0.83, 0.37, 0.75, 0.92, 0.78, 0.66, 0.59, 0.89, 0.36, 0.19, 1.0, 0.95, 0.92, 0.93, 0.56, 0.16, 0.97, 0.99, 0.24, 0.76, 0.84, 0.36, 0.81, 0.37, 0.87],
+      wednesday: [0.31, 0.66, 0.16, 0.28, 0.79, 0.32, 0.25, 0.17, 0.88, 0.56, 0.68, 0.9, 0.64, 0.86, 0.45, 0.77, 0.5, 0.2, 0.88, 0.65, 0.99, 0.32, 0.09, 0.39, 0.6, 0.06, 0.79, 0.4, 0.16, 0.73, 0.84, 0.45],
+      thursday: [0.2, 0.92, 0.85, 0.45, 0.85, 0.13, 0.49, 0.44, 0.2, 0.62, 0.16, 0.87, 0.48, 0.27, 0.7, 0.78, 0.9, 0.33, 0.89, 0.08, 0.58, 0.35, 0.29, 0.09, 0.58, 0.34, 0.43, 0.42, 0.36, 0.45, 0.41, 0.86],
+      friday: [0.71, 0.53, 0.82, 0.95, 0.49, 0.89, 0.56, 0.75, 0.43, 0.14, 0.15, 0.28, 0.4, 0.08, 0.59, 0.18, 0.11, 0.25, 0.29, 0.68, 0.71, 0.57, 0.65, 0.51, 0.98, 0.18, 0.04, 0.52, 0.01, 0.22, 0.08, 0.65],
+    };
+  
+    return {
+      day: day,
+      values: congestionDataMap[day] || [],
+    };
+  };
 
   //Handle zoom to display parking lot
   const handleRegionChangeComplete = (region) => {
@@ -363,7 +380,10 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                         <Text style={styles.modalTextOne}>
                             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"][selectedDay]}{": "}
                             {Math.round((congestionData[selectedLot.congestionKey]?.[selectedDay] || 0) * 100)}%
-                          </Text>
+                        </Text>
+                        {/* Render Histogram between the arrow buttons */}
+                        <Histogram data={getDayData(daysOfWeek[selectedDay].toLowerCase())} />
+
                         <View style={styles.modalNavigation}>
                           <TouchableOpacity 
                             onPress={() => setSelectedDay((selectedDay - 1 + 5) % 5)} 
