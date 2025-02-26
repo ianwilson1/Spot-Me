@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Alert, StyleSheet, Text, Modal, TouchableOpacity} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker, Polygon } from 'react-native-maps';
-import {LoginScreen, RegisterScreen, AccountMenuScreen, UpdateAccount, UpdateUsername, UpdatePasswd, YourPermits, WeeklyScheduler} from './components/Accounts.js';
+import {LoginScreen, AccountMenuScreen, UpdateAccount, UpdateUsername, UpdatePasswd, YourPermits} from './components/Accounts.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
