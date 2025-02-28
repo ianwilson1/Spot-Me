@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image, PanResponder} from "react-native";
 import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -44,8 +44,13 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
 
             if(serverResponse.status === "valid") {
                 setIsLoggedIn(true);
-                Alert.alert("Login successful.");
                 await storeUserSession({username});
+
+                const storedPermits = await AsyncStorage.getItem('userPermits');
+                if (storedPermits) {
+                    console.log("User's saved permits loaded: ", JSON.parse(storedPermits));
+                }
+                Alert.alert("Login successful.");
                 navigation.navigate("Main");
             }
             else if (serverResponse.status === "null_user") {
@@ -121,55 +126,6 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
         </View>
     )
 }
-
-/*export const RegisterScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleRegister = async () => {
-        try{
-            const msgObj = {
-                "op": "CreateAccount",
-                "name": username,
-                "passwd": password
-            };
-
-            const response = await sendMsg(JSON.stringify(msgObj));
-            const serverResponse = JSON.parse(response);
-
-            if (serverResponse.status === "account_created") {
-                Alert.alert("Registration successful");
-                setIsLoggedIn(true);
-                navigation.navigate("Main");
-            } 
-            else if (serverResponse.status === "name_used") {
-                Alert.alert("Username in use!","Please use another name.");
-            }
-            else if (serverResponse.status === "invalid_pass") {
-                Alert.alert("Password does not meet requirements.");
-            }
-            else {
-                Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
-            }
-
-        } catch (error){
-            Alert.alert("Unexpected error!", "Please try again.");
-            console.error(error);
-        }
-        };
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Register</Text>
-            <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername}/>
-            <TextInput style={styles.input} placeholder="Password" value={password} secureTextEntry onChangeText={setPassword}/>
-            <TouchableOpacity title="Register" style={styles.buttons} onPress={handleRegister}>
-            <Text style={styles.text}>Register</Text>
-            </TouchableOpacity>
-            <TouchableOpacity title="Go to login" onPress={() => navigation.navigate('Login')}/>
-        </View>
-    );
-};*/
 
 export const AccountMenuScreen = ({sendMsg, navigation, setIsLoggedIn, isLoggedIn}) => {
 
@@ -474,11 +430,37 @@ export const YourPermits = ({navigation, sendMsg}) => {
         'blue': false,
     });
 
-    const handleCheckedItem = (itemId) => {
-        setPermits((prevPermit) => ({
-            ...prevPermit,
-            [itemId]: !prevPermit[itemId],
-        }));
+    useEffect (() => {
+        const fetchUserPermits = async () => {
+            try {
+                const username = await AsyncStorage.getItem('userSession');
+                if (!username) return;
+
+                const storedPermits = await AsyncStorage.getItem('userPermits');
+                if (storedPermits) {
+                    setPermits(JSON.parse(storedPermits));
+                }
+            } catch (error) {
+                console.error('Error retrieving permits: ', error);
+            }
+        };
+
+        fetchUserPermits();
+    }, []);
+
+    const handleCheckedItem = async (itemId) => {
+        const updatedPermits = {...permits, [itemId]: !permits[itemId]};
+        setPermits(updatedPermits);
+        await savePermits(updatedPermits);
+    };
+
+    const savePermits = async (permits) => {
+        try {
+            await AsyncStorage.setItem('userPermits', JSON.stringify(permits));
+            console.log('Permits saved locally:', permits);
+        } catch (error) {
+            console.error('Error saving permits:', error);
+        }
     };
 
     const handleYourPermits = async () => {
@@ -499,6 +481,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
             const serverResponse = JSON.parse(response);
 
             if (serverResponse.status === "permits_updated"){
+                await AsyncStorage.setItem('userPermits', JSON.stringify(permits));
                 Alert.alert("Permit updated successfully!");
                 navigation.navigate("AccountMenu");
             } 
