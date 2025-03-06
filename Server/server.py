@@ -269,9 +269,15 @@ async def RefreshData():
         print('[REFR_DATA]: {e}')
         return "data_error", ""
     
-async def UpdatePermits(name, newPermits):                        
+async def UpdatePermits(name, passwd, newPermits):                        
     print(f'[OPERATION] UpdatePermits({name},{newPermits})')
     # [green,yellow,black,gold,handicap]
+
+    # authStatus = UserAuthenticate(name, passwd)                            ## FIXME: Uncomment when passwd passthrough is enabled clientside!
+
+    # if authStatus != "valid":
+    #    print("[UPD_PERM] Authentication failed: " + authStatus)
+    #    return authStatus
 
     filter = {"name": name}
     update = {"$set": {"permits": newPermits}}
@@ -298,6 +304,17 @@ async def DeleteAccount(name, passwd):
     else:
         print("[DEL_ACC] Failed authentication: " + authStatus)
         return authStatus
+    
+async def SaveWeeklySchedule(name, passwd, newSched):
+    print(f'[OPERATION] SaveWeeklySchedule({name})')
+
+    # authStatus = UserAuthenticate(name, passwd)                   ## FIXME: Uncomment when passwd passthrough is enabled clientside!
+
+    # if authStatus != "valid":                                                 
+    #    print("[UPD_PERM] Authentication failed: " + authStatus)
+    #    return authStatus
+    
+    
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
@@ -340,8 +357,9 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "UpdatePermits":
             name = rcvdJson["name"]
+            passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ## FIXME
             newPermits = rcvdJson["permits"]
-            status = await UpdatePermits(name, newPermits)
+            status = await UpdatePermits(name,passwd,newPermits)
             await websocket.send(json.dumps({"status":status}))
 
         elif rcvdJson["op"] == "DeleteAccount":
@@ -349,6 +367,12 @@ async def HandleOperation(websocket, rcvdJson):
             passwd = rcvdJson["passwd"]
             status = await DeleteAccount(name,passwd)
             await websocket.send(json.dumps({"status": status}))
+
+        elif rcvdJson["op"] == "SaveWeeklySchedule":
+            name = rcvdJson["name"]
+            passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ## FIXME
+            newSched = rcvdJson["newSched"]
+            status = await SaveWeeklySchedule(name,passwd,newSched)
             
     except websockets.exceptions.ConnectionClosedError:
         print("[HANDLE_OP] Connection closed while handling operation.")
