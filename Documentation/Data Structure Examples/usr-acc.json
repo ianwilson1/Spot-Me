@@ -1,0 +1,38 @@
+{
+    "_id": "ObjectId('67b28b910405159d5f9c14c3')",
+    "name": "adale",
+    "pass": "Binary.createFromBase64('JDJiJDEyJHhDdXIuZzU2QlF1SXJzZG82cDU1Y2VCdlZnLlVuZTdnUTFvUDRNZXpoVDI4cG93R1lzWWZl', 0)",
+    "permits": [ 
+    	true, 
+        true,
+	    false, 
+	    false, 
+	    false 
+    ],
+    "weeklySchedule": {
+        "monday": [
+            {
+                "isFilled" : true,
+                "prefLot" : "P6",
+                "conflictStatus": 0
+            },
+            {
+                "isFilled" : true,
+                "prefLot" : "P5",
+                "conflictStatus": 1
+            },
+            {
+                "... the 30 minute time blocks from 7am  - 9:30pm ..." : ""
+            },
+            {
+                "isFilled" : false,
+                "prefLot" : null,
+                "conflictStatus": 0
+            }
+        ],
+        "tuesday" : [ "... the time blocks from 6am - 10pm on tuesday ..." ],
+        "wedensday" : [ "... the time blocks from 6am - 10pm on tuesday ..."],
+        "thursday" : [ "... the time blocks from 6am - 10pm on tuesday ..." ],
+        "friday" : [ "... the time blocks from 6am - 10pm on tuesday ..." ]
+    }
+}
