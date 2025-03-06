@@ -314,7 +314,17 @@ async def SaveWeeklySchedule(name, passwd, newSched):
     #    print("[UPD_PERM] Authentication failed: " + authStatus)
     #    return authStatus
     
-    
+    filter = {"name": name}
+    update = {"$set": {"weeklySchedule": newSched}}
+        
+    result = USERS_COL.update_one(filter, update)
+        
+    if result.modified_count > 0:
+        print("[UPD_PERM] Permits updated successfully!")
+        return "schedule_updated"
+    else:
+        print("[UPD_PERM] Permits not updated.")
+        return "schedule_updated"
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
