@@ -179,13 +179,13 @@ async def Login(name, passwd):
     return authStatus, userData
     
 async def UpdateSpot(id, status): 
-    print(f"[OPERATION] UpdateSpot({id},{status})")
+    # print(f"[OPERATION] UpdateSpot({id},{status})")
     filter = {"spaces.space_id": id} # Find spot
     update = {"$set": {"spaces.$.status": status}} # Set new status; # 0 = empty, 1 = full, 2 = soft reserved
     
     SPOTS_COL.update_one(filter, update) # Update document
     await CongestionCalc(id) # Update congestion level of lot
-    print("[UPD_SPOT] Updated spot successfully.")
+    # print("[UPD_SPOT] Updated spot successfully.")
 
 async def CreateAccount(name, passwd): 
     print(f"[OPERATION] CreateAccount({name})")
@@ -314,17 +314,7 @@ async def SaveWeeklySchedule(name, passwd, newSched):
     #    print("[UPD_PERM] Authentication failed: " + authStatus)
     #    return authStatus
     
-    filter = {"name": name}
-    update = {"$set": {"weeklySchedule": newSched}}
-        
-    result = USERS_COL.update_one(filter, update)
-        
-    if result.modified_count > 0:
-        print("[UPD_PERM] Schedule updated successfully!")
-        return "schedule_updated"
-    else:
-        print("[UPD_PERM] Schedule not updated.")
-        return "schedule_updated"
+
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
@@ -380,7 +370,7 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "SaveWeeklySchedule":
             name = rcvdJson["name"]
-            passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ## FIXME
+            passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ##
             newSched = rcvdJson["newSched"]
             status = await SaveWeeklySchedule(name,passwd,newSched)
             
