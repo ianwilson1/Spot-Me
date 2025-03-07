@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image, PanResponder} from "react-native";
 import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -546,52 +546,112 @@ export const YourPermits = ({navigation, sendMsg}) => {
 };
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-const TOTAL_HOURS = 12; // Example: Displaying 12 hours (e.g., 8 AM - 8 PM)
+const TOTAL_INTERVALS = 24; // Example: Displaying 12 hours (30 min intervals) (e.g., 8 AM - 8 PM)
+const CELL_WIDTH = 70;
+const CELL_HEIGHT = 30;
 
 //feature 5.5 from system req doc
 export const WeeklyScheduler = () => {
   const [blocks, setBlocks] = useState([]); // Stores the selected time blocks
+  const [startSelection, setStartSelection] = useState(null); // Tracks initial selection
+  const gridRef = useRef(null); // Reference to grid position on screen
+  
+  useEffect(() => {
+    if (gridRef.current) {
+        gridRef.current.measure((x, y, width, height, pageX) => {
+            setGridOffsetX(pageX);
+        });
+    }
+  }, []);
 
+  const [gridOffsetX, setGridOffsetX] = useState(0);
+ 
   // Handles touch and drag
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderGrant: (evt, gestureState) => {
-      const { locationX, locationY } = evt.nativeEvent;
-      const dayIndex = Math.floor(locationX / 70); // Assuming each day width is ~70px
-      const timeIndex = Math.floor(locationY / 40); // Assuming each hour height is ~40px
+    onMoveShouldSetPanResponder: () => true,
 
-      if (dayIndex >= 0 && dayIndex < DAYS.length && timeIndex >= 0 && timeIndex < TOTAL_HOURS) {
-        setBlocks((prevBlocks) => [
-          ...prevBlocks,
-          { day: dayIndex, start: timeIndex, end: timeIndex + 1 },
-        ]);
+    onPanResponderGrant: (evt) => {
+      const { locationX, locationY, pageX } = evt.nativeEvent;
+
+      const adjustedX = pageX - gridOffsetX;
+      const dayIndex = Math.floor(adjustedX / CELL_WIDTH); // Assuming each day width is ~70px
+      const timeIndex = Math.floor(locationY / CELL_HEIGHT); // Assuming each hour height is ~40px
+
+      if(isValidSelection(dayIndex, timeIndex)) {
+        setStartSelection({day: dayIndex, start: timeIndex});
       }
     },
-  });
+
+    onPanResponderMove: (evt) => {
+        if (!startSelection) return;
+        const {locationX, locationY, pageX} = evt.nativeEvent;
+
+        const adjustedX = pageX - locationX;
+        const dayIndex = Math.floor(adjustedX / CELL_WIDTH);
+        const timeIndex = Math.floor(locationY / CELL_HEIGHT);
+
+        if (isValidSelection(dayIndex, timeIndex)) {
+            updateBlockSelection(dayIndex, startSelection.start, timeIndex);
+        }
+    },
+
+    onPanResponderRelease: () => {
+        setStartSelection(null);   // Reset after selection is complete
+    }
+});
+
+// checks validity of selection
+const isValidSelection = (day, time) => {
+    return (
+        day >= 0 && day < DAYS.length &&
+        time >= 0 && time < TOTAL_INTERVALS &&
+        !blocks.some(b => b.day === day && b.start <= time && b.end > time)
+    );
+};
+
+// Updates blocks while dragging
+const updateBlockSelection = (day, start, end) => {
+    setBlocks((prevBlocks) => {
+        let newBlocks = [...prevBlocks];
+
+        const existingBlock = newBlocks.find(b => b.day === day && b.start === start);
+
+        if (existingBlock) {
+            existingBlock.end = Math.max(start, end) + 1;
+        } else {
+            newBlocks.push({day, start: Math.min(start, end), end: Math.max(start, end) + 1});
+        }
+
+        return [...newBlocks];
+    });
+};
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header with days */}
-      <SafeAreaView style={styles.header}>
+      <View style={styles.header}>
         {DAYS.map((day, index) => (
           <Text key={index} style={styles.dayText}>{day}</Text>
         ))}
-      </SafeAreaView>
+      </View>
       
       {/* Scheduler Grid */}
-      <SafeAreaView style={styles.grid} {...panResponder.panHandlers}>
-        {[...Array(TOTAL_HOURS)].map((_, hour) => (
-          <SafeAreaView key={hour} style={styles.row}>
-            {DAYS.map((_, day) => (
-              <SafeAreaView key={day} style={styles.cell}>
-                {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
-                  <SafeAreaView style={styles.selectedBlock} />
-                )}
-              </SafeAreaView>
+      <View style= {styles.touchWrapper} {...panResponder.panHandlers}>
+        <View style={styles.grid}>
+            {[...Array(TOTAL_INTERVALS)].map((_, hour) => (
+                <View key={hour} style={styles.row}>
+                {DAYS.map((_, day) => (
+                    <View key={day} style={styles.cell}>
+                        {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
+                        <View style={styles.selectedBlock} />
+                        )}
+                    </View>
+                ))}
+                </View>
             ))}
-          </SafeAreaView>
-        ))}
-      </SafeAreaView>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -683,29 +743,7 @@ const styles = StyleSheet.create({
     dayText: { fontWeight: "bold", fontSize: 16, width: 70, textAlign: "center" },
     grid: { flexDirection: "column" },
     row: { flexDirection: "row" },
-    cell: { width: 70, height: 40, borderWidth: 1, borderColor: "#ddd" },
-    selectedBlock: { flex: 1, backgroundColor: "blue" },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
+    cell: { width: CELL_WIDTH, height: CELL_HEIGHT, borderWidth: 0.5, borderColor: "#ccc" },
+    selectedBlock: { flex: 1, backgroundColor: "#002e6d" },
+    touchWrapper: {flex: 1},
 });
