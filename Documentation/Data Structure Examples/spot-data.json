@@ -1,0 +1,50 @@
+[
+    {
+        "lot_id" :  "P6",
+        "congestion_percent" : 0.65,
+        "histData" : {
+            "weekNumber" : 3,         "<- Keep in mind that this value only exists for P6. This is used to track which week of the 4 week data retention cycle the server is on." : "",
+            "monday" : [
+                [0.65, 0.64, "...", 0.69],
+                ["... congestion data from week 2 ..."],
+                ["... congestion data from week 3 ..."],
+                ["... congestion data from week 4 ..."]
+            ],
+            "tuesday" : [
+                ["... congestion data from week 1 ..."],
+                ["... congestion data from week 2 ..."],
+                ["..."],
+                ["..."]
+            ],
+            "wednesday" : [
+                ["..."],
+                ["..."],
+                ["..."],
+                ["..."]
+            ],
+            "thursday" : [
+                ["..."],
+                ["..."],
+                ["..."],
+                ["..."]
+            ],
+            "friday" : [
+                ["..."],
+                ["..."],
+                ["..."],
+                ["..."]
+            ]
+        },
+        "avgCong" : {
+            "monday" :      [0.65, "...", 0.69],
+            "tuesday" :     ["... list of 4 week average congestion ..."],
+            "wednesday" :   ["..."],
+            "thursday" :    ["..."],
+            "friday" :      ["..."]
+        }
+    },
+    {
+        "lot_id" : "P5",
+        "..." : "the same as the stuff in P6"
+    }
+]
