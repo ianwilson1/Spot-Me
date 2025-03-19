@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Alert, StyleSheet, Text, Modal, TouchableOpacity} from 'react-native';
+import { View, Alert, StyleSheet, Text, Modal, TouchableOpacity, Platform, Linking} from 'react-native';
 import Toolbar from './components/Toolbar.js';
 import MapView, { Marker, Polygon } from 'react-native-maps';
 import {LoginScreen, AccountMenuScreen, UpdateAccount, UpdateUsername, UpdatePasswd, YourPermits, WeeklyScheduler} from './components/Accounts.js';
@@ -65,7 +65,14 @@ export default function App () {
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId) => {
-    Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`);   // `Block ID: ${blockId}\n   --> for testing 
+    Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`, [
+      { 
+          text: "Begin Navigation",
+          onPress: () => {
+              openNavigation(36.811609, -119.741742);
+            }
+      }
+    ]);   // `Block ID: ${blockId}\n   --> for testing
   };
 
   // Establish connection to server
@@ -249,7 +256,7 @@ const saveLocation = async () => {
 };
 
 const fileUri = `${FileSystem.documentDirectory}localData.json`;
-  const refreshData = async () => { // TODO: Still need to finish this function, not fully functional
+  const refreshData = async () => {
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
         const serverResponse = await sendMsg(msg);
