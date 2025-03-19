@@ -64,12 +64,16 @@ export default function App () {
     setZoom(zoomLevel);
   };
   // Function to handle tapping spot
-  const handlePolygonPress = (parkingLot, spotId, blockId) => {
+  const handlePolygonPress = (parkingLot, spotId, blockId, coordinates) => {
+    console.log(coordinates[0]);
+
     Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`, [
       { 
-          text: "Begin Navigation",
+          text: "Reserve and Navigate",
           onPress: () => {
-              openNavigation(36.811609, -119.741742);
+              latitude = coordinates[0].latitude;
+              longitude = coordinates[0].longitude;
+              openNavigation(latitude, longitude);
             }
       }
     ]);   // `Block ID: ${blockId}\n   --> for testing
@@ -348,7 +352,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                       fillColor={fillColor}
                       strokeWidth={1}
                       tappable
-                      onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block)}
+                      onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates)}
                     />
                   );  
                 })}
