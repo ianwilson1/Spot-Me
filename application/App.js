@@ -10,7 +10,6 @@ import * as FileSystem from 'expo-file-system';
 import parkingData from './assets/parking_lot_data.json';
 import Histogram from './components/histogram.js'
 
-
 const Stack = createStackNavigator();
 
 export default function App () {
@@ -106,6 +105,20 @@ export default function App () {
         reject('ERROR: Could not connect to server!')
       }
     });
+  };
+
+  // Use this to begin navigation
+  const openNavigation = (latitude, longitude) => {
+    const destination = encodeURIComponent(String(latitude) + "," + String(longitude)); // San Francisco, CA
+    let url = "";
+
+    if (Platform.OS === "ios") {
+      url = `maps://?saddr=&daddr=${destination}&directionsmode=driving`; // Apple Maps with driving mode
+    } else {
+      url = `google.navigation:q=${destination}`; // Google Maps with driving mode
+    }
+
+    Linking.openURL(url).catch((err) => Alert.alert("Error", "Failed to start navigation."));
   };
 
   // Re-orient map to north (compass button)
