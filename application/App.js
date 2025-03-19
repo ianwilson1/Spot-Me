@@ -65,8 +65,6 @@ export default function App () {
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId, coordinates) => {
-    console.log(coordinates[0]);
-
     Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`, [
       { 
           text: "Reserve and Navigate",
@@ -75,6 +73,9 @@ export default function App () {
               longitude = coordinates[0].longitude;
               openNavigation(latitude, longitude);
             }
+      },
+      { 
+        text: "Cancel"
       }
     ]);   // `Block ID: ${blockId}\n   --> for testing
   };
@@ -150,7 +151,7 @@ const checkPermissions = async () => {
 
 const parkingLots = [
   { name: 'P5', coordinates: { latitude: 36.811609, longitude: -119.741742 }, congestionKey: 'P5' },
-  { name: 'P6', coordinates: { latitude: 36.813302, longitude: -119.741799 }, congestionKey: 'P6'},
+  { name: 'P6', coordinates: { latitude: 36.813297806394154, longitude: -119.7417291064082 }, congestionKey: 'P6'},
 ];
 
 
@@ -264,7 +265,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
     let msg = JSON.stringify({ "op":"RefreshData" })
       try {
         const serverResponse = await sendMsg(msg);
-        console.log('Refresh successful:', serverResponse);
+        // console.log('Refresh successful:', serverResponse);
         responseData = JSON.parse(serverResponse)
 
         // Parse the data and initialize updatedStatus as an empty array
@@ -323,6 +324,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
               <MapView 
                 ref={mapRef}
                 style={styles.map}
+                showsPointsOfInterest={false}
                 setCamera={{
                     heading: 50,
                 }}
@@ -529,7 +531,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: 'white',
   },
   title: {
     fontWeight: 'bold',
@@ -545,6 +547,9 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }]
   },
   modalBackground: {
     flex: 1,
