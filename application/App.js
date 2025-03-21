@@ -93,22 +93,6 @@ export default function App () {
     requestPermissions();
   }, []);
 
-  // Establish connection to server
-  useEffect( () => {
-    const ConnectToServer = () => {
-      const client = new WebSocket('ws://34.169.42.70:15024')
-      socketRef.current = client;
-    };
-
-    ConnectToServer();
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    }
-  }, []);
-
   // CALL THIS TO SEND MESSAGE TO THE SERVER!
   // Returns the server response.
   const sendMsg = (msg) => {
@@ -131,6 +115,26 @@ export default function App () {
       }
     });
   };
+
+    // Establish connection to server
+    useEffect( () => {
+      const ConnectToServer = () => {
+        const client = new WebSocket('ws://34.169.42.70:15024')
+        socketRef.current = client;
+
+        client.onopen = () => {
+          refreshData();
+        }
+      }
+  
+      ConnectToServer();
+  
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.close();
+        }
+      }
+    }, []);
 
   // Use this to begin navigation
   const openNavigation = async (latitude, longitude) => {
@@ -184,7 +188,7 @@ const getPinColor = (congestion) => {
   if (congestion == 2) return "white" // Default value (cannot be 0, it would mean empty, not default)
   else if (congestion > 0.85) return "red"; // High congestion
   else if (congestion > 0.65) return "yellow"; // Medium congestion
-  else return "purple"; // Low congestion
+  else return "green"; // Low congestion
 };
 
 // Function to handle tapping the parking lot marker
