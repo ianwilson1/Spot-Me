@@ -7,6 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system';
+import * as Notifications from "expo-notifications";
 import parkingData from './assets/parking_lot_data.json';
 import Histogram from './components/histogram.js'
 
@@ -80,6 +81,18 @@ export default function App () {
     ]);   // `Block ID: ${blockId}\n   --> for testing
   };
 
+  async function requestPermissions() {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission required", "You need to enable notifications to use this feature.");
+    }
+  }
+
+  // Request Notification Permissions
+  useEffect( () => {
+    requestPermissions();
+  }, []);
+
   // Establish connection to server
   useEffect( () => {
     const ConnectToServer = () => {
@@ -120,17 +133,28 @@ export default function App () {
   };
 
   // Use this to begin navigation
-  const openNavigation = (latitude, longitude) => {
+  const openNavigation = async (latitude, longitude) => {
     const destination = encodeURIComponent(String(latitude) + "," + String(longitude)); // San Francisco, CA
     let url = "";
 
     if (Platform.OS === "ios") {
       url = `maps://?saddr=&daddr=${destination}&directionsmode=driving`; // Apple Maps with driving mode
-    } else {
+    } 
+    else {
       url = `google.navigation:q=${destination}`; // Google Maps with driving mode
     }
 
-    Linking.openURL(url).catch((err) => Alert.alert("Error", "Failed to start navigation."));
+    Linking.openURL(url).catch(() => Alert.alert("Error", "Failed to start navigation."));
+
+    // Schedule a notification after 10 minutes
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "SpotMe Navigation",
+        body: "Reservation time limit reached. Please return to SpotMe.",
+        sound: true,
+      },
+      trigger: { seconds: 15 },
+    });
   };
 
   // Re-orient map to north (compass button)
@@ -304,12 +328,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
         console.error('Error sending message:', error);
       }
     };
-
-      /* Tried this code to automatically refresh app when opened
-       useEffect(() => {
-        refreshData();
-      }, []); // Empty dependency array ensures it runs only once on mount
-      */
 
   return (
     <NavigationContainer>
