@@ -46,6 +46,7 @@ async def UpdCongAvg(lot, week, day, index):
         {"lot_id": lot},
         {"$set": {key:avg}}
     )
+    print(f"[UPD_CONG_AVG] Successfully updated {lot}.")
 
 async def UpdLotCongHist(lot, key):
     doc = SPOTS_COL.find_one({"lot_id": lot}, {"congestion_percent": 1, "_id": 0})
