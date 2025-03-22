@@ -402,7 +402,7 @@ async def HandleOperation(websocket, rcvdJson):
     except websockets.exceptions.ConnectionClosedOK:
         print("[HANDLE_OP] Connection closed with OK status.")
     except Exception as e:
-        print(f"[HANDLE_OP] Unexpected error: {e}")
+        print(f"[HANDLE_OP] Unexpected error: {e}. Received JSON: {json.dumps(rcvdJson)}")
 
 
     # TODO: Create branches for the rest of the operations
