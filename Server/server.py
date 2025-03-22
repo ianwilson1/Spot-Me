@@ -342,7 +342,6 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status, "userData":userData}))
 
         elif rcvdJson["op"] == "UpdateSpot":
-            print("[HANDLE_OP] Handling UPDATE_SPOT.")
             id = rcvdJson["id"]
             status = rcvdJson["status"]
             await UpdateSpot(id, status)
