@@ -46,6 +46,7 @@ async def UpdCongAvg(lot, week, day, index):
         {"lot_id": lot},
         {"$set": {key:avg}}
     )
+
     print(f"[UPD_CONG_AVG] Successfully updated {lot}.")
 
 async def UpdLotCongHist(lot, key):
@@ -334,23 +335,27 @@ async def SaveWeeklySchedule(name, passwd, newSched):
 async def HandleOperation(websocket, rcvdJson):
     try:
         if rcvdJson["op"] == "Login":
+            print("[HANDLE_OP] Handling LOGIN.")
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status, userData = await Login(name, passwd)
             await websocket.send(json.dumps({"status": status, "userData":userData}))
 
         elif rcvdJson["op"] == "UpdateSpot":
+            print("[HANDLE_OP] Handling UPDATE_SPOT.")
             id = rcvdJson["id"]
             status = rcvdJson["status"]
             await UpdateSpot(id, status)
 
         elif rcvdJson["op"] == "CreateAccount":
+            print("[HANDLE_OP] Handling CREATE_ACCOUNT.")
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status = await CreateAccount(name, passwd)
             await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "UpdateName":
+            print("[HANDLE_OP] Handling UPDATE_NAME.")
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newName = rcvdJson["newName"]
@@ -358,6 +363,7 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status}))
             
         elif rcvdJson["op"] == "UpdatePass":
+            print("[HANDLE_OP] Handling UPDATE_PASS.")
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newPass = rcvdJson["newPass"]
@@ -365,10 +371,12 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "RefreshData":
+            print("[HANDLE_OP] Handling REFRESH_DATA.")
             status, data = await RefreshData()
             await websocket.send(json.dumps({"status":status, "data": data}))
 
         elif rcvdJson["op"] == "UpdatePermits":
+            print("[HANDLE_OP] Handling UPDATE_PERMITS.")
             name = rcvdJson["name"]
             passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ## FIXME
             newPermits = rcvdJson["permits"]
@@ -376,12 +384,14 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status":status}))
 
         elif rcvdJson["op"] == "DeleteAccount":
+            print("[HANDLE_OP] Handling DELETE_ACCOUNT.")
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status = await DeleteAccount(name,passwd)
             await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "SaveWeeklySchedule":
+            print("[HANDLE_OP] Handling SAVE_WEEKLY_SCHEDULE.")
             name = rcvdJson["name"]
             passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ##
             newSched = rcvdJson["newSched"]
