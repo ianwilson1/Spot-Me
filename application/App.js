@@ -64,7 +64,6 @@ export default function App () {
   const handleRegionChangeComplete = (region) => {
     const zoomLevel = Math.log2(360 / region.latitudeDelta);
     setZoom(zoomLevel);
-    console.log(zoomLevel);
     if (mapRef.current && zoomLevel < 13) {
       mapRef.current.animateToRegion({ // Center and zoom in on car's location
           latitude: 36.81369124340123,
@@ -359,7 +358,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     longitudeDelta: 0.02,
                 }}
               >
-                {zoom >= 15.78 
+                {zoom >= 16.86 
                   && parkingSpots.map((spot) => {
                   // Determine the fill color based on the status
                   const statusColors = {
