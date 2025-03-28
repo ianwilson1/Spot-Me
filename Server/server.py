@@ -398,7 +398,7 @@ async def HandleOperation(websocket, rcvdJson):
             await websocket.send(json.dumps({"status": status}))
 
         else:
-            print(f"[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}")
+            print(f'[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}')
             status = "unrecognized_operation"
             await websocket.send(json.dumps({"status": status}))
             
