@@ -395,6 +395,12 @@ async def HandleOperation(websocket, rcvdJson):
             passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ##
             newSched = rcvdJson["newSched"]
             status = await SaveWeeklySchedule(name,passwd,newSched)
+            await websocket.send(json.dumps({"status": status}))
+
+        else:
+            print(f"[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}")
+            status = "unrecognized_operation"
+            await websocket.send(json.dumps({"status": status}))
             
     except websockets.exceptions.ConnectionClosedError:
         print("[HANDLE_OP] Connection closed while handling operation.")
