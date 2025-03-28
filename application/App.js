@@ -22,7 +22,7 @@ export default function App () {
   // States
   const [carLocation, setCarLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [zoom, setZoom] = useState(0);
+  const [zoom, setZoom] = useState(14);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
 
@@ -64,9 +64,19 @@ export default function App () {
   const handleRegionChangeComplete = (region) => {
     const zoomLevel = Math.log2(360 / region.latitudeDelta);
     setZoom(zoomLevel);
+    console.log(zoomLevel);
+    if (mapRef.current && zoomLevel < 13) {
+      mapRef.current.animateToRegion({ // Center and zoom in on car's location
+          latitude: 36.81369124340123,
+          longitude: -119.7455163161234,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.015,
+      }, 1000);
+    };
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId, coordinates) => {
+    console.log("Polygon pressed.");
     Alert.alert(`Parking Lot: ${parkingLot}`, `Spot ID: ${spotId}\n`, [
       { 
           text: "Reserve and Navigate",
@@ -239,17 +249,6 @@ const saveLocation = async () => {
                         
             console.log(carLoc.coords);
             setCarLocation(carLoc.coords);
-
-            /*
-            try {
-              await FileSystem.writeAsStringAsync(fileUri, locJSON, {
-                encoding: FileSystem.EncodingType.UTF8
-              });
-              console.log('Car location saved!');
-            } catch (error) {
-              console.error('Error saving car location:', error);
-            }
-            */
           }
         },
         { 
@@ -388,12 +387,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   return(
                     <Marker
                       key={index}
-                      /*title={`${lot.name}`}
-                      description={
-                        congestion >= 0 && congestion <= 1 
-                          ? `(${Math.round(congestion * 100)}% full)` 
-                          : "No data. Refresh"
-                      }*/
                       pinColor={pinColor}
                       coordinate={lot.coordinates}
                       onPress={() => handleMarkerPress(lot)}  // Show modal on press
