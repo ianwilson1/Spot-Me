@@ -182,38 +182,27 @@ async def Login(name, passwd):
     
 async def UpdateSpot(id, status): 
     # print(f"[OPERATION] UpdateSpot({id},{status})")
-    filter = {"spaces.space_id": id} # Find spot
-    update = {"$set": {"spaces.$.status": status}} # Set new status; # 0 = empty, 1 = full, 2 = soft reserved
+    filter = {"spaces.space_id": id}  # find a spot
+    doc = SPOTS_COL.find_one(filter, {"spaces.$": 1})  # retrieve the current spot data
+
+    if doc is None:
+        print(f"[UPD_SPOT] Spot {id} not found.")
+        return "spot_not_found"
+
+    current_status = doc['spaces'][0]['status']
+
+    # prevent a transition from status 2 (soft reserved) to status 0 (unoccupied)
+    if current_status == 2 and status == 0:
+        print(f"[UPD_SPOT] Attempt to free a soft reserved spot {id} ignored.")
+        return "spot_update_ignored"
+
+    update = {"$set": {"spaces.$.status": status}}  # set new status
+    SPOTS_COL.update_one(filter, update)  
     
-    SPOTS_COL.update_one(filter, update) # Update document
-    await CongestionCalc(id) # Update congestion level of lot
+    await CongestionCalc(id)  # update congestion level of lot
     # print("[UPD_SPOT] Updated spot successfully.")
     return "spot_updated"
 
-async def CreateAccount(name, passwd): 
-    print(f"[OPERATION] CreateAccount({name})")
-
-    if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
-        print("[CRTE_ACC] User already exists.")
-        return "name_used"
-
-    passwordValidationStatus = ValidatePassword(passwd)
-    
-    if passwordValidationStatus != "valid":
-        print("[CRTE_ACC] Password requirements not met: " + passwordValidationStatus)
-        return passwordValidationStatus
-    
-    hashed_password = hash_password(passwd) # Create the hashed password
-    
-    user = { # Set document
-        "name": name,
-        "pass": hashed_password,
-        "permits": [False, False, False, False, False] # [green,yellow,black,gold,handicap]
-    }
-
-    USERS_COL.insert_one(user) # Insert document
-    print("[CRTE_ACC] New user created successfully.")
-    return "account_created"
 
 async def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{newName})")
@@ -329,6 +318,19 @@ async def SaveWeeklySchedule(name, passwd, newSched):
     else:
         print("[UPD_PERM] Schedule not updated.")
         return "schedule_updated"
+    
+async def RefreshSpotData(spot_id):
+    print(f'[OPERATION] RefreshSpotData({spot_id})')
+    lot = SPOTS_COL.find_one({"spaces.space_id": spot_id}, {"_id": 0, "spaces.$": 1})
+    if lot is None:
+        print('[REFR_SPOT_DATA] Spot not found in the database.')
+        return "spot_not_found", ""
+
+    spot_data = lot['spaces'][0]
+    print(f'[REFR_SPOT_DATA] Successfully retrieved data for spot {spot_id}.')
+    return "spot_data_retrieved", json.dumps(spot_data)
+
+
 
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
