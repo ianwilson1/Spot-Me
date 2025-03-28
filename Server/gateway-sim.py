@@ -17,6 +17,8 @@ MAX_SPOTS = 1873                      # Number of parking spots we currently hav
 
 async def Send(websocket, msg):
     await websocket.send(msg)
+    response = await websocket.recv()
+    return response
 
 async def Start():
     async with websockets.connect(ADDR) as websocket:
@@ -40,7 +42,8 @@ async def Start():
             
             msg = json.dumps(updSpotInfo)
             print(f"[OUTBOUND] {msg}")
-            await Send(websocket, msg)
+            response = await Send(websocket, msg)
+            print(f"[RECEIVED] {response}")
 
             await asyncio.sleep(1)
 

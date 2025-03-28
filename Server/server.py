@@ -188,6 +188,7 @@ async def UpdateSpot(id, status):
     SPOTS_COL.update_one(filter, update) # Update document
     await CongestionCalc(id) # Update congestion level of lot
     # print("[UPD_SPOT] Updated spot successfully.")
+    return "spot_updated"
 
 async def CreateAccount(name, passwd): 
     print(f"[OPERATION] CreateAccount({name})")
@@ -344,7 +345,8 @@ async def HandleOperation(websocket, rcvdJson):
         elif rcvdJson["op"] == "UpdateSpot":
             id = rcvdJson["id"]
             status = rcvdJson["status"]
-            await UpdateSpot(id, status)
+            status = await UpdateSpot(id, status)
+            await websocket.send(json.dumps({"status": status}))
 
         elif rcvdJson["op"] == "CreateAccount":
             print("[HANDLE_OP] Handling CREATE_ACCOUNT.")
