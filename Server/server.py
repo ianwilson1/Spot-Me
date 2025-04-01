@@ -343,23 +343,51 @@ async def SaveWeeklySchedule(name, passwd, newSched):
         print("[UPD_PERM] Schedule not updated.")
         return "schedule_updated"
     
-async def RefreshSpotData(spot_id):
-    print(f'[OPERATION] RefreshSpotData({spot_id})')
+async def QuerySpot(spot_id):
+    #print(f'[OPERATION] QuerySpot({spot_id})')
     lot = SPOTS_COL.find_one({"spaces.space_id": spot_id}, {"_id": 0, "spaces.$": 1})
     if lot is None:
-        print('[REFR_SPOT_DATA] Spot not found in the database.')
-        return "spot_not_found", ""
+        print(f'[REFR_SPOT_DATA] Spot not found in the database: {spot_id}')
+        return "null"
 
     spot_data = lot['spaces'][0]
-    print(f'[REFR_SPOT_DATA] Successfully retrieved data for spot {spot_id}.')
-    return "spot_data_retrieved", json.dumps(spot_data)
+    #print(f'[REFR_SPOT_DATA] Successfully retrieved data for spot {spot_id}.')
+    status = spot_data["status"]
 
+    if status == 0:
+        return "unoccupied"
+    elif status == 1:
+        return "occupied"
+    elif status == 2:
+        return "reserved"
+    else:
+        print(f"[REFER_SPOT_DATA] Unknown/invalid spot status? ({status})")
+        return "invalid"
 
+async def ReserveSpot(spotId):
+    print(f'[OPERATION] ReserveSpot({spotId})')
+
+    # Summary of operation (self notes)
+    # Server receives, queries database for spot status, and sets to yellow if green.
+        # If yellow or red, send "taken" status and cancel operation
+    # Every 15 seconds 40 times (== 10 minutes), the server will query the status of the spot
+        # If the spot becomes occupied during loop, immediately break out of loop and send status "taken"
+        # If spot is still reserved when loop ends, send status "time_limit_reached" and reset to green
+
+    # Client side:
+    # Client calls reserve spot and starts an 10m30s timer (used later)
+    # If client receives "taken" status, offer option to reserve closest spot and resend ReserveSpot()
+    # If client receives "time_limit_reached" status, end reservation and cancel timer
+    # If timer reaches 0, assume that connection to server has been lost and cancel reservation.
+
+    spot = await QuerySpot()
+    await UpdateSpot(spotId, 2)
 
  
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
 async def HandleOperation(websocket, rcvdJson):
+    print(websocket)
     try:
         if rcvdJson["op"] == "Login":
             print("[HANDLE_OP] Handling LOGIN.")
@@ -424,6 +452,19 @@ async def HandleOperation(websocket, rcvdJson):
             newSched = rcvdJson["newSched"]
             status = await SaveWeeklySchedule(name,passwd,newSched)
             await websocket.send(json.dumps({"status": status}))
+
+        elif rcvdJson["op"] == "QuerySpot":
+            print("[HANDLE_OP] Handling QUERY_SPOT")
+            id = rcvdJson["id"]
+            status = await QuerySpot(id)
+            await websocket.send(json.dumps({"status": status}))
+
+        elif rcvdJson["op"] == "ReserveSpot":
+            print("[HANDLE_OP] Handling RESERVE_SPOT")
+            client = websocket
+            spotId = rcvdJson["spotId"]
+            status = await ReserveSpot(client, spotId)
+            await websocket.send(json.dumps({"status":status}))
 
         else:
             print(f'[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}')
