@@ -193,7 +193,7 @@ async def UpdateSpot(id, status):
 
     # prevent a transition from status 2 (soft reserved) to status 0 (unoccupied)
     if current_status == 2 and status == 0:
-        print(f"[UPD_SPOT] Attempt to free a soft reserved spot {id} ignored.")
+        #print(f"[UPD_SPOT] Attempt to free a soft reserved spot {id} ignored.")
         return "spot_update_ignored"
 
     update = {"$set": {"spaces.$.status": status}}  # set new status
