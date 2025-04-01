@@ -367,13 +367,6 @@ async def QuerySpot(spot_id):
 async def ReserveSpot(spotId):
     print(f'[OPERATION] ReserveSpot({spotId})')
 
-    # Summary of operation (self notes)
-    # Server receives, queries database for spot status, and sets to yellow if green.
-        # If yellow or red, send respective status and cancel operation
-    # Every 15 seconds 40 times (== 10 minutes), the server will query the status of the spot
-        # If the spot becomes occupied during loop, immediately break out of loop and send status "taken"
-        # If spot is still reserved when loop ends, send status "time_limit_reached" and reset to green
-
     # Client side:
     # Client calls reserve spot and starts a 10m30s timer (used later)
     # If client receives "taken" status, offer option to reserve closest spot and resend ReserveSpot()
@@ -389,8 +382,8 @@ async def ReserveSpot(spotId):
     
     await UpdateSpot(spotId, 2)
     
-    for i in range(0,5):
-        print("[RESERVE_SPOT] Requerying...")
+    for i in range(0,600):
+        #print("[RESERVE_SPOT] Requerying...")
         spot = await QuerySpot(spotId)
 
         if spot == "occupied":
@@ -498,10 +491,7 @@ async def HandleOperation(websocket, rcvdJson):
     except Exception as e:
         print(f"[HANDLE_OP] Unexpected error: {e}. Received JSON: {json.dumps(rcvdJson)}")
 
-
-    # TODO: Create branches for the rest of the operations
-
-async def HandleMsg(websocket):#
+async def HandleMsg(websocket):
     async for msg in websocket:
         if msg == DISCONNECT_MESSAGE:
             return
