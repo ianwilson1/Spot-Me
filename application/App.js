@@ -80,9 +80,10 @@ export default function App () {
       { 
           text: "Reserve and Navigate",
           onPress: () => {
+              id = spotId
               latitude = coordinates[0].latitude;
               longitude = coordinates[0].longitude;
-              openNavigation(latitude, longitude);
+              softReserve(spotId, latitude, longitude);
             }
       },
       {
@@ -147,8 +148,8 @@ export default function App () {
     }, []);
 
   // Use this to begin navigation
-  const openNavigation = async (latitude, longitude) => {
-    const destination = encodeURIComponent(String(latitude) + "," + String(longitude)); // San Francisco, CA
+  const softReserve = async (spotId, latitude, longitude) => {
+    const destination = encodeURIComponent(String(latitude) + "," + String(longitude));
     let url = "";
 
     if (Platform.OS === "ios") {
