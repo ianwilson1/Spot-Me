@@ -369,21 +369,41 @@ async def ReserveSpot(spotId):
 
     # Summary of operation (self notes)
     # Server receives, queries database for spot status, and sets to yellow if green.
-        # If yellow or red, send "taken" status and cancel operation
+        # If yellow or red, send respective status and cancel operation
     # Every 15 seconds 40 times (== 10 minutes), the server will query the status of the spot
         # If the spot becomes occupied during loop, immediately break out of loop and send status "taken"
         # If spot is still reserved when loop ends, send status "time_limit_reached" and reset to green
 
     # Client side:
-    # Client calls reserve spot and starts an 10m30s timer (used later)
+    # Client calls reserve spot and starts a 10m30s timer (used later)
     # If client receives "taken" status, offer option to reserve closest spot and resend ReserveSpot()
     # If client receives "time_limit_reached" status, end reservation and cancel timer
     # If timer reaches 0, assume that connection to server has been lost and cancel reservation.
 
     spot = await QuerySpot()
-    await UpdateSpot(spotId, 2)
 
- 
+    if spot == "occupied":
+        return "preoccupied"
+    if spot == "reserved":
+        return "prereserved"
+    
+    await UpdateSpot(spotId, 2)
+    
+    for i in range(0,40):
+        spot = await QuerySpot()
+
+        if spot == "occupied" or spot == "reserved":
+            return "taken"
+    
+        await asyncio.sleep(15)
+
+    spot = await QuerySpot()
+    
+    if spot != "occupied":
+        await UpdateSpot(spotId, 0)
+    
+    return "time_limit_reached"
+    
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
 async def HandleOperation(websocket, rcvdJson):
