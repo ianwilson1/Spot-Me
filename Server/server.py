@@ -387,7 +387,6 @@ async def ReserveSpot(spotId):
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
 async def HandleOperation(websocket, rcvdJson):
-    print(websocket)
     try:
         if rcvdJson["op"] == "Login":
             print("[HANDLE_OP] Handling LOGIN.")
