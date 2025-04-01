@@ -203,6 +203,30 @@ async def UpdateSpot(id, status):
     # print("[UPD_SPOT] Updated spot successfully.")
     return "spot_updated"
 
+async def CreateAccount(name, passwd): 
+    print(f"[OPERATION] CreateAccount({name})")
+
+    if (USERS_COL.find_one({"name": name})): # Only make a new account if the username is unique
+        print("[CRTE_ACC] User already exists.")
+        return "name_used"
+
+    passwordValidationStatus = ValidatePassword(passwd)
+    
+    if passwordValidationStatus != "valid":
+        print("[CRTE_ACC] Password requirements not met: " + passwordValidationStatus)
+        return passwordValidationStatus
+    
+    hashed_password = hash_password(passwd) # Create the hashed password
+    
+    user = { # Set document
+        "name": name,
+        "pass": hashed_password,
+        "permits": [False, False, False, False, False] # [green,yellow,black,gold,handicap]
+    }
+
+    USERS_COL.insert_one(user) # Insert document
+    print("[CRTE_ACC] New user created successfully.")
+    return "account_created"
 
 async def UpdateName(name, passwd, newName):
     print(f"[OPERATION] UpdateName({name},{newName})")
