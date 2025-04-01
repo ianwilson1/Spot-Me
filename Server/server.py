@@ -380,7 +380,7 @@ async def ReserveSpot(spotId):
     # If client receives "time_limit_reached" status, end reservation and cancel timer
     # If timer reaches 0, assume that connection to server has been lost and cancel reservation.
 
-    spot = await QuerySpot()
+    spot = await QuerySpot(spotId)
 
     if spot == "occupied":
         return "preoccupied"
@@ -389,17 +389,19 @@ async def ReserveSpot(spotId):
     
     await UpdateSpot(spotId, 2)
     
-    for i in range(0,40):
-        spot = await QuerySpot()
+    for i in range(0,5):
+        print("[RESERVE_SPOT] Requerying...")
+        spot = await QuerySpot(spotId)
 
-        if spot == "occupied" or spot == "reserved":
+        if spot == "occupied":
             return "taken"
     
-        await asyncio.sleep(15)
+        await asyncio.sleep(1)
 
-    spot = await QuerySpot()
+    spot = await QuerySpot(spotId)
     
     if spot != "occupied":
+        await UpdateSpot(spotId, 1)
         await UpdateSpot(spotId, 0)
     
     return "time_limit_reached"
@@ -480,9 +482,8 @@ async def HandleOperation(websocket, rcvdJson):
 
         elif rcvdJson["op"] == "ReserveSpot":
             print("[HANDLE_OP] Handling RESERVE_SPOT")
-            client = websocket
-            spotId = rcvdJson["spotId"]
-            status = await ReserveSpot(client, spotId)
+            id = rcvdJson["id"]
+            status = await ReserveSpot(id)
             await websocket.send(json.dumps({"status":status}))
 
         else:

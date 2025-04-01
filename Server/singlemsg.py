@@ -21,8 +21,10 @@ async def Start():
     async with websockets.connect(ADDR) as websocket:
 
         msg = {
-            "op": "QuerySpot",
-            "id": 1241
+            "op": "ReserveSpot",
+            #"op": "UpdateSpot",
+            "id": 1870,
+            "status": 0
         }
         
         msg = json.dumps(msg)
