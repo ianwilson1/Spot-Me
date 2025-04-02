@@ -10,7 +10,6 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from "expo-notifications";
 import parkingData from './assets/parking_lot_data.json';
 import Histogram from './components/histogram.js'
-// import WeeklySchedule from './components/WeeklySched.js'
 
 const Stack = createStackNavigator();
 
@@ -25,12 +24,10 @@ export default function App () {
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
-  const [mapBounds, setMapBounds] = useState(null);
 
 
   //Pull parking spot data from assets
   useEffect(() =>{
-    //console.log(parkingData)
     setParkingSpots(parkingData);
   }, []);
 
@@ -38,6 +35,7 @@ export default function App () {
     const today = new Date().getDay();
     return today === 0 || today === 6 ? 0 : today - 1; // Map Sunday (0) & Saturday (6) to Monday (0)
   };
+
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
@@ -65,31 +63,6 @@ export default function App () {
   const handleRegionChangeComplete = (region) => {
     const zoomLevel = Math.log2(360 / region.latitudeDelta);
     setZoom(zoomLevel);
-    //console.log(zoom);
-
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
-
-    const bounds = {
-      north: latitude + latitudeDelta / 2,
-      south: latitude - latitudeDelta / 2,
-      east: longitude + longitudeDelta / 2,
-      west: longitude - longitudeDelta / 2,
-    };
-  
-    setMapBounds(bounds);
-
-    if (mapRef.current && zoomLevel < 13) {
-      mapRef.current.setCamera({
-        center: {
-          latitude: 36.81369124340123,
-          longitude: -119.7455163161234,
-        },
-        zoom: 15,  // Desired zoom level
-        heading: 0,
-        pitch: 0,
-        altitude: 0, // Optional
-      });
-    };
   };
   // Function to handle tapping spot
   const handlePolygonPress = (parkingLot, spotId, blockId, coordinates) => {
@@ -102,7 +75,7 @@ export default function App () {
               openNavigation(latitude, longitude);
             }
       },
-      {
+      { 
         text: "Cancel"
       }
     ]);   // `Block ID: ${blockId}\n   --> for testing
@@ -265,6 +238,17 @@ const saveLocation = async () => {
                         
             console.log(carLoc.coords);
             setCarLocation(carLoc.coords);
+
+            /*
+            try {
+              await FileSystem.writeAsStringAsync(fileUri, locJSON, {
+                encoding: FileSystem.EncodingType.UTF8
+              });
+              console.log('Car location saved!');
+            } catch (error) {
+              console.error('Error saving car location:', error);
+            }
+            */
           }
         },
         { 
@@ -310,7 +294,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
       try {
         const serverResponse = await sendMsg(msg);
         // console.log('Refresh successful:', serverResponse);
-        let responseData = JSON.parse(serverResponse)
+        responseData = JSON.parse(serverResponse)
 
         // Parse the data and initialize updatedStatus as an empty array
         const parsedData = JSON.parse(responseData.data);
@@ -363,43 +347,39 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 ref={mapRef}
                 style={styles.map}
                 showsPointsOfInterest={false}
-                showsUserLocation={true}
-                showsBuildings={false}
-                showsCompass={false}
-                showsMyLocationButton={false}
-                showsTraffic={false}
+                setCamera={{
+                    heading: 50,
+                }}
                 minZoomLevel={15}
                 onRegionChange={handleRegionChangeComplete}
+                initialRegion={{
+                    latitude: 36.81369124340123,
+                    longitude: -119.7455163161234,
+                    latitudeDelta: 0.02,
+                    longitudeDelta: 0.02,
+                }}
               >
-              {zoom >= 16.86 && parkingSpots
-                .filter((spot) =>
-                  spot.coordinates.some(coord => 
-                    coord.latitude <= mapBounds?.north &&
-                    coord.latitude >= mapBounds?.south &&
-                    coord.longitude <= mapBounds?.east &&
-                    coord.longitude >= mapBounds?.west
-                  )
-                )
-                .map((spot) => {
+                {zoom >= 15.78 
+                  && parkingSpots.map((spot) => {
+                  // Determine the fill color based on the status
                   const statusColors = {
-                    0: "rgba(0, 255, 0, 1)", // Green for available
-                    1: "rgba(255, 0, 0, 1)", // Red for unavailable
-                    2: "rgba(255, 255, 0, 1)", // Yellow for reserved
+                    0: "rgba(0, 255, 0, 0.5)", // Green for available
+                    1: "rgba(255, 0, 0, 0.5)", // Red for unavailable
+                    2: "rgba(255, 255, 0, 0.5)", // Yellow for reserved
                   };
-                  const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Default gray
+                  const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Gray as default
                   return (
                     <Polygon
                       key={spot.id}
                       coordinates={spot.coordinates}
+                      strokeColor="black"
                       fillColor={fillColor}
-                      strokeColor={"black"}
                       strokeWidth={1}
                       tappable
                       onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates)}
                     />
-                  );
-                })
-              }
+                  );  
+                })}
                                 
                 {parkingLots.map((lot, index) => {
                   const congestion = congestionData[lot.congestionKey] || 2;
@@ -407,6 +387,12 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   return(
                     <Marker
                       key={index}
+                      /*title={`${lot.name}`}
+                      description={
+                        congestion >= 0 && congestion <= 1 
+                          ? `(${Math.round(congestion * 100)}% full)` 
+                          : "No data. Refresh"
+                      }*/
                       pinColor={pinColor}
                       coordinate={lot.coordinates}
                       onPress={() => handleMarkerPress(lot)}  // Show modal on press
