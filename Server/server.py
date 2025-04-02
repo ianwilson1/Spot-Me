@@ -363,6 +363,24 @@ async def QuerySpot(spot_id):
     else:
         print(f"[REFER_SPOT_DATA] Unknown/invalid spot status? ({status})")
         return "invalid"
+    
+async def ReservationCheck(spotId):
+    for i in range(0,600):
+        #print("[RESERVE_SPOT] Requerying...")
+        spot = await QuerySpot(spotId)
+
+        if spot == "occupied":
+            return "taken"
+    
+        await asyncio.sleep(1)
+
+    spot = await QuerySpot(spotId)
+    
+    if spot != "occupied":
+        await UpdateSpot(spotId, 1)
+        await UpdateSpot(spotId, 0)
+    
+    return "time_limit_reached"
 
 async def ReserveSpot(spotId):
     print(f'[OPERATION] ReserveSpot({spotId})')
@@ -381,23 +399,7 @@ async def ReserveSpot(spotId):
         return "prereserved"
     
     await UpdateSpot(spotId, 2)
-    
-    for i in range(0,600):
-        #print("[RESERVE_SPOT] Requerying...")
-        spot = await QuerySpot(spotId)
-
-        if spot == "occupied":
-            return "taken"
-    
-        await asyncio.sleep(1)
-
-    spot = await QuerySpot(spotId)
-    
-    if spot != "occupied":
-        await UpdateSpot(spotId, 1)
-        await UpdateSpot(spotId, 0)
-    
-    return "time_limit_reached"
+    return await ReservationCheck(spotId)
     
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 

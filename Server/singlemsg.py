@@ -8,7 +8,7 @@ ADDR = 'ws://34.169.42.70:15024'   # Public address + port of server machine
 DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from the server
 
 # vvv For local testing only (comment out when running on server)
-ADDR = 'ws://localhost:15024'
+#ADDR = 'ws://localhost:15024'
 
 ####################################################
 
@@ -22,8 +22,8 @@ async def Start():
 
         msg = {
             "op": "ReserveSpot",
-            #"op": "UpdateSpot",
-            "id": 1870,
+            "op": "UpdateSpot",
+            "id": 22,
             "status": 0
         }
         
