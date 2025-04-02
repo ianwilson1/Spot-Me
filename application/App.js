@@ -25,8 +25,6 @@ export default function App () {
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
-  const [mapBounds, setMapBounds] = useState(null);
-
 
   //Pull parking spot data from assets
   useEffect(() =>{
@@ -67,17 +65,6 @@ export default function App () {
     setZoom(zoomLevel);
     //console.log(zoom);
 
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
-
-    const bounds = {
-      north: latitude + latitudeDelta / 2,
-      south: latitude - latitudeDelta / 2,
-      east: longitude + longitudeDelta / 2,
-      west: longitude - longitudeDelta / 2,
-    };
-  
-    setMapBounds(bounds);
-
     if (mapRef.current && zoomLevel < 13) {
       mapRef.current.setCamera({
         center: {
@@ -97,9 +84,9 @@ export default function App () {
       { 
           text: "Reserve and Navigate",
           onPress: () => {
-              latitude = coordinates[0].latitude;
-              longitude = coordinates[0].longitude;
-              softReserve(latitude, longitude);
+              let latitude = coordinates[0].latitude;
+              let longitude = coordinates[0].longitude;
+              softReserve(latitude, longitude, spotId);
             }
       },
       {
@@ -164,8 +151,26 @@ export default function App () {
     }, []);
 
   // Use this to begin navigation
-  const softReserve = async (latitude, longitude) => {
-    const destination = encodeURIComponent(String(latitude) + "," + String(longitude)); // San Francisco, CA
+  const softReserve = async (latitude, longitude, spotId) => {
+
+    let json = {
+      "op":"QuerySpot",
+      "id":spotId
+    }
+
+    const response = await sendMsg(JSON.stringify(json));
+    const serverResponse = JSON.parse(response);
+
+    if (serverResponse.status == "occupied") {
+      Alert.alert("Spot Occupied", "This spot is occupied or became occupied during transaction. Please choose another spot.");
+      return;
+    }
+    if (serverResponse.status == "reserved") {
+      Alert.alert("Spot Already Reserved", "This spot is reserved or was reserved during transaction. Please choose another spot.");
+      return;
+    }
+    
+    let destination = encodeURIComponent(String(latitude) + "," + String(longitude));
     let url = "";
 
     if (Platform.OS === "ios") {
