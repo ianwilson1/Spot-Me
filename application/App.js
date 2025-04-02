@@ -99,7 +99,7 @@ export default function App () {
           onPress: () => {
               latitude = coordinates[0].latitude;
               longitude = coordinates[0].longitude;
-              openNavigation(latitude, longitude);
+              softReserve(latitude, longitude);
             }
       },
       {
@@ -164,7 +164,7 @@ export default function App () {
     }, []);
 
   // Use this to begin navigation
-  const openNavigation = async (latitude, longitude) => {
+  const softReserve = async (latitude, longitude) => {
     const destination = encodeURIComponent(String(latitude) + "," + String(longitude)); // San Francisco, CA
     let url = "";
 
@@ -372,14 +372,6 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 onRegionChange={handleRegionChangeComplete}
               >
               {zoom >= 16.86 && parkingSpots
-                .filter((spot) =>
-                  spot.coordinates.some(coord => 
-                    coord.latitude <= mapBounds?.north &&
-                    coord.latitude >= mapBounds?.south &&
-                    coord.longitude <= mapBounds?.east &&
-                    coord.longitude >= mapBounds?.west
-                  )
-                )
                 .map((spot) => {
                   const statusColors = {
                     0: "rgba(0, 255, 0, 1)", // Green for available
