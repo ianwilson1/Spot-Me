@@ -22,13 +22,14 @@ export default function App () {
   // States
   const [carLocation, setCarLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [zoom, setZoom] = useState(14);
+  const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
 
 
   //Pull parking spot data from assets
   useEffect(() =>{
+    //console.log(parkingData)
     setParkingSpots(parkingData);
   }, []);
 
@@ -36,7 +37,6 @@ export default function App () {
     const today = new Date().getDay();
     return today === 0 || today === 6 ? 0 : today - 1; // Map Sunday (0) & Saturday (6) to Monday (0)
   };
-
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
@@ -64,6 +64,7 @@ export default function App () {
   const handleRegionChangeComplete = (region) => {
     const zoomLevel = Math.log2(360 / region.latitudeDelta);
     setZoom(zoomLevel);
+    //console.log(zoom);
     if (mapRef.current && zoomLevel < 13) {
       mapRef.current.animateToRegion({ // Center and zoom in on car's location
           latitude: 36.81369124340123,
@@ -346,6 +347,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 ref={mapRef}
                 style={styles.map}
                 showsPointsOfInterest={false}
+                showsUserLocation={true}
+                showsBuildings={false}
+                showsCompass={false}
+                showsMyLocationButton={false}
+                showsTraffic={false}
                 setCamera={{
                     heading: 50,
                 }}
@@ -375,7 +381,10 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                       fillColor={fillColor}
                       strokeWidth={1}
                       tappable
-                      onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates)}
+                      onPress={() => {
+                        console.log("press")
+                        handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates);
+                      }}
                     />
                   );  
                 })}
