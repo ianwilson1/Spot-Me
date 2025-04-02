@@ -191,8 +191,8 @@ async def UpdateSpot(id, status):
 
     current_status = doc['spaces'][0]['status']
 
-    # prevent a transition from status 2 (soft reserved) to status 0 (unoccupied)
-    if current_status == 2 and status == 0:
+    # prevent a transition from status 2 (soft reserved) to status 0 (unoccupied), or from occupied to reserved
+    if (current_status == 2 and status == 0) or (current_status == 1 and status == 2):
         #print(f"[UPD_SPOT] Attempt to free a soft reserved spot {id} ignored.")
         return "spot_update_ignored"
 
