@@ -23,8 +23,8 @@ async def Start():
         msg = {
             "op": "ReserveSpot",
             "op": "UpdateSpot",
-            "id": 22,
-            "status": 0
+            "id": 8,
+            "status": 1
         }
         
         msg = json.dumps(msg)

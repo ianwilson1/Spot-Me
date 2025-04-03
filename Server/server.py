@@ -376,10 +376,12 @@ async def ReserveSpot(spotId, websocket):
     spot = await QuerySpot(spotId)
 
     if spot == "occupied":
+        print("[RESERVE_SPOT] Spot was already occupied!")
         status = "preoccupied"
         await websocket.send(json.dumps({"status":status}))
         return
     if spot == "reserved":
+        print("[RESERVE_SPOT] Spot was pre-reserved!")
         status = "prereserved"
         await websocket.send(json.dumps({"status":status}))
         return
@@ -391,6 +393,7 @@ async def ReserveSpot(spotId, websocket):
         spot = await QuerySpot(spotId)
 
         if spot == "occupied":
+            print("[RESERVE_SPOT] Spot was taken mid-reservation!")
             status = "taken"
             await websocket.send(json.dumps({"status":status}))
             return
@@ -403,6 +406,7 @@ async def ReserveSpot(spotId, websocket):
         await UpdateSpot(spotId, 1)
         await UpdateSpot(spotId, 0)
     
+    print("[RESERVE_SPOT] Time limit reached!")
     status = "time_limit_reached"
     await websocket.send(json.dumps({"status":status}))
     return
