@@ -378,12 +378,12 @@ async def ReserveSpot(spotId, websocket):
     if spot == "occupied":
         print("[RESERVE_SPOT] Spot was already occupied!")
         status = "preoccupied"
-        await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
+        await websocket.send(json.dumps({"op": "ReserveSpot", "id": spotId, "status":status}))
         return
     if spot == "reserved":
         print("[RESERVE_SPOT] Spot was pre-reserved!")
         status = "prereserved"
-        await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
+        await websocket.send(json.dumps({"op": "ReserveSpot", "id": spotId, "status":status}))
         return
     
     await UpdateSpot(spotId, 2)
@@ -395,7 +395,7 @@ async def ReserveSpot(spotId, websocket):
         if spot == "occupied":
             print("[RESERVE_SPOT] Spot was taken mid-reservation!")
             status = "taken"
-            await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
+            await websocket.send(json.dumps({"op": "ReserveSpot", "id": spotId, "status":status}))
             return
     
         await asyncio.sleep(1)
@@ -408,7 +408,7 @@ async def ReserveSpot(spotId, websocket):
     
     print("[RESERVE_SPOT] Time limit reached!")
     status = "time_limit_reached"
-    await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
+    await websocket.send(json.dumps({"op": "ReserveSpot", "id": spotId, "status":status}))
     return
     
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages

@@ -23,7 +23,7 @@ async def Start():
         msg = {
             "op": "ReserveSpot",
             "op": "UpdateSpot",
-            "id": 161,
+            "id": 6,
             "status": 1
         }
         
