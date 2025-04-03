@@ -170,27 +170,66 @@ export default function App () {
       return;
     }
     
+    // Start navigation
     let destination = encodeURIComponent(String(latitude) + "," + String(longitude));
     let url = "";
-
     if (Platform.OS === "ios") {
       url = `maps://?saddr=&daddr=${destination}&directionsmode=driving`; // Apple Maps with driving mode
     } 
     else {
       url = `google.navigation:q=${destination}`; // Google Maps with driving mode
     }
-
     Linking.openURL(url).catch(() => Alert.alert("Error", "Failed to start navigation."));
 
-    // Schedule a notification after 10 minutes
-    await Notifications.scheduleNotificationAsync({
+    json = {
+      "op":"ReserveSpot",
+      "id":spotId
+    }
+
+    response = await sendMsg(JSON.stringify(json));
+    serverResponse = JSON.parse(response);
+    console.log(serverResponse);
+
+    if (serverResponse.status == "prereserved") {
+      Alert.alert("Prereserved")
+      /*await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Spot Reservation Conflict",
+          body: "The parking spot was prereserved mid-transaction.",
+        },
+        trigger: null,
+      });*/
+    }
+    if (serverResponse.status == "preoccupied" || serverResponse.status == "taken") {
+      Alert.alert("Taken")
+      /*await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Spot Taken",
+          body: "The parking spot was taken.",
+        },
+        trigger: null,
+      });*/
+    }
+    if (serverResponse.status == "time_limit_reached") {
+      Alert.alert("Time limit reached.")
+      /*await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Time Limit Reached",
+          body: "Your reservation time is up.",
+        },
+        trigger: null,
+      });*/
+    }
+
+    /*await Notifications.scheduleNotificationAsync({
       content: {
         title: "SpotMe Navigation",
         body: "Reservation time limit reached. Please return to SpotMe.",
         sound: true,
+        data: { returnToApp: true },
       },
-      trigger: { seconds: 15 },
-    });
+      trigger: { seconds: 5 },
+    });*/
   };
 
   // Re-orient map to north (compass button)
