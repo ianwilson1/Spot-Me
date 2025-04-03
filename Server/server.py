@@ -378,12 +378,12 @@ async def ReserveSpot(spotId, websocket):
     if spot == "occupied":
         print("[RESERVE_SPOT] Spot was already occupied!")
         status = "preoccupied"
-        await websocket.send(json.dumps({"status":status}))
+        await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
         return
     if spot == "reserved":
         print("[RESERVE_SPOT] Spot was pre-reserved!")
         status = "prereserved"
-        await websocket.send(json.dumps({"status":status}))
+        await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
         return
     
     await UpdateSpot(spotId, 2)
@@ -395,7 +395,7 @@ async def ReserveSpot(spotId, websocket):
         if spot == "occupied":
             print("[RESERVE_SPOT] Spot was taken mid-reservation!")
             status = "taken"
-            await websocket.send(json.dumps({"status":status}))
+            await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
             return
     
         await asyncio.sleep(1)
@@ -408,7 +408,7 @@ async def ReserveSpot(spotId, websocket):
     
     print("[RESERVE_SPOT] Time limit reached!")
     status = "time_limit_reached"
-    await websocket.send(json.dumps({"status":status}))
+    await websocket.send(json.dumps({"op": "ReserveSpot", "status":status}))
     return
     
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
@@ -417,79 +417,88 @@ async def HandleOperation(websocket, rcvdJson):
     try:
         if rcvdJson["op"] == "Login":
             print("[HANDLE_OP] Handling LOGIN.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status, userData = await Login(name, passwd)
-            await websocket.send(json.dumps({"status": status, "userData":userData}))
+            await websocket.send(json.dumps({"op": op, "status": status, "userData":userData}))
 
         elif rcvdJson["op"] == "UpdateSpot":
+            op = rcvdJson["op"]
             id = rcvdJson["id"]
             status = rcvdJson["status"]
             status = await UpdateSpot(id, status)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op":op,"status": status}))
 
         elif rcvdJson["op"] == "CreateAccount":
             print("[HANDLE_OP] Handling CREATE_ACCOUNT.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status = await CreateAccount(name, passwd)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op": op, "status": status}))
 
         elif rcvdJson["op"] == "UpdateName":
             print("[HANDLE_OP] Handling UPDATE_NAME.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newName = rcvdJson["newName"]
             status = await UpdateName(name, passwd, newName)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op":op, "status": status}))
             
         elif rcvdJson["op"] == "UpdatePass":
             print("[HANDLE_OP] Handling UPDATE_PASS.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             newPass = rcvdJson["newPass"]
             status = await UpdatePass(name, passwd, newPass)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op":op, "status": status}))
 
         elif rcvdJson["op"] == "RefreshData":
             print("[HANDLE_OP] Handling REFRESH_DATA.")
+            op = rcvdJson["op"]
             status, data = await RefreshData()
-            await websocket.send(json.dumps({"status":status, "data": data}))
+            await websocket.send(json.dumps({"op": op, "status":status, "data": data}))
 
         elif rcvdJson["op"] == "UpdatePermits":
             print("[HANDLE_OP] Handling UPDATE_PERMITS.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ## FIXME
             newPermits = rcvdJson["permits"]
             status = await UpdatePermits(name,passwd,newPermits)
-            await websocket.send(json.dumps({"status":status}))
+            await websocket.send(json.dumps({"op": op, "status":status}))
 
         elif rcvdJson["op"] == "DeleteAccount":
             print("[HANDLE_OP] Handling DELETE_ACCOUNT.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = rcvdJson["passwd"]
             status = await DeleteAccount(name,passwd)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op": op, "status": status}))
 
         elif rcvdJson["op"] == "SaveWeeklySchedule":
             print("[HANDLE_OP] Handling SAVE_WEEKLY_SCHEDULE.")
+            op = rcvdJson["op"]
             name = rcvdJson["name"]
             passwd = "PLACEHOLDER" # rcvdJson["passwd"]                     ##
             newSched = rcvdJson["newSched"]
             status = await SaveWeeklySchedule(name,passwd,newSched)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op": op, "status": status}))
 
         elif rcvdJson["op"] == "QuerySpot":
             print("[HANDLE_OP] Handling QUERY_SPOT")
+            op = rcvdJson["op"]
             id = rcvdJson["id"]
             status = await QuerySpot(id)
-            await websocket.send(json.dumps({"status": status}))
+            await websocket.send(json.dumps({"op": op, "status": status}))
 
         elif rcvdJson["op"] == "ReserveSpot":
             print("[HANDLE_OP] Handling RESERVE_SPOT")
             id = rcvdJson["id"]
             asyncio.create_task(ReserveSpot(id, websocket))
-
 
         else:
             print(f'[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}')
