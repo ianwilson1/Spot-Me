@@ -363,26 +363,8 @@ async def QuerySpot(spot_id):
     else:
         print(f"[REFER_SPOT_DATA] Unknown/invalid spot status? ({status})")
         return "invalid"
-    
-async def ReservationCheck(spotId):
-    for i in range(0,600):
-        #print("[RESERVE_SPOT] Requerying...")
-        spot = await QuerySpot(spotId)
 
-        if spot == "occupied":
-            return "taken"
-    
-        await asyncio.sleep(1)
-
-    spot = await QuerySpot(spotId)
-    
-    if spot != "occupied":
-        await UpdateSpot(spotId, 1)
-        await UpdateSpot(spotId, 0)
-    
-    return "time_limit_reached"
-
-async def ReserveSpot(spotId):
+async def ReserveSpot(spotId, websocket):
     print(f'[OPERATION] ReserveSpot({spotId})')
 
     # Client side:
@@ -394,12 +376,36 @@ async def ReserveSpot(spotId):
     spot = await QuerySpot(spotId)
 
     if spot == "occupied":
-        return "preoccupied"
+        status = "preoccupied"
+        await websocket.send(json.dumps({"status":status}))
+        return
     if spot == "reserved":
-        return "prereserved"
+        status = "prereserved"
+        await websocket.send(json.dumps({"status":status}))
+        return
     
     await UpdateSpot(spotId, 2)
-    return await ReservationCheck(spotId)
+
+    for i in range(0,600):
+        #print("[RESERVE_SPOT] Requerying...")
+        spot = await QuerySpot(spotId)
+
+        if spot == "occupied":
+            status = "taken"
+            await websocket.send(json.dumps({"status":status}))
+            return
+    
+        await asyncio.sleep(1)
+
+    spot = await QuerySpot(spotId)
+    
+    if spot != "occupied":
+        await UpdateSpot(spotId, 1)
+        await UpdateSpot(spotId, 0)
+    
+    status = "time_limit_reached"
+    await websocket.send(json.dumps({"status":status}))
+    return
     
 #################################################### Websocket message handling; calls appropriate functions from JSON encoded messages
 
@@ -478,8 +484,8 @@ async def HandleOperation(websocket, rcvdJson):
         elif rcvdJson["op"] == "ReserveSpot":
             print("[HANDLE_OP] Handling RESERVE_SPOT")
             id = rcvdJson["id"]
-            status = await ReserveSpot(id)
-            await websocket.send(json.dumps({"status":status}))
+            asyncio.create_task(ReserveSpot(id, websocket))
+
 
         else:
             print(f'[HANDLE_OP] ERROR: Unrecognized operation received: {rcvdJson["op"]}')
