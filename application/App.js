@@ -25,6 +25,7 @@ export default function App () {
   const [zoom, setZoom] = useState(0);
   const [parkingSpots, setParkingSpots] = useState([]);
   const [congestionData, setCongestionData] = useState({});
+  const [trackedSpotId, setTrackedSpotId] = useState(null);
 
   //Pull parking spot data from assets
   useEffect(() =>{
@@ -113,22 +114,40 @@ export default function App () {
     const socket = socketRef.current;
 
     return new Promise((resolve, reject) => {
-      if (socket && socket.readyState === WebSocket.OPEN) {
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            reject("ERROR: Could not connect to server!");
+            return;
+        }
+
         socket.send(msg);
-      
-        socket.onmessage = (event) => {
-          resolve(event.data); 
-        }
-  
+
+        // Temporary listener for this specific response
+        const handleResponse = (event) => {
+          //console.log("sendMsg() received event: " + event);
+            try {
+                const data = JSON.parse(event.data);
+
+                // Ensure the response matches the request type
+                const sentOp = JSON.parse(msg).op;
+                if (data.op === sentOp) {
+                    resolve(event.data);
+
+                    // Remove this specific listener after handling the response
+                    socket.removeEventListener("message", handleResponse);
+                }
+            } catch (error) {
+                reject("Error parsing WebSocket response: " + error);
+            }
+        };
+
+        socket.addEventListener("message", handleResponse);
+
         socket.onerror = (error) => {
-          reject('ERROR: ' + error);
-        }
-      }
-      else {
-        reject('ERROR: Could not connect to server!')
-      }
+            reject("WebSocket Error: " + error);
+        };
     });
   };
+
 
     // Establish connection to server
     useEffect( () => {
@@ -152,85 +171,57 @@ export default function App () {
 
   // Use this to begin navigation
   const softReserve = async (latitude, longitude, spotId) => {
-
-    let json = {
-      "op":"QuerySpot",
-      "id":spotId
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
+        Alert.alert("WebSocket Error", "Connection to server is not open.");
+        return;
     }
 
-    const response = await sendMsg(JSON.stringify(json));
-    const serverResponse = JSON.parse(response);
+    try {
+        // Step 1: Query the spot status
+        const queryResponse = await sendMsg(JSON.stringify({ op: "QuerySpot", id: spotId }));
+        const serverResponse = JSON.parse(queryResponse);
 
-    if (serverResponse.status == "occupied") {
-      Alert.alert("Spot Occupied", "This spot is occupied or became occupied during transaction. Please choose another spot.");
-      return;
-    }
-    if (serverResponse.status == "reserved") {
-      Alert.alert("Spot Already Reserved", "This spot is reserved or was reserved during transaction. Please choose another spot.");
-      return;
-    }
-    
-    // Start navigation
-    let destination = encodeURIComponent(String(latitude) + "," + String(longitude));
-    let url = "";
-    if (Platform.OS === "ios") {
-      url = `maps://?saddr=&daddr=${destination}&directionsmode=driving`; // Apple Maps with driving mode
-    } 
-    else {
-      url = `google.navigation:q=${destination}`; // Google Maps with driving mode
-    }
-    Linking.openURL(url).catch(() => Alert.alert("Error", "Failed to start navigation."));
+        if (serverResponse.status === "occupied") {
+            Alert.alert("Spot Occupied", "This spot is occupied or became occupied during transaction. Please choose another spot.");
+            return;
+        }
+        if (serverResponse.status === "reserved") {
+            Alert.alert("Spot Already Reserved", "This spot is reserved or was reserved during transaction. Please choose another spot.");
+            return;
+        }
 
-    json = {
-      "op":"ReserveSpot",
-      "id":spotId
-    }
+        // Step 2: Start navigation
+        let destination = encodeURIComponent(`${latitude},${longitude}`);
+        let url = Platform.OS === "ios"
+            ? `maps://?saddr=&daddr=${destination}&directionsmode=driving`
+            : `google.navigation:q=${destination}`;
 
-    response = await sendMsg(JSON.stringify(json));
-    serverResponse = JSON.parse(response);
-    console.log(serverResponse);
+        Linking.openURL(url).catch(() => Alert.alert("Error", "Failed to start navigation."));
 
-    if (serverResponse.status == "prereserved") {
-      Alert.alert("Prereserved")
-      /*await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Spot Reservation Conflict",
-          body: "The parking spot was prereserved mid-transaction.",
-        },
-        trigger: null,
-      });*/
-    }
-    if (serverResponse.status == "preoccupied" || serverResponse.status == "taken") {
-      Alert.alert("Taken")
-      /*await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Spot Taken",
-          body: "The parking spot was taken.",
-        },
-        trigger: null,
-      });*/
-    }
-    if (serverResponse.status == "time_limit_reached") {
-      Alert.alert("Time limit reached.")
-      /*await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Time Limit Reached",
-          body: "Your reservation time is up.",
-        },
-        trigger: null,
-      });*/
-    }
+        setTrackedSpotId(spotId);
 
-    /*await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "SpotMe Navigation",
-        body: "Reservation time limit reached. Please return to SpotMe.",
-        sound: true,
-        data: { returnToApp: true },
-      },
-      trigger: { seconds: 5 },
-    });*/
-  };
+        // Step 3: Send reservation request
+        console.log("Sending reservation request...");
+        const reserveResponse = await sendMsg(JSON.stringify({ op: "ReserveSpot", id: spotId }));
+        const reserveStatus = JSON.parse(reserveResponse);
+        console.log("Received server response:", reserveStatus);
+
+        // Step 4: Handle initial reservation response
+        if (reserveStatus.status === "prereserved") {
+            console.log("Prereserved");
+            Alert.alert("Spot Prereserved", "The parking spot was prereserved mid-transaction.");
+        }
+        if (reserveStatus.status === "preoccupied" || reserveStatus.status === "taken") {
+            console.log("Taken");
+            Alert.alert("Spot Taken", "The parking spot was taken.");
+        }
+        if (reserveStatus.status === "time_limit_reached") {
+            Alert.alert("Time Limit Reached", "Your reservation time is up.");
+        }
+    } catch (error) {
+        console.error("Error occurred during reservation:", error);
+    }
+};
 
   // Re-orient map to north (compass button)
   const realignMap = () => {
@@ -389,7 +380,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
 
       } 
       catch (error) {
-        console.error('Error sending message:', error);
+        console.error(error);
       }
     };
 

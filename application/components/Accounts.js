@@ -91,6 +91,18 @@ export const LoginScreen = ({navigation, sendMsg, setIsLoggedIn, isLoggedIn}) =>
             else if (serverResponse.status === "invalid_pass") {
                 Alert.alert("Password does not meet requirements.");
             }
+            else if (serverResponse.status === "short_pass") {
+                Alert.alert("Password requirements not met!", "Please make your password at least 8 characters.");
+            }
+            else if (serverResponse.status === "no_num") {
+                Alert.alert("Password requirements not met!", "Please contain at least one number.");
+            }
+            else if (serverResponse.status === "no_caps") {
+                Alert.alert("Password requirements not met!", "Please contain at least one capital letter.");
+            }
+            else if (serverResponse.status === "no_spec_chars") {
+                Alert.alert("Password requirements not met!", "Please contain at least one special character (!@#$%^&*-_).");
+            }
             else {
                 Alert.alert("Unexpected server error!", "Server response: " + serverResponse.status);
             }
