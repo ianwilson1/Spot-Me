@@ -388,7 +388,7 @@ async def ReserveSpot(spotId, websocket):
     
     await UpdateSpot(spotId, 2)
 
-    for i in range(0,600):
+    for i in range(0,15):
         #print("[RESERVE_SPOT] Requerying...")
         spot = await QuerySpot(spotId)
 
