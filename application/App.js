@@ -422,7 +422,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 {parkingLots.map((lot, index) => {
                   const congestion = congestionData[lot.congestionKey] || 2;
 
-                  if (congestion == 2) color = "white"; // Default value (cannot be 0, it would mean empty, not default)
+                  if (congestion == 2) color = "gray"; // Default value (cannot be 0, it would mean empty, not default)
                   else if (congestion > 0.85) color = "red"; // High congestion
                   else if (congestion > 0.65) color = "yellow"; // Medium congestion
                   else color = "green"; // Low congestion
@@ -430,9 +430,11 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   let img = lot.name.toLowerCase() + color;
 
                   const pins = {
+                    "p5gray": require("./assets/pins/p5gray.png"),
                     "p5red": require("./assets/pins/p5red.png"),
                     "p5yellow": require("./assets/pins/p5yellow.png"),
                     "p5green": require("./assets/pins/p5green.png"),
+                    "p6gray": require("./assets/pins/p6gray.png"),
                     "p6red": require("./assets/pins/p6red.png"),
                     "p6yellow": require("./assets/pins/p6yellow.png"),
                     "p6rgreen": require("./assets/pins/p6red.png")
