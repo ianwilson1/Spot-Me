@@ -427,10 +427,22 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   else if (congestion > 0.65) color = "yellow"; // Medium congestion
                   else color = "green"; // Low congestion
 
+                  let img = lot.name.toLowerCase() + color;
+
+                  const pins = {
+                    "p5red": require("./assets/pins/p5red.png"),
+                    "p5yellow": require("./assets/pins/p5yellow.png"),
+                    "p5green": require("./assets/pins/p5green.png"),
+                    "p6red": require("./assets/pins/p6red.png"),
+                    "p6yellow": require("./assets/pins/p6yellow.png"),
+                    "p6rgreen": require("./assets/pins/p6red.png")
+                  };
+
                   return(
                     <Marker
                       key={color + index}
                       pinColor={color}
+                      image = {pins[img]}
                       coordinate={lot.coordinates}
                       onPress={() => handleMarkerPress(lot)}  // Show modal on press
                       style={{ transform: [{ scale: getMarkerScale(lot.name) }] }}
