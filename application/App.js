@@ -244,15 +244,6 @@ const parkingLots = [
   { name: 'P6', coordinates: { latitude: 36.813297806394154, longitude: -119.7417291064082 }, congestionKey: 'P6'},
 ];
 
-
-// Function to determine pin color based on congestion
-const getPinColor = (congestion) => {
-  if (congestion == 2) return "white" // Default value (cannot be 0, it would mean empty, not default)
-  else if (congestion > 0.85) return "red"; // High congestion
-  else if (congestion > 0.65) return "yellow"; // Medium congestion
-  else return "green"; // Low congestion
-};
-
 // Function to handle tapping the parking lot marker
 const handleMarkerPress = (lot) => {
   setSelectedMarker(lot.name);
@@ -406,35 +397,40 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                 minZoomLevel={15}
                 onRegionChange={handleRegionChangeComplete}
               >
-              {zoom >= 16.86 && parkingSpots
-                .map((spot) => {
-                  const statusColors = {
-                    0: "rgba(0, 255, 0, 1)", // Green for available
-                    1: "rgba(255, 0, 0, 1)", // Red for unavailable
-                    2: "rgba(255, 255, 0, 1)", // Yellow for reserved
-                  };
-                  const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Default gray
-                  return (
-                    <Polygon
-                      key={spot.id}
-                      coordinates={spot.coordinates}
-                      fillColor={fillColor}
-                      strokeColor={"black"}
-                      strokeWidth={1}
-                      tappable
-                      onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates)}
-                    />
-                  );
-                })
-              }
+                {zoom >= 16.86 && parkingSpots
+                  .map((spot) => {
+                    const statusColors = {
+                      0: "rgba(0, 255, 0, 1)", // Green for available
+                      1: "rgba(255, 0, 0, 1)", // Red for unavailable
+                      2: "rgba(255, 255, 0, 1)", // Yellow for reserved
+                    };
+                    const fillColor = statusColors[spot.status] || "rgba(128, 128, 128, 0.5)"; // Default gray
+                    return (
+                      <Polygon
+                        key={spot.id}
+                        coordinates={spot.coordinates}
+                        fillColor={fillColor}
+                        strokeColor={"black"}
+                        strokeWidth={1}
+                        tappable
+                        onPress={() => handlePolygonPress(spot.parkingLot, spot.id, spot.block, spot.coordinates)}
+                      />
+                    );
+                  })
+                }
                                 
                 {parkingLots.map((lot, index) => {
                   const congestion = congestionData[lot.congestionKey] || 2;
-                  const pinColor =getPinColor(congestion);
+
+                  if (congestion == 2) color = "white"; // Default value (cannot be 0, it would mean empty, not default)
+                  else if (congestion > 0.85) color = "red"; // High congestion
+                  else if (congestion > 0.65) color = "yellow"; // Medium congestion
+                  else color = "green"; // Low congestion
+
                   return(
                     <Marker
-                      key={index}
-                      pinColor={pinColor}
+                      key={color + index}
+                      pinColor={color}
                       coordinate={lot.coordinates}
                       onPress={() => handleMarkerPress(lot)}  // Show modal on press
                       style={{ transform: [{ scale: getMarkerScale(lot.name) }] }}
