@@ -8,7 +8,7 @@ import websockets
 ADDR = 'ws://34.169.42.70:15024'   # Public address + port of server machine
 DISCON_MSG = "!DISCONNECT"          # String to send to cleanly disconnect from the server
 
-MAX_SPOTS = 1873                      # Number of parking spots we currently have implemented. CHANGE AS NEEDED
+MAX_SPOTS = 1251                     # ONLY FOR P6; P5 will be manually updated to test pin colors
 
 # vvv For local testing only (comment out when running on server)
 # ADDR = 'ws://localhost:15024'
