@@ -456,6 +456,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                     <Marker
                         title = {'Your Car'}
                         pinColor={'navy'}
+                        image = {require("./assets/pins/carloc.png")}
                         coordinate = {{
                             latitude: carLocation.latitude,
                             longitude: carLocation.longitude,
