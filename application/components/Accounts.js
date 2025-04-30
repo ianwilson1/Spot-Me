@@ -3,6 +3,9 @@ import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image
 import { Checkbox, CheckBox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Calendar } from 'react-native-big-calendar';
+
 
 
 const storeUserSession = async (userData) => {
@@ -638,33 +641,46 @@ const updateBlockSelection = (day, start, end) => {
         return [...newBlocks];
     });
 };
+const events = [
+    {
+      title: 'Meeting',
+      start: new Date(2020, 1, 11, 10, 0),
+      end: new Date(2020, 1, 11, 10, 30),
+    },
+    {
+      title: 'Coffee break',
+      start: new Date(2025, 4, 5, 15, 45),
+      end: new Date(2025, 4, 5, 16, 30),
+    },
+  ]
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with days */}
-      <View style={styles.header}>
-        {DAYS.map((day, index) => (
-          <Text key={index} style={styles.dayText}>{day}</Text>
-        ))}
-      </View>
+    //<SafeAreaView style={styles.container}>
+     // {/* Header with days */}
+      //<View style={styles.header}>
+        //{DAYS.map((day, index) => (
+          //<Text key={index} style={styles.dayText}>{day}</Text>
+        //))}
+      //</View>
       
-      {/* Scheduler Grid */}
-      <View style= {styles.touchWrapper} {...panResponder.panHandlers}>
-        <View style={styles.grid}>
-            {[...Array(TOTAL_INTERVALS)].map((_, hour) => (
-                <View key={hour} style={styles.row}>
-                {DAYS.map((_, day) => (
-                    <View key={day} style={styles.cell}>
-                        {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
-                        <View style={styles.selectedBlock} />
-                        )}
-                    </View>
-                ))}
-                </View>
-            ))}
-        </View>
-      </View>
-    </SafeAreaView>
+      //{/* Scheduler Grid */}
+      //<View style= {styles.touchWrapper} {...panResponder.panHandlers}>
+        //<View style={styles.grid}>
+          //  {[...Array(TOTAL_INTERVALS)].map((_, hour) => (
+            //    <View key={hour} style={styles.row}>
+              //  {DAYS.map((_, day) => (
+                //    <View key={day} style={styles.cell}>
+                  //      {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
+                    //    <View style={styles.selectedBlock} />
+                      //  )}
+                    //</View>
+               // ))}
+                //</View>
+            //))}
+        //</View>
+      //</View>
+    //</SafeAreaView>
+    <Calendar events={events} height={100} ampm={true} weekStartsOn={1} weekEndsOn={7}/>
   );
 };
 
