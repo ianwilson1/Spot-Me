@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Modal, Image, PanResponder} from "react-native";
-import { Checkbox, CheckBox} from 'react-native-paper';
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
+import { Checkbox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Calendar } from 'react-native-big-calendar';
+import Modal from "react-native-modal";
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 
 
@@ -515,7 +518,7 @@ export const YourPermits = ({navigation, sendMsg}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-           <Text style={styles.title}>Your Permits</Text>
+           <Text style={styles.title}>My Permits</Text>
            <View style={styles.checkBoxContainer}>
                 <Checkbox.Item
                     status={permits['green'] ? 'checked' : 'unchecked'}
@@ -560,127 +563,113 @@ export const YourPermits = ({navigation, sendMsg}) => {
     );
 };
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-const TOTAL_INTERVALS = 24; // Example: Displaying 12 hours (30 min intervals) (e.g., 8 AM - 8 PM)
-const CELL_WIDTH = 70;
-const CELL_HEIGHT = 30;
+const lotPermit = {
+    "P5": 'green',
+    "P6": 'green'
+};
+
+const lots = Object.keys(lotPermit);
 
 //feature 5.5 from system req doc
 export const WeeklyScheduler = () => {
-  const [blocks, setBlocks] = useState([]); // Stores the selected time blocks
-  const [startSelection, setStartSelection] = useState(null); // Tracks initial selection
-  const gridRef = useRef(null); // Reference to grid position on screen
-  
-  useEffect(() => {
-    if (gridRef.current) {
-        gridRef.current.measure((x, y, width, height, pageX) => {
-            setGridOffsetX(pageX);
-        });
-    }
-  }, []);
+    const navigation = useNavigation();
+    
+    const [events, setEvents] = useState([]);
+    const [selectedBlock, setSelectedBlock] = useState(null);
+    const [lotModalVisible, setLotModalVisible] = useState(false);
+    const [userPermits, setUserPermits] = useState({});
 
-  const [gridOffsetX, setGridOffsetX] = useState(0);
- 
-  // Handles touch and drag
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: () => true,
+    useEffect(() => {
+        const fetchUserPermits = async () => {
+            try {
+                const storedPermits = await AsyncStorage.getItem('userPermits');
+                if (storedPermits) {
+                    setUserPermits(JSON.parse(storedPermits));
+                }
+            } catch (error) {
+                console.error('Error retrieving permits: ', error);
+            }
+        };
 
-    onPanResponderGrant: (evt) => {
-      const { locationX, locationY, pageX } = evt.nativeEvent;
+        fetchUserPermits();
+    }, []);
 
-      const adjustedX = pageX - gridOffsetX;
-      const dayIndex = Math.floor(adjustedX / CELL_WIDTH); // Assuming each day width is ~70px
-      const timeIndex = Math.floor(locationY / CELL_HEIGHT); // Assuming each hour height is ~40px
+    const getBlockColor = (lot, congestion = 70) => {
+        const requiredPermit = lotPermit[lot];
+        const hasPermit = userPermits[requiredPermit] || false;
+        if (!hasPermit) return 'red';
+        return congestion > 85 ? 'yellow' : 'green';
+    };
 
-      if(isValidSelection(dayIndex, timeIndex)) {
-        setStartSelection({day: dayIndex, start: timeIndex});
-      }
-    },
+    const handleEventPress = (event) => {
+        setSelectedBlock(event);
+        setLotModalVisible(true);
+    };
 
-    onPanResponderMove: (evt) => {
-        if (!startSelection) return;
-        const {locationX, locationY, pageX} = evt.nativeEvent;
+    const handlePressCell = (date) => {
+        const newEvent = {
+          id: Date.now(),
+          title: 'New Block',
+          start: new Date(date),
+          end: new Date(date.getTime() + 30 * 60000), // 30 minutes
+        };
+        setEvents([...events, newEvent]);
+      };
 
-        const adjustedX = pageX - locationX;
-        const dayIndex = Math.floor(adjustedX / CELL_WIDTH);
-        const timeIndex = Math.floor(locationY / CELL_HEIGHT);
-
-        if (isValidSelection(dayIndex, timeIndex)) {
-            updateBlockSelection(dayIndex, startSelection.start, timeIndex);
-        }
-    },
-
-    onPanResponderRelease: () => {
-        setStartSelection(null);   // Reset after selection is complete
-    }
-});
-
-// checks validity of selection
-const isValidSelection = (day, time) => {
-    return (
-        day >= 0 && day < DAYS.length &&
-        time >= 0 && time < TOTAL_INTERVALS &&
-        !blocks.some(b => b.day === day && b.start <= time && b.end > time)
-    );
-};
-
-// Updates blocks while dragging
-const updateBlockSelection = (day, start, end) => {
-    setBlocks((prevBlocks) => {
-        let newBlocks = [...prevBlocks];
-
-        const existingBlock = newBlocks.find(b => b.day === day && b.start === start);
-
-        if (existingBlock) {
-            existingBlock.end = Math.max(start, end) + 1;
-        } else {
-            newBlocks.push({day, start: Math.min(start, end), end: Math.max(start, end) + 1});
-        }
-
-        return [...newBlocks];
-    });
-};
-const events = [
-    {
-      title: 'Meeting',
-      start: new Date(2020, 1, 11, 10, 0),
-      end: new Date(2020, 1, 11, 10, 30),
-    },
-    {
-      title: 'Coffee break',
-      start: new Date(2025, 4, 5, 15, 45),
-      end: new Date(2025, 4, 5, 16, 30),
-    },
-  ]
+    const assignBlock = (lot) => {
+        const updatedEvent = {
+            ...selectedBlock,
+            lot,
+            color: getBlockColor(lot),
+        };
+        setEvents((prevEvents) => 
+            prevEvents.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)) 
+        );
+        setLotModalVisible(false);
+    };
 
   return (
-    //<SafeAreaView style={styles.container}>
-     // {/* Header with days */}
-      //<View style={styles.header}>
-        //{DAYS.map((day, index) => (
-          //<Text key={index} style={styles.dayText}>{day}</Text>
-        //))}
-      //</View>
-      
-      //{/* Scheduler Grid */}
-      //<View style= {styles.touchWrapper} {...panResponder.panHandlers}>
-        //<View style={styles.grid}>
-          //  {[...Array(TOTAL_INTERVALS)].map((_, hour) => (
-            //    <View key={hour} style={styles.row}>
-              //  {DAYS.map((_, day) => (
-                //    <View key={day} style={styles.cell}>
-                  //      {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
-                    //    <View style={styles.selectedBlock} />
-                      //  )}
-                    //</View>
-               // ))}
-                //</View>
-            //))}
-        //</View>
-      //</View>
-    //</SafeAreaView>
-    <Calendar events={events} height={100} ampm={true} weekStartsOn={1} weekEndsOn={7}/>
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: 'absolute', top: 60, left: 20,
+        zIndex: 1,}}>
+          <Ionicons name="arrow-back" size={24} color="black"/>
+        </TouchableOpacity>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+            Weekly Scheduler
+        </Text>
+      </View>
+
+      <Calendar
+        events={events}
+        height={1200}
+        onPressEvent={handleEventPress}
+        onPressCell={handlePressCell}
+        eventCellStyle={(event) => ({ backgroundColor: event.color || 'gray' })}
+        ampm={true}
+        minHour={6}
+      />
+
+      <Modal visible={lotModalVisible} transparent animationType="slide">
+        <View style={{ backgroundColor: '#fff', margin: 30, padding: 20, borderRadius: 10 }}>
+          <Text style={{ fontWeight: 'bold' }}>Select Parking Lot:</Text>
+          {lots.map((lot) => {
+            const requiredPermit = lotPermit[lot];
+            const hasPermit = userPermits[requiredPermit];
+            return (
+              <TouchableOpacity key={lot} onPress={() => assignBlock(lot)}>
+                <Text style={{ fontSize: 16, padding: 5 }}>
+                  {lot} {!hasPermit && <Text style={{ color: 'red' }}>⚠️</Text>}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+          <TouchableOpacity onPress={() => setLotModalVisible(false)}>
+            <Text style={{ color: 'blue', marginTop: 10 }}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -771,7 +760,7 @@ const styles = StyleSheet.create({
     dayText: { fontWeight: "bold", fontSize: 16, width: 70, textAlign: "center" },
     grid: { flexDirection: "column" },
     row: { flexDirection: "row" },
-    cell: { width: CELL_WIDTH, height: CELL_HEIGHT, borderWidth: 0.5, borderColor: "#ccc" },
+    //cell: { width: CELL_WIDTH, height: CELL_HEIGHT, borderWidth: 0.5, borderColor: "#ccc" },
     selectedBlock: { flex: 1, backgroundColor: "#002e6d" },
     touchWrapper: {flex: 1},
 });
