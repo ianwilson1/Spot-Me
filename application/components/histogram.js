@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
-
 const screenWidth = Dimensions.get("window").width;
 
 const generateTimeSlots = (startTime, endTime) => {
@@ -89,8 +88,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 16,
     padding: 10,
-    alignSelf: "center",
-    maxWidth: screenWidth - 10,
+    alignSelf: "left",
+    maxWidth: screenWidth - 8,
     height: 300,
   },
   title: {

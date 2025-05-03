@@ -481,7 +481,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                         </Text>
 
                         <Text style={styles.modalTextOne}>
-                          {`Current: ${Math.round((congestionData[selectedLot.congestionKey]?.[selectedDay] || 0) * 100)}%`}
+                          {`Current: ${Math.round((congestionData[selectedLot.congestionKey] || 0) * 100)}%`}
                         </Text>
 
                         <Histogram data={getDayData(daysOfWeek[selectedDay].toLowerCase())} />
@@ -653,12 +653,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bottomRow: {
-    flexDirection: 'row',        // Makes children (Close button and Nav buttons) appear side by side
-    justifyContent: 'space-between', // Space between Close and Nav buttons
-    alignItems: 'center',  // Center vertically
-    width: '100%',              // Ensures the row spans the entire modal width
-    marginTop: 10,              // Space between the modal content and buttons
-    paddingHorizontal: 20,      // Padding for inner spacing
+    flexDirection: 'row',        
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 10,
+    paddingHorizontal: 20,
   },
   closeButton: {
     backgroundColor: '#002e6d',
@@ -670,14 +670,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   modalNavigation: {
-    flexDirection: "row",      // Arrange elements in a row
-    alignItems: "center",      // Align vertically in the center
-    justifyContent: "space-between", // Space out the nav buttons evenly
-    width: "100%",              // Limit the width of the nav buttons section
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
     paddingHorizontal: 20,
   },
   navButtonWrapper: {
-    paddingHorizontal: 15, // Spacing around the buttons
+    paddingHorizontal: 15,
   },
   navButton: {
     fontSize: 24,
