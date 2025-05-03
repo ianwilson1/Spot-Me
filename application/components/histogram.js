@@ -1,17 +1,15 @@
 // Histogram.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
+
 
 const screenWidth = Dimensions.get("window").width;
 
-// Helper function to generate time slots
 const generateTimeSlots = (startTime, endTime) => {
   const timeSlots = [];
   const start = new Date();
   start.setHours(startTime.split(":")[0], startTime.split(":")[1]);
-
   const end = new Date();
   end.setHours(endTime.split(":")[0], endTime.split(":")[1]);
 
@@ -20,7 +18,7 @@ const generateTimeSlots = (startTime, endTime) => {
     const minutes = start.getMinutes();
     const timeLabel = `${hours % 12 || 12}:${minutes === 0 ? "00" : minutes} ${hours >= 12 ? "PM" : "AM"}`;
     timeSlots.push(timeLabel);
-    start.setMinutes(start.getMinutes() + 30); // Increment by 30 minutes
+    start.setMinutes(start.getMinutes() + 30);
   }
 
   return timeSlots;
@@ -28,50 +26,57 @@ const generateTimeSlots = (startTime, endTime) => {
 
 const Histogram = ({ data, startTime = "06:00", endTime = "22:00" }) => {
   const timeSlots = generateTimeSlots(startTime, endTime);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Congestion for {data.day}</Text>
-      <BarChart
-        data={{
-          labels: timeSlots,
-          datasets: [
-            {
-              data: data.values.map(value => value * 100),
-            },
-          ],
-        }}
-        width={screenWidth - 60} // 40px for padding
-        height={220}
-        yAxisLabel=""
-        yAxisSuffix="%"
-        chartConfig={{
-          backgroundColor: "#f8f8f8",
-          backgroundGradientFrom: "#f8f8f8",
-          backgroundGradientTo: "#f8f8f8",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-          propsForDots: {
-            r: "3",
-            strokeWidth: "1",
-            stroke: "#ffa726",
-          },
-          barPercentage: 0.25, // Skinnier bars (1/4th of the width)
-          xAxisLabelStyle: {
-            transform: [{ rotate: "-90deg" }], // Rotate x-axis labels vertically
-            left: -10,
-            right: -10,
-            position: "absolute",
-          },
-        }}
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
+      <View style={styles.chartBox}>
+        <Text style={styles.title}>
+         Expected for {data.day.charAt(0).toUpperCase() + data.day.slice(1)}:
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <BarChart
+            data={{
+              labels: timeSlots,
+              datasets: [
+                {
+                  data: data.values.map(value => value * 100),
+                },
+              ],
+            }}
+            width={timeSlots.length * 25}
+            height={240}
+            yAxisSuffix="%"
+            yAxisInterval={1}
+            fromZero={true}
+            chartConfig={{
+              backgroundColor: "#f8f8f8",
+              backgroundGradientFrom: "#f8f8f8",
+              backgroundGradientTo: "#f8f8f8",
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: "3",
+                strokeWidth: "1",
+                stroke: "#ffa726",
+              },
+              barPercentage: 0.6,
+              propsForVerticalLabels: {
+                fontSize: 8,
+                rotation: 90,
+              },
+            }}
+            style={{
+              marginVertical: 2,
+              borderRadius: 16,
+              marginLeft: -12,
+            }}
+          />
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -79,12 +84,20 @@ const Histogram = ({ data, startTime = "06:00", endTime = "22:00" }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 10,
+    justifyContent: "center", 
+  },
+  chartBox: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 10,
+    alignSelf: "center",
+    maxWidth: screenWidth - 10,
+    height: 300,
   },
   title: {
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 12,
+    textAlign: "center",
   },
 });
 
