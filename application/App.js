@@ -476,40 +476,44 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
                   <View style={styles.modalContainer}>
                     {selectedLot && (
                       <>
-                        <Text style={styles.modalTitle}>{selectedLot.name} Expected Congestion</Text>
-                        <Text style={styles.modalTextOne}>
-                            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"][selectedDay]}{": "}
-                            {Math.round((congestionData[selectedLot.congestionKey]?.[selectedDay] || 0) * 100)}%
+                        <Text style={styles.modalTitle}>
+                          {`${selectedLot.name} Congestion`}
                         </Text>
-                        {/* Render Histogram between the arrow buttons */}
-                        <Histogram data={getDayData(daysOfWeek[selectedDay].toLowerCase())} />
 
-                        <View style={styles.modalNavigation}>
-                          <TouchableOpacity 
-                            onPress={() => setSelectedDay((selectedDay - 1 + 5) % 5)} 
-                            disabled={selectedDay === 0}
-                            style={styles.navButtonWrapper}
-                          >
-                            <Text style={styles.navButton}>{'<'}</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity 
-                            onPress={() => setSelectedDay((selectedDay + 1) % 5)} 
-                            disabled={selectedDay === 4}
-                            style={styles.navButtonWrapper}
-                          >
-                            <Text style={styles.navButton}>{'>'}</Text>
-                          </TouchableOpacity>
-                        </View>
+                        <Text style={styles.modalTextOne}>
+                          {`Current: ${Math.round((congestionData[selectedLot.congestionKey]?.[selectedDay] || 0) * 100)}%`}
+                        </Text>
+
+                        <Histogram data={getDayData(daysOfWeek[selectedDay].toLowerCase())} />
                       </>
                     )}
 
-                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                      <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
+                    <View style={styles.bottomRow}>
+                      <View style={styles.modalNavigation}>
+                        <TouchableOpacity
+                          onPress={() => setSelectedDay((selectedDay - 1 + 5) % 5)}
+                          disabled={selectedDay === 0}
+                          style={styles.navButtonWrapper}
+                        >
+                          <Text style={styles.navButton}>{'<'}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                          <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() => setSelectedDay((selectedDay + 1) % 5)}
+                          disabled={selectedDay === 4}
+                          style={styles.navButtonWrapper}
+                        >
+                          <Text style={styles.navButton}>{'>'}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   </View>
                 </View>
               </Modal>
-
 
               <Toolbar 
                 {...props} 
@@ -633,20 +637,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: 'white',
-    padding: 20,
+    padding: 10,
     borderRadius: 10,
+    maxHeight: '50%',
     width: '80%',
     alignItems: 'center',
-  },
-  modalNavigation: {
-    flexDirection: "row",      // Arrange elements in a row
-    alignItems: "center",      // Align elements vertically in the center
-    justifyContent: "space-between", // Space elements evenly
-    width: "80%",              // Adjust width to prevent excessive spacing
-    marginTop: 10,
-  },
-  navButtonWrapper: {
-    paddingHorizontal: 15, // Add spacing around buttons for easier touch
   },
   modalTitle: {
     fontSize: 20,
@@ -657,6 +652,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+  bottomRow: {
+    flexDirection: 'row',        // Makes children (Close button and Nav buttons) appear side by side
+    justifyContent: 'space-between', // Space between Close and Nav buttons
+    alignItems: 'center',  // Center vertically
+    width: '100%',              // Ensures the row spans the entire modal width
+    marginTop: 10,              // Space between the modal content and buttons
+    paddingHorizontal: 20,      // Padding for inner spacing
+  },
   closeButton: {
     backgroundColor: '#002e6d',
     padding: 10,
@@ -666,12 +669,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-  navRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginVertical: 10,
+  modalNavigation: {
+    flexDirection: "row",      // Arrange elements in a row
+    alignItems: "center",      // Align vertically in the center
+    justifyContent: "space-between", // Space out the nav buttons evenly
+    width: "100%",              // Limit the width of the nav buttons section
+    paddingHorizontal: 20,
+  },
+  navButtonWrapper: {
+    paddingHorizontal: 15, // Spacing around the buttons
   },
   navButton: {
     fontSize: 24,
