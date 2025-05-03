@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
+
 const screenWidth = Dimensions.get("window").width;
 
 const generateTimeSlots = (startTime, endTime) => {
@@ -42,7 +43,7 @@ const Histogram = ({ data, startTime = "06:00", endTime = "22:00" }) => {
                 },
               ],
             }}
-            width={timeSlots.length * 30}
+            width={timeSlots.length * 25}
             height={240}
             yAxisSuffix="%"
             yAxisInterval={1}
@@ -62,15 +63,16 @@ const Histogram = ({ data, startTime = "06:00", endTime = "22:00" }) => {
                 strokeWidth: "1",
                 stroke: "#ffa726",
               },
-              barPercentage: 0.8,
+              barPercentage: 0.6,
               propsForVerticalLabels: {
                 fontSize: 8,
                 rotation: 90,
               },
             }}
             style={{
-              marginVertical: 8,
+              marginVertical: 2,
               borderRadius: 16,
+              marginLeft: -12,
             }}
           />
         </ScrollView>
@@ -88,8 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 16,
     padding: 10,
-    alignSelf: "left",
-    maxWidth: screenWidth - 8,
+    alignSelf: "center",
+    maxWidth: screenWidth - 10,
     height: 300,
   },
   title: {
