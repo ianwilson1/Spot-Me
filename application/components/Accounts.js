@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Platform} from "react-native";
 import { Checkbox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,6 +7,8 @@ import { Calendar } from 'react-native-big-calendar';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 
 
@@ -576,8 +578,13 @@ export const WeeklyScheduler = () => {
     
     const [events, setEvents] = useState([]);
     const [selectedBlock, setSelectedBlock] = useState(null);
-    const [lotModalVisible, setLotModalVisible] = useState(false);
+    const [eventModalVisible, setEventModalVisible] = useState(false);
     const [userPermits, setUserPermits] = useState({});
+    const [showStartPicker, setShowStartPicker] = useState(false);
+    const [showEndPicker, setShowEndPicker] = useState(false);
+    const [repeatWeekly, setRepeatWeekly] = useState(false);
+    const [repeatUntil, setRepeatUntil] = useState(null);
+    const [showRepeatUntilPicker, setShowRepeatUntilPicker] = useState(false);
 
     useEffect(() => {
         const fetchUserPermits = async () => {
@@ -601,36 +608,49 @@ export const WeeklyScheduler = () => {
         return congestion > 85 ? 'yellow' : 'green';
     };
 
-    const handleEventPress = (event) => {
-        setSelectedBlock(event);
-        setLotModalVisible(true);
-    };
-
     const handlePressCell = (date) => {
-        const newEvent = {
-          id: Date.now(),
-          title: 'New Block',
-          start: new Date(date),
-          end: new Date(date.getTime() + 30 * 60000), // 30 minutes
-        };
-        setEvents([...events, newEvent]);
+        const start = new Date(date);
+        const end = new Date(date.getTime() + 30 * 60000);
+        end.setHours(end.getHours() + 1); // Default to 1 hour block
+        setSelectedBlock({id: Date.now(), title: '', lot: '', start, end});
+        setEventModalVisible(true);
       };
 
-    const assignBlock = (lot) => {
-        const updatedEvent = {
-            ...selectedBlock,
-            lot,
-            color: getBlockColor(lot),
-        };
-        setEvents((prevEvents) => 
-            prevEvents.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)) 
-        );
-        setLotModalVisible(false);
+    const saveEvent = () => {
+        const color = getBlockColor(selectedBlock.lot);
+
+        const newEvents = [];
+
+        if (repeatWeekly && repeatUntil) {
+            let nextDate = new Date(selectedBlock.start);
+            let nextEnd = new Date(selectedBlock.end);
+            const endDate = new Date(repeatUntil);
+        
+            while (nextDate <= endDate) {
+              newEvents.push({
+                ...selectedBlock,
+                id: Date.now() + Math.random(), // ensure unique id
+                start: new Date(nextDate),
+                end: new Date(nextEnd),
+                color,
+              });
+              nextDate.setDate(nextDate.getDate() + 7);
+              nextEnd.setDate(nextEnd.getDate() + 7);
+            }
+          } else {
+            newEvents.push({ ...selectedBlock, color });
+          }
+        
+          setEvents((prev) => [...prev, ...newEvents]);
+          setEventModalVisible(false);
+          setRepeatWeekly(false);
+          setRepeatUntil(null);
     };
+
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: 'absolute', top: 60, left: 20,
         zIndex: 1,}}>
           <Ionicons name="arrow-back" size={24} color="black"/>
@@ -639,36 +659,104 @@ export const WeeklyScheduler = () => {
             Weekly Scheduler
         </Text>
       </View>
-
       <Calendar
         events={events}
         height={1200}
-        onPressEvent={handleEventPress}
         onPressCell={handlePressCell}
         eventCellStyle={(event) => ({ backgroundColor: event.color || 'gray' })}
         ampm={true}
         minHour={6}
       />
 
-      <Modal visible={lotModalVisible} transparent animationType="slide">
-        <View style={{ backgroundColor: '#fff', margin: 30, padding: 20, borderRadius: 10 }}>
-          <Text style={{ fontWeight: 'bold' }}>Select Parking Lot:</Text>
-          {lots.map((lot) => {
-            const requiredPermit = lotPermit[lot];
-            const hasPermit = userPermits[requiredPermit];
-            return (
-              <TouchableOpacity key={lot} onPress={() => assignBlock(lot)}>
-                <Text style={{ fontSize: 16, padding: 5 }}>
-                  {lot} {!hasPermit && <Text style={{ color: 'red' }}>⚠️</Text>}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-          <TouchableOpacity onPress={() => setLotModalVisible(false)}>
-            <Text style={{ color: 'blue', marginTop: 10 }}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+<Modal visible={eventModalVisible} transparent animationType="slide">
+  {selectedBlock && (
+    <View style={{ backgroundColor: '#fff', margin: 20, padding: 20, borderRadius: 10 }}>
+      <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Create Parking Schedule</Text>
+
+      <TextInput
+        placeholder="Event Title"
+        value={selectedBlock.title}
+        onChangeText={(text) => setSelectedBlock({ ...selectedBlock, title: text })}
+        style={{ borderBottomWidth: 1, marginVertical: 10 }}
+      />
+
+      <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+        <Text>Start Time: {selectedBlock.start.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      {showStartPicker && (
+        <DateTimePicker
+          value={selectedBlock.start}
+          mode="time"
+          onChange={(e, date) => {
+            setShowStartPicker(false);
+            if (date) setSelectedBlock({ ...selectedBlock, start: date });
+          }}
+        />
+      )}
+
+      <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+        <Text>End Time: {selectedBlock.end.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      {showEndPicker && (
+        <DateTimePicker
+          value={selectedBlock.end}
+          mode="time"
+          onChange={(e, date) => {
+            setShowEndPicker(false);
+            if (date) setSelectedBlock({ ...selectedBlock, end: date });
+          }}
+        />
+      )}
+
+<TouchableOpacity onPress={() => setRepeatWeekly(!repeatWeekly)}>
+  <Text style={{ color: repeatWeekly ? 'green' : 'black' }}>
+    Repeat Weekly: {repeatWeekly ? 'Yes' : 'No'}
+  </Text>
+</TouchableOpacity>
+
+{repeatWeekly && (
+  <>
+    <TouchableOpacity onPress={() => setShowRepeatUntilPicker(true)}>
+      <Text>
+        Repeat Until: {repeatUntil ? repeatUntil.toDateString() : 'Select Date'}
+      </Text>
+    </TouchableOpacity>
+    {showRepeatUntilPicker && (
+      <DateTimePicker
+        value={repeatUntil || new Date()}
+        mode="date"
+        display="default"
+        onChange={(e, date) => {
+          setShowRepeatUntilPicker(false);
+          if (date) setRepeatUntil(date);
+        }}
+      />
+    )}
+  </>
+)}
+
+      <Text style={{ marginTop: 10 }}>Assign Lot:</Text>
+      {lots.map((lot) => (
+        <TouchableOpacity
+          key={lot}
+          onPress={() => setSelectedBlock({ ...selectedBlock, lot })}
+        >
+          <Text style={{ padding: 5, color: selectedBlock.lot === lot ? 'blue' : 'black' }}>{lot}</Text>
+        </TouchableOpacity>
+      ))}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+        <TouchableOpacity onPress={() => setEventModalVisible(false)}>
+          <Text style={{ color: 'gray' }}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={saveEvent}>
+          <Text style={{ color: 'green' }}>Save</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )}
+</Modal>
+
     </View>
   );
 };
