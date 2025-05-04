@@ -5,17 +5,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Calendar } from 'react-native-big-calendar';
-<<<<<<< Updated upstream
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-
-=======
->>>>>>> Stashed changes
-
-
 
 const storeUserSession = async (userData) => {
     try {
@@ -625,81 +618,143 @@ export const WeeklyScheduler = () => {
 
         const newEvents = [];
 
-        if (isValidSelection(dayIndex, timeIndex)) {
-            updateBlockSelection(dayIndex, startSelection.start, timeIndex);
-        }
-    },
+        if (repeatWeekly && repeatUntil) {
+            let nextDate = new Date(selectedBlock.start);
+            let nextEnd = new Date(selectedBlock.end);
+            const endDate = new Date(repeatUntil);
+        
+            while (nextDate <= endDate) {
+              newEvents.push({
+                ...selectedBlock,
+                id: Date.now() + Math.random(), // ensure unique id
+                start: new Date(nextDate),
+                end: new Date(nextEnd),
+                color,
+              });
+              nextDate.setDate(nextDate.getDate() + 7);
+              nextEnd.setDate(nextEnd.getDate() + 7);
+            }
+          } else {
+            newEvents.push({ ...selectedBlock, color });
+          }
+        
+          setEvents((prev) => [...prev, ...newEvents]);
+          setEventModalVisible(false);
+          setRepeatWeekly(false);
+          setRepeatUntil(null);
+    };
 
-    onPanResponderRelease: () => {
-        setStartSelection(null);   // Reset after selection is complete
-    }
-});
-
-// checks validity of selection
-const isValidSelection = (day, time) => {
-    return (
-        day >= 0 && day < DAYS.length &&
-        time >= 0 && time < TOTAL_INTERVALS &&
-        !blocks.some(b => b.day === day && b.start <= time && b.end > time)
-    );
-};
-
-// Updates blocks while dragging
-const updateBlockSelection = (day, start, end) => {
-    setBlocks((prevBlocks) => {
-        let newBlocks = [...prevBlocks];
-
-        const existingBlock = newBlocks.find(b => b.day === day && b.start === start);
-
-        if (existingBlock) {
-            existingBlock.end = Math.max(start, end) + 1;
-        } else {
-            newBlocks.push({day, start: Math.min(start, end), end: Math.max(start, end) + 1});
-        }
-
-        return [...newBlocks];
-    });
-};
-const events = [
-    {
-      title: 'Meeting',
-      start: new Date(2020, 1, 11, 10, 0),
-      end: new Date(2020, 1, 11, 10, 30),
-    },
-    {
-      title: 'Coffee break',
-      start: new Date(2025, 4, 5, 15, 45),
-      end: new Date(2025, 4, 5, 16, 30),
-    },
-  ]
 
   return (
-    //<SafeAreaView style={styles.container}>
-     // {/* Header with days */}
-      //<View style={styles.header}>
-        //{DAYS.map((day, index) => (
-          //<Text key={index} style={styles.dayText}>{day}</Text>
-        //))}
-      //</View>
-      
-      //{/* Scheduler Grid */}
-      //<View style= {styles.touchWrapper} {...panResponder.panHandlers}>
-        //<View style={styles.grid}>
-          //  {[...Array(TOTAL_INTERVALS)].map((_, hour) => (
-            //    <View key={hour} style={styles.row}>
-              //  {DAYS.map((_, day) => (
-                //    <View key={day} style={styles.cell}>
-                  //      {blocks.some((b) => b.day === day && b.start <= hour && b.end > hour) && (
-                    //    <View style={styles.selectedBlock} />
-                      //  )}
-                    //</View>
-               // ))}
-                //</View>
-            //))}
-        //</View>
-      //</View>
-    //</SafeAreaView>
-    <Calendar events={events} height={100} ampm={true} weekStartsOn={1} weekEndsOn={7}/>
+    <View style={{ flex: 1 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: 'absolute', top: 60, left: 20,
+        zIndex: 1,}}>
+          <Ionicons name="arrow-back" size={24} color="black"/>
+        </TouchableOpacity>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+            Weekly Scheduler
+        </Text>
+      </View>
+      <Calendar
+        events={events}
+        height={1200}
+        onPressCell={handlePressCell}
+        eventCellStyle={(event) => ({ backgroundColor: event.color || 'gray' })}
+        ampm={true}
+        minHour={6}
+      />
+
+<Modal visible={eventModalVisible} transparent animationType="slide">
+  {selectedBlock && (
+    <View style={{ backgroundColor: '#fff', margin: 20, padding: 20, borderRadius: 10 }}>
+      <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Create Parking Schedule</Text>
+
+      <TextInput
+        placeholder="Event Title"
+        value={selectedBlock.title}
+        onChangeText={(text) => setSelectedBlock({ ...selectedBlock, title: text })}
+        style={{ borderBottomWidth: 1, marginVertical: 10 }}
+      />
+
+      <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+        <Text>Start Time: {selectedBlock.start.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      {showStartPicker && (
+        <DateTimePicker
+          value={selectedBlock.start}
+          mode="time"
+          onChange={(e, date) => {
+            setShowStartPicker(false);
+            if (date) setSelectedBlock({ ...selectedBlock, start: date });
+          }}
+        />
+      )}
+
+      <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+        <Text>End Time: {selectedBlock.end.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      {showEndPicker && (
+        <DateTimePicker
+          value={selectedBlock.end}
+          mode="time"
+          onChange={(e, date) => {
+            setShowEndPicker(false);
+            if (date) setSelectedBlock({ ...selectedBlock, end: date });
+          }}
+        />
+      )}
+
+<TouchableOpacity onPress={() => setRepeatWeekly(!repeatWeekly)}>
+  <Text style={{ color: repeatWeekly ? 'green' : 'black' }}>
+    Repeat Weekly: {repeatWeekly ? 'Yes' : 'No'}
+  </Text>
+</TouchableOpacity>
+
+{repeatWeekly && (
+  <>
+    <TouchableOpacity onPress={() => setShowRepeatUntilPicker(true)}>
+      <Text>
+        Repeat Until: {repeatUntil ? repeatUntil.toDateString() : 'Select Date'}
+      </Text>
+    </TouchableOpacity>
+    {showRepeatUntilPicker && (
+      <DateTimePicker
+        value={repeatUntil || new Date()}
+        mode="date"
+        display="default"
+        onChange={(e, date) => {
+          setShowRepeatUntilPicker(false);
+          if (date) setRepeatUntil(date);
+        }}
+      />
+    )}
+  </>
+)}
+
+      <Text style={{ marginTop: 10 }}>Assign Lot:</Text>
+      {lots.map((lot) => (
+        <TouchableOpacity
+          key={lot}
+          onPress={() => setSelectedBlock({ ...selectedBlock, lot })}
+        >
+          <Text style={{ padding: 5, color: selectedBlock.lot === lot ? 'blue' : 'black' }}>{lot}</Text>
+        </TouchableOpacity>
+      ))}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+        <TouchableOpacity onPress={() => setEventModalVisible(false)}>
+          <Text style={{ color: 'gray' }}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={saveEvent}>
+          <Text style={{ color: 'green' }}>Save</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )}
+</Modal>
+
+    </View>
   );
 };
 
