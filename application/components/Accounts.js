@@ -8,7 +8,6 @@ import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { CongestionContext } from "./CongestionContext";
 
 const storeUserSession = async (userData) => {
     try {
@@ -569,8 +568,7 @@ const lotPermit = {
 const lots = Object.keys(lotPermit);
 
 //feature 5.5 from system req doc
-export const WeeklyScheduler = ({sendMsg, congestionData = {}, ...otherProps}) => {
-    console.log("Received congestion data: ", congestionData);
+export const WeeklyScheduler = ({sendMsg, congestionData = {}}) => {
     const navigation = useNavigation();
     
     const [events, setEvents] = useState([]);
@@ -595,10 +593,29 @@ export const WeeklyScheduler = ({sendMsg, congestionData = {}, ...otherProps}) =
             }
         };
 
+        const loadEvents = async () => {
+            try {
+                const storedEvents = await AsyncStorage.getItem('weeklyEvents');
+                if (storedEvents){
+                    const parsed = JSON.parse(storedEvents);
+                    parsed.forEach(e => {
+                        e.start = new Date(e.start);
+                        e.end = new Date(e.end);
+                    });
+                    setEvents(parsed);
+                } 
+            } catch (error) {
+                console.error('Error retrieving events: ', error);
+            }
+        };
         fetchUserPermits();
+        loadEvents(); 
     }, []);
 
-    const newCongestionData = useContext(CongestionContext);
+    useEffect(() => {
+        AsyncStorage.setItem('weeklyEvents', JSON.stringify(events));
+    }, [events]);
+
     const getBlockColor = (lot) => {
         const requiredPermit = lotPermit[lot];
         const hasPermit = userPermits[requiredPermit] || false;
@@ -615,6 +632,11 @@ export const WeeklyScheduler = ({sendMsg, congestionData = {}, ...otherProps}) =
         setSelectedBlock({id: Date.now(), title: '', lot: '', start, end});
         setEventModalVisible(true);
       };
+
+      const handlePressEvent = (event) => {
+        setSelectedBlock(event);
+        setEventModalVisible(true);
+    };
 
     const saveEvent = () => {
         const color = getBlockColor(selectedBlock.lot);
@@ -663,6 +685,7 @@ export const WeeklyScheduler = ({sendMsg, congestionData = {}, ...otherProps}) =
         events={events}
         height={1200}
         onPressCell={handlePressCell}
+        onPressEvent={handlePressEvent}
         eventCellStyle={(event) => ({ backgroundColor: event.color || 'gray' })}
         ampm={true}
         minHour={6}
