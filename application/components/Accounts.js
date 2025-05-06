@@ -638,37 +638,105 @@ export const WeeklyScheduler = ({sendMsg, congestionData = {}}) => {
         setEventModalVisible(true);
     };
 
-    const saveEvent = () => {
+    /*const isOverlapping = (newEvent, existingEvents) => {
+        return existingEvents.some(event => {
+          // Optional: skip comparing to itself (in case of editing)
+          if (event.id === newEvent.id) return false;
+      
+          return (
+            newEvent.start < event.end &&
+            newEvent.end > event.start
+          );
+        });
+      };*/
+      
+
+      const saveEvent = () => {
         const color = getBlockColor(selectedBlock.lot);
-
         const newEvents = [];
-
+      
+        if (!selectedBlock) return;
+      
+        // Function to check for overlap
+        const isOverlapping = (newEvent, existingEvents) => {
+          return existingEvents.some(event =>
+            newEvent.start < event.end && newEvent.end > event.start
+          );
+        };
+      
         if (repeatWeekly && repeatUntil) {
-            let nextDate = new Date(selectedBlock.start);
-            let nextEnd = new Date(selectedBlock.end);
-            const endDate = new Date(repeatUntil);
-        
-            while (nextDate <= endDate) {
-              newEvents.push({
-                ...selectedBlock,
-                id: Date.now() + Math.random(), // ensure unique id
-                start: new Date(nextDate),
-                end: new Date(nextEnd),
-                color,
-              });
-              nextDate.setDate(nextDate.getDate() + 7);
-              nextEnd.setDate(nextEnd.getDate() + 7);
+          let nextDate = new Date(selectedBlock.start);
+          let nextEnd = new Date(selectedBlock.end);
+          const endDate = new Date(repeatUntil);
+      
+          while (nextDate <= endDate) {
+            const newEvent = {
+              ...selectedBlock,
+              id: Date.now() + Math.random(), // unique ID
+              start: new Date(nextDate),
+              end: new Date(nextEnd),
+              color,
+            };
+      
+            if (isOverlapping(newEvent, events)) {
+              Alert.alert("Time Conflict", "One or more repeated events overlap with existing ones.");
+              return;
             }
-          } else {
-            newEvents.push({ ...selectedBlock, color });
+      
+            newEvents.push(newEvent);
+            nextDate.setDate(nextDate.getDate() + 7);
+            nextEnd.setDate(nextEnd.getDate() + 7);
           }
-        
-          setEvents((prev) => [...prev, ...newEvents]);
-          setEventModalVisible(false);
-          setRepeatWeekly(false);
-          setRepeatUntil(null);
-    };
+        } else {
+          const singleEvent = { ...selectedBlock, id: Date.now(), color };
+          
+          if (isOverlapping(singleEvent, events)) {
+            Alert.alert("Time Conflict", "This event overlaps with an existing one.");
+            return;
+          }
+      
+          newEvents.push(singleEvent);
+        }
+      
+        setEvents((prev) => [...prev, ...newEvents]);
+        setEventModalVisible(false);
+        setRepeatWeekly(false);
+        setRepeatUntil(null);
+      };
+      
 
+    const saveSchedule = async () => {
+        try {
+            const username = await getUsername();
+            if (!username) {
+                console.error("No user found in session");
+                return;
+            }
+            const serializedSched = events.map(e => ({
+                ...e,
+                start: e.start instanceof Date ? e.start.toISOString() : e.start,
+                end: e.end instanceof Date ? e.end.toISOString() : e.end,
+              }));
+
+            const msgObj = {
+                "op": "SaveWeeklySchedule",
+                "name": String(username),
+                "newSched": serializedSched,
+            };
+
+            const response = await sendMsg(JSON.stringify(msgObj));
+            const serverResponse = JSON.parse(response);
+
+            if (serverResponse.status === "schedule_updated") {
+                Alert.alert("Schedule saved successfully!");
+            } else {
+                Alert.alert("Failed to save schedule.", "Server response: " + serverResponse.status);
+            }
+        } catch (error) {
+            Alert.alert("Error", "Could not connect to the server.");
+            console.error(error);
+        }
+    };
 
   return (
     <View style={{ flex: 1 }}>
@@ -772,6 +840,25 @@ export const WeeklyScheduler = ({sendMsg, congestionData = {}}) => {
         <TouchableOpacity onPress={() => setEventModalVisible(false)}>
           <Text style={{ color: 'gray' }}>Cancel</Text>
         </TouchableOpacity>
+        {selectedBlock?.id && ( // Make sure the event has an ID before showing the delete button
+    <TouchableOpacity
+      onPress={() => {
+        Alert.alert("Delete Event?", "Are you sure you want to delete this event?", [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: () => {
+              setEvents((prev) => prev.filter((e) => e.id !== selectedBlock.id));
+              setEventModalVisible(false); // Close the modal after deleting
+            },
+          },
+        ]);
+      }}
+    >
+      <Text style={{ color: 'red' }}>Delete</Text>
+    </TouchableOpacity>
+  )}
         <TouchableOpacity onPress={saveEvent}>
           <Text style={{ color: 'green' }}>Save</Text>
         </TouchableOpacity>
