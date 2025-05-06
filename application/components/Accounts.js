@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {View, TextInput, Alert, Text, StyleSheet, TouchableOpacity, Platform} from "react-native";
 import { Checkbox} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Calendar } from 'react-native-big-calendar';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { CongestionContext } from "./CongestionContext";
 
 const storeUserSession = async (userData) => {
     try {
@@ -289,7 +289,6 @@ export const UpdateUsername = ({sendMsg, navigation}) => {
             Alert.alert("Error, Current password and new username are required.");
             return;
         }
-
         try{
             const msgObj = {
                 "op": "UpdateName",
@@ -570,7 +569,8 @@ const lotPermit = {
 const lots = Object.keys(lotPermit);
 
 //feature 5.5 from system req doc
-export const WeeklyScheduler = () => {
+export const WeeklyScheduler = ({sendMsg, congestionData = {}, ...otherProps}) => {
+    console.log("Received congestion data: ", congestionData);
     const navigation = useNavigation();
     
     const [events, setEvents] = useState([]);
@@ -598,11 +598,14 @@ export const WeeklyScheduler = () => {
         fetchUserPermits();
     }, []);
 
-    const getBlockColor = (lot, congestion = 70) => {
+    const newCongestionData = useContext(CongestionContext);
+    const getBlockColor = (lot) => {
         const requiredPermit = lotPermit[lot];
         const hasPermit = userPermits[requiredPermit] || false;
         if (!hasPermit) return 'red';
-        return congestion > 85 ? 'yellow' : 'green';
+
+        const congestion = congestionData[lot] ?? 0.7;
+        return congestion > 0.85 ? 'yellow' : 'green';
     };
 
     const handlePressCell = (date) => {

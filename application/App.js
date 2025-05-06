@@ -10,7 +10,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from "expo-notifications";
 import parkingData from './assets/parking_lot_data.json';
 import Histogram from './components/histogram.js'
-// import WeeklySchedule from './components/WeeklySched.js'
+import { CongestionContext } from './components/CongestionContext.js';
 
 const Stack = createStackNavigator();
 
@@ -596,6 +596,7 @@ const fileUri = `${FileSystem.documentDirectory}localData.json`;
               <WeeklyScheduler
                 {...screenProps}
                 sendMsg={sendMsg}
+                congestionData = {congestionData}
               />
             }
           />
